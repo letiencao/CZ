@@ -5,6 +5,8 @@ public class AccountModel extends BaseModel {
 	private String password;
 	private String phoneNumber;
 	private String avatar;
+	private String uuid;
+	
 	public String getName() {
 		return name;
 	}
@@ -28,6 +30,13 @@ public class AccountModel extends BaseModel {
 	}
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+	
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	@Override
 	public String toString() {
