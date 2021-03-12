@@ -10,9 +10,9 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 
 	@Override
 	public boolean signUp(AccountModel accountModel) {
-		String sql = "INSERT INTO account(deleted,createddate,createdby,name,password,phonenumber,avatar) VALUES (?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO account(deleted,createddate,createdby,name,password,phonenumber,avatar,uuid) VALUES (?,?,?,?,?,?,?,?)";
 		return insertOne(sql, accountModel.isDeleted(),accountModel.getCreatedDate(),accountModel.getCreatedBy(),accountModel.getName(),accountModel.getPassword(),
-				accountModel.getPhoneNumber(),accountModel.getAvatar());
+				accountModel.getPhoneNumber(),accountModel.getAvatar(),accountModel.getUuid());
 	}
 
 	@Override
