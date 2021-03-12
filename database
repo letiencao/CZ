@@ -1,0 +1,109 @@
+use czone;
+create table account
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    name varchar(255) not null,
+    password text not null,
+    phonenumber varchar(255) not null,
+    avatar longtext null
+);
+create table post
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    content text not null,
+    accountid bigint not null
+);
+create table comment
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    content text not null,
+    postid bigint not null,
+    accountid bigint not null
+);
+create table chat
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    content text not null,
+    idA bigint not null,
+    idB bigint not null
+);
+create table blocks
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    idblocks bigint not null,
+    idblocked bigint not null
+); 
+create table friend
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    idA bigint not null,
+    idB bigint not null
+);
+create table likes
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    postid bigint not null,
+    accountid bigint not null
+);
+create table file
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    content longtext null,
+    postid bigint not null
+    
+);
+alter table file add constraint fk_file_post foreign key (postid) references post(id);
+alter table blocks add constraint fk_blocks_account_1 foreign key (idblocks) references account(id);
+alter table blocks add constraint fk_blocks_account_2 foreign key (idblocked) references account(id);
+alter table post add constraint fk_post_account foreign key (accountid) references account(id);
+alter table comment add constraint fk_comment_post foreign key (postid) references post(id);
+alter table likes add constraint fk_likes_account foreign key (accountid) references account(id);
+alter table likes add constraint fk_likes_post foreign key (postid) references post(id);
+alter table comment add constraint fk_comment_account foreign key (accountid) references account(id);
+
+alter table friend add constraint fk_friend_account_1 foreign key (idA) references account(id);
+alter table friend add constraint fk_friend_account_2 foreign key (idB) references account(id);
+
+alter table chat add constraint fk_chat_account_1 foreign key (idA) references account(id);
+alter table chat add constraint fk_chat_account_2 foreign key (idB) references account(id);
+
