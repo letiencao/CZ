@@ -60,35 +60,43 @@ public class SignUpAPI extends HttpServlet {
 //		}
 //		
 //		response.getWriter().print(gson.toJson(signUpResponse));
+		
 		SignUpResponse signUpResponse = new SignUpResponse();
 		SignUpRequest signUpRequest = gson.fromJson(request.getReader(), SignUpRequest.class);
-		String phoneNumber = signUpRequest.getPhoneNumber();
-		String password = signUpRequest.getPassword();
-//		@SuppressWarnings("unused")
-		String uuid = signUpRequest.getUuid();
-		Pattern p = Pattern.compile("[^A-Za-z0-9]");
-		Matcher m = p.matcher(password);
-		AccountModel accountModel = new AccountModel();
-		if(phoneNumber == "" || password == "" || uuid == "") {
-			signUpResponse.setCode(1002);
-			signUpResponse.setMessage("Parameter is not enough");
+		if(signUpRequest == null) {
+			signUpResponse.setCode(9994);
+			signUpResponse.setMessage("No data or end of list data");
 			signUpResponse.setAccountModel(null);
 		}else {
-			if(!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0' && password.length()>=6 && password.length() <=10 && !phoneNumber.equalsIgnoreCase(password)) {
-				accountModel = accountService.signUp(signUpRequest);
-				if(accountModel != null) {
-					signUpResponse.setCode(1000);
-					signUpResponse.setMessage("OK");
-					signUpResponse.setAccountModel(accountModel);
+			String phoneNumber = signUpRequest.getPhoneNumber();
+			String password = signUpRequest.getPassword();
+//			@SuppressWarnings("unused")
+			String uuid = signUpRequest.getUuid();
+			Pattern p = Pattern.compile("[^A-Za-z0-9]");
+			Matcher m = p.matcher(password);
+			AccountModel accountModel = new AccountModel();
+			
+			if(phoneNumber == "" || password == "" || uuid == "") {
+				signUpResponse.setCode(1002);
+				signUpResponse.setMessage("Parameter is not enough");
+				signUpResponse.setAccountModel(null);
+			}else {
+				if(!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0' && password.length()>=6 && password.length() <=10 && !phoneNumber.equalsIgnoreCase(password)) {
+					accountModel = accountService.signUp(signUpRequest);
+					if(accountModel != null) {
+						signUpResponse.setCode(1000);
+						signUpResponse.setMessage("OK");
+						signUpResponse.setAccountModel(accountModel);
+					}else {
+						signUpResponse.setCode(9996);
+						signUpResponse.setMessage("User existed");
+						signUpResponse.setAccountModel(null);
+					}
 				}else {
-					signUpResponse.setCode(9996);
-					signUpResponse.setMessage("User existed");
+					signUpResponse.setCode(1004);
+					signUpResponse.setMessage("Parameter value is invalid");
 					signUpResponse.setAccountModel(null);
 				}
-			}else {
-				signUpResponse.setCode(1004);
-				signUpResponse.setMessage("Parameter value is invalid");
-				signUpResponse.setAccountModel(null);
 			}
 		}
 		response.getWriter().print(gson.toJson(signUpResponse));;
