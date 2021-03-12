@@ -10,7 +10,8 @@ create table account
     name varchar(255) not null,
     password text not null,
     phonenumber varchar(255) not null,
-    avatar longtext null
+    avatar longtext null,
+    uuid varchar(255) not null
 );
 create table post
 (
