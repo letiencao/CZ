@@ -31,34 +31,7 @@ public class AccountAPI extends HttpServlet {
 	}
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		response.setContentType("application/json");
-		Gson gson = new  Gson();
-		AccountModel accountModel = gson.fromJson(request.getReader(), AccountModel.class);
-		SignUpResponse signUpResponse = new SignUpResponse();
-		String phoneNumber = accountModel.getPhoneNumber();
-		String password = accountModel.getPassword();
-		AccountModel model = null;
-		Pattern p = Pattern.compile("[^A-Za-z0-9]");
-		Matcher m = p.matcher(password);
-		if(!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0' && password.length()>=6 && password.length() <=10 && !phoneNumber.equalsIgnoreCase(password)) {
-			model = accountService.signUp(accountModel);
-			if(model != null) {
-				signUpResponse.setCode(1000);
-				signUpResponse.setMessage("OK");
-				signUpResponse.setAccountModel(model);
-			}else {
-				signUpResponse.setCode(9996);
-				signUpResponse.setMessage("User existed");
-				signUpResponse.setAccountModel(null);
-			}
-		}else {
-			signUpResponse.setCode(1004);
-			signUpResponse.setMessage("Parameter value is invalid");
-			signUpResponse.setAccountModel(null);
-		}
 		
-		response.getWriter().print(gson.toJson(signUpResponse));
 	}
 
 }
