@@ -21,6 +21,7 @@ public class AccountMapping implements IRowMapping<AccountModel> {
 			model.setPhoneNumber(resultSet.getString("phonenumber"));
 			model.setPassword(resultSet.getString("password"));
 			model.setAvatar(resultSet.getString("avatar"));
+			model.setUuid(resultSet.getString("uuid"));
 		} catch (SQLException e) {
 			System.out.println("Failed__User Mapping");
 			System.out.println("Failed__User Mapping = "+e.getMessage());
