@@ -7,5 +7,5 @@ import com.letiencao.request.SignInRequest;
 public interface IAccountDAO extends GenericDAO<AccountModel> {
 	boolean signUp(AccountModel accountModel);
 	AccountModel signIn(SignInRequest signInRequest);
-	AccountModel findByPhoneNumber(PhoneNumberRequest phoneNumberRequest);
+	AccountModel findByPhoneNumber(String phoneNumber);
 }
