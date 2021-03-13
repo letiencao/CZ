@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,15 +99,20 @@ public class BaseDAO<T> implements GenericDAO<T> {
 	}
 
 	@Override
-	public boolean insertOne(String sql, Object... parameters) {
+	public Long insertOne(String sql, Object... parameters) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		Long id = -1L;
 		try {
 			connection = getConnection();
 			connection.setAutoCommit(false);
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			setParameter(preparedStatement, parameters);
 			preparedStatement.executeUpdate();
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+			while(resultSet.next()) {
+				id = resultSet.getLong(1);
+			}
 			connection.commit();
 		} catch (SQLException e) {
 
@@ -116,11 +122,11 @@ public class BaseDAO<T> implements GenericDAO<T> {
 				}
 			} catch (SQLException e1) {
 				System.out.println("Failed__InsertOne__AbstractDAO__0");
-				return false;
+				return -1L;
 			}
 			System.out.println("Failed__InsertOne__AbstractDAO__1");
 			System.out.println(""+e.getMessage());
-			return false;
+			return -1L;
 		} finally {
 			try {
 				if (preparedStatement != null) {
@@ -128,10 +134,10 @@ public class BaseDAO<T> implements GenericDAO<T> {
 				}
 			} catch (SQLException e2) {
 				System.out.println("Failed__InsertOne__AbstractDAO__2");
-				return false;
+				return -1L;
 			}
 		}
-		return true;
+		return id;
 	}
 
 	@Override
