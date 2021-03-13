@@ -11,23 +11,33 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 	@Override
 	public boolean signUp(AccountModel accountModel) {
 		String sql = "INSERT INTO account(deleted,createddate,createdby,name,password,phonenumber,avatar,uuid) VALUES (?,?,?,?,?,?,?,?)";
-		return insertOne(sql, accountModel.isDeleted(),accountModel.getCreatedDate(),accountModel.getCreatedBy(),accountModel.getName(),accountModel.getPassword(),
-				accountModel.getPhoneNumber(),accountModel.getAvatar(),accountModel.getUuid());
+		Long id = insertOne(sql, accountModel.isDeleted(), accountModel.getCreatedDate(), accountModel.getCreatedBy(),
+				accountModel.getName(), accountModel.getPassword(), accountModel.getPhoneNumber(),
+				accountModel.getAvatar(), accountModel.getUuid());
+		boolean check = false;
+		if (id > 0) {
+			check = true;
+		}
+		return check;
 	}
 
 	@Override
 	public AccountModel signIn(SignInRequest signInRequest) {
 		String sql = "SELECT * FROM account WHERE phonenumber = ? AND password = ?";
-		
-		return findOne(sql, new AccountMapping(), signInRequest.getPhoneNumber(),signInRequest.getPassword());
+		try {
+			return findOne(sql, new AccountMapping(), signInRequest.getPhoneNumber(), signInRequest.getPassword());
+		} catch (ClassCastException e) {
+			return null;
+		}
+
 	}
 
 	@Override
-	public AccountModel findByPhoneNumber(PhoneNumberRequest phoneNumberRequest) {
+	public AccountModel findByPhoneNumber(String phoneNumber) {
 		try {
 			String sql = "SELECT * FROM account WHERE phonenumber = ?";
-			AccountModel accountModel = findOne(sql, new AccountMapping(), phoneNumberRequest.getPhoneNumber());
-			if(accountModel != null) {
+			AccountModel accountModel = findOne(sql, new AccountMapping(), phoneNumber);
+			if (accountModel != null) {
 				return accountModel;
 			}
 			return null;
