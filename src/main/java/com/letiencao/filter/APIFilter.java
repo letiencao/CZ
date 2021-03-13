@@ -19,7 +19,7 @@ import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
-@WebFilter(urlPatterns = { "/api/findByPhoneNumber", "/api/logout" })
+@WebFilter(urlPatterns = { "/api/logout", "/api/add_post" })
 public class APIFilter implements Filter {
 
 	private final static String TOKEN_HEADER = "Authorization";
@@ -43,33 +43,31 @@ public class APIFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		
+
 		httpRequest.setCharacterEncoding("utf-8");
 		httpResponse.setContentType("application/json");
-		String authToken = httpRequest.getHeader(TOKEN_HEADER);
-		System.out.println("authToken = " + authToken);
-		String url = httpRequest.getRequestURI();
-		System.out.println("url = " + url);
-		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
-		
+		Gson gson = new Gson();
+		String authToken = httpRequest.getHeader(TOKEN_HEADER);
 		try {
-			if (authToken != null) {
-				if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {
-					chain.doFilter(request, response);
-				}else {
-					baseResponse.setCode(9998);
-					baseResponse.setMessage("Token is invalid");
-					httpResponse.getWriter().print(gson.toJson(baseResponse));
-				}
+			System.out.println("authToken = " + authToken);
+			String url = httpRequest.getRequestURI();
+			System.out.println("url = " + url);
+
+			if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {
+				chain.doFilter(request, response);
+			} else {
+				baseResponse.setCode(9998);
+				baseResponse.setMessage("Token is invalid");
+				httpResponse.getWriter().print(gson.toJson(baseResponse));
 			}
+
 		} catch (IllegalArgumentException e) {
-			//token == null
+			// token == null
 			baseResponse.setCode(9994);
 			baseResponse.setMessage("No data or end of list data");
 			httpResponse.getWriter().print(gson.toJson(baseResponse));
 		}
-		
 
 	}
 
