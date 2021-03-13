@@ -1,18 +1,14 @@
 package com.letiencao.response;
 
-import java.util.List;
-
 public class AddPostResponse extends BaseResponse {
-	private List<String> data;
+	private DataPostResponse dataPostResponse;
 
-	public List<String> getData() {
-		return data;
+	public DataPostResponse getDataPostResponse() {
+		return dataPostResponse;
 	}
 
-	public void setData(List<String> data) {
-		this.data = data;
+	public void setDataPostResponse(DataPostResponse dataPostResponse) {
+		this.dataPostResponse = dataPostResponse;
 	}
-	
-	
 
 }
