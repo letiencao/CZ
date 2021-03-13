@@ -4,8 +4,7 @@ import java.util.List;
 
 public class AddPostRequest {
 	private String token;
-	private List<String> image;
-	private String video;
+	private List<String> files;
 	private String described;
 	public String getToken() {
 		return token;
@@ -13,17 +12,12 @@ public class AddPostRequest {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	public List<String> getImage() {
-		return image;
+	
+	public List<String> getFiles() {
+		return files;
 	}
-	public void setImage(List<String> image) {
-		this.image = image;
-	}
-	public String getVideo() {
-		return video;
-	}
-	public void setVideo(String video) {
-		this.video = video;
+	public void setFiles(List<String> files) {
+		this.files = files;
 	}
 	public String getDescribed() {
 		return described;
