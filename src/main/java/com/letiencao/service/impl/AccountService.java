@@ -21,9 +21,7 @@ public class AccountService extends BaseService implements IAccountService {
 	@Override
 	public AccountModel signUp(SignUpRequest signUpRequest) {
 		String phoneNumber = signUpRequest.getPhoneNumber();
-		PhoneNumberRequest phoneNumberRequest = new PhoneNumberRequest();
-		phoneNumberRequest.setPhoneNumber(phoneNumber);
-		AccountModel model = accountDAO.findByPhoneNumber(phoneNumberRequest);
+		AccountModel model = accountDAO.findByPhoneNumber(phoneNumber);
 		if(model != null) {
 			return null;
 		}else{
@@ -55,11 +53,7 @@ public class AccountService extends BaseService implements IAccountService {
 		return null;
 	}
 	@Override
-	public AccountModel findByPhoneNumber(PhoneNumberRequest phoneNumberRequest) {
-		
-		return accountDAO.findByPhoneNumber(phoneNumberRequest);
+	public AccountModel findByPhoneNumber(String phoneNumber) {
+		return accountDAO.findByPhoneNumber(phoneNumber);
 	}
-
-	
-
 }
