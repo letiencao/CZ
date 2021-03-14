@@ -21,8 +21,9 @@ public class PostService extends BaseService implements IPostService {
 		accountDAO = new AccountDAO();
 	}
 
+	@SuppressWarnings("unused")
 	@Override
-	public PostModel insertOne(AddPostRequest addPostRequest) {
+	public Long insertOne(AddPostRequest addPostRequest) {
 		String described = addPostRequest.getDescribed();
 		String phoneNumber = getPhoneNumberFromToken(addPostRequest.getToken());
 		AccountModel model = accountDAO.findByPhoneNumber(phoneNumber);
@@ -33,11 +34,8 @@ public class PostService extends BaseService implements IPostService {
 		postModel.setCreatedBy(model.getPhoneNumber());
 		postModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		postModel.setDeleted(false);
-		PostModel postModel2 = postDAO.insertOne(postModel);
-		if(postModel2 == null) {
-			return null;
-		}
-		return postModel2;
+		Long id = postDAO.insertOne(postModel);
+		return id;
 	}
 
 	@Override
