@@ -14,15 +14,11 @@ import com.letiencao.model.PostModel;
 public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 
 	@Override
-	public PostModel insertOne(PostModel postModel) {
+	public Long insertOne(PostModel postModel) {
 		String sql = "INSERT INTO post(deleted,createddate,createdby,content,accountid) VALUES(?,?,?,?,?)";
 		Long id = insertOne(sql, postModel.isDeleted(), postModel.getCreatedDate(), postModel.getCreatedBy(),
 				postModel.getContent(), postModel.getAccountId());
-		if (id > 0) {
-			return findPostById(id);
-		} else {
-			return null;
-		}
+		return id;
 	}
 
 	@Override
@@ -40,6 +36,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			PostModel model = new PostModel();
+			System.out.println("huhu");
 			List<String> files = new ArrayList<String>();
 			while (resultSet.next()) {
 				model.setId(resultSet.getLong("post.id"));
@@ -53,6 +50,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 				files.add(resultSet.getString("file.content"));
 			}
 			model.setFiles(files);
+			System.out.println("model = "+model.getId());
 			return model;
 
 		} catch (SQLException e) {
@@ -69,7 +67,6 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 				return null;
 			}
 		}
-
 		return null;
 	}
 
