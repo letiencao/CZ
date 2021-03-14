@@ -4,6 +4,6 @@ import com.letiencao.model.PostModel;
 import com.letiencao.request.AddPostRequest;
 
 public interface IPostService {
-	PostModel insertOne(AddPostRequest addPostRequest);
+	Long insertOne(AddPostRequest addPostRequest);
 	PostModel findPostById(Long id);
 }
