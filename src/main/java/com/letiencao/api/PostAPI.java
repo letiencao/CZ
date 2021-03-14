@@ -2,8 +2,7 @@ package com.letiencao.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +18,13 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.google.gson.Gson;
-import com.letiencao.model.AccountModel;
 import com.letiencao.model.FileModel;
-import com.letiencao.model.PostModel;
 import com.letiencao.request.AddPostRequest;
 import com.letiencao.response.AddPostResponse;
 import com.letiencao.response.DataPostResponse;
 import com.letiencao.service.GenericService;
-import com.letiencao.service.IAccountService;
 import com.letiencao.service.IFileService;
 import com.letiencao.service.IPostService;
-import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.FileService;
 import com.letiencao.service.impl.PostService;
@@ -171,10 +166,11 @@ public class PostAPI extends HttpServlet {
 		addPostRequest.setDescribed(describedRequest);
 		addPostRequest.setToken(token);
 		addPostRequest.setFiles(files);
-		PostModel model = postService.insertOne(addPostRequest);
+		Long id = postService.insertOne(addPostRequest);
+		System.out.println("ID  111 = " + id);
 		FileModel fileModel = new FileModel();
 		try {
-			fileModel.setPostId(model.getId());
+			fileModel.setPostId(id);
 		} catch (NullPointerException e) {
 			addPostResponse.setCode(1002);
 			addPostResponse.setDataPostResponse(null);
@@ -188,8 +184,8 @@ public class PostAPI extends HttpServlet {
 			fileService.insertOne(fileModel);
 		}
 		DataPostResponse dataPostResponse = new DataPostResponse();
-		dataPostResponse.setId(model.getId());
-		dataPostResponse.setUrl("/CZone/api/post?id="+model.getId());
+		dataPostResponse.setId(id);
+		dataPostResponse.setUrl("/CZone/api/post?id=" + id);
 		addPostResponse.setCode(1000);
 //		addPostResponse.setId(1L);
 		addPostResponse.setDataPostResponse(dataPostResponse);
@@ -198,17 +194,10 @@ public class PostAPI extends HttpServlet {
 	}
 
 	public String uploadFolder() {
-		try {
-			URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
-			File f;
-			f = new File(u.toURI());
-			System.out.println(f.getParent());
-			String root = f.getParent() + "//files//";
-			return root;
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
+		String root = System.getProperty("user.dir")+"\\uploadFiles";
+		System.out.println("root = " + root);
+		return root;
+
 	}
 
 }
