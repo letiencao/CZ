@@ -66,95 +66,95 @@ public class PostAPI extends HttpServlet {
 			File file = new File(root);
 			if (file.exists() == false) {
 				file.mkdirs();
-			} else {
-				ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());
-				List<FileItem> list;
-				list = servletFileUpload.parseRequest(request);
+			}
+			ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());
+			List<FileItem> list;
+			list = servletFileUpload.parseRequest(request);
 //				System.out.println("List size = " + list.size());
 //				System.out.println(list.get(1).getString());
-				boolean image = false, video = false;
-				// co file image thi image = true
-				// co file video thi video = true
-				int listFilesSize = 0;
-				List<FileItem> items = new ArrayList<FileItem>();
-				for (FileItem item : list) {
-					// request co chua File thi getName != null,con khong thi getName == null
-					if (item.getName() != null) {
-						if (item.getName().endsWith(".mp4")) {
-							if (image == true) {
-								continue;
-							} else {
-								video = true;
-								listFilesSize += item.getSize();
-							}
-						} else if (item.getName().endsWith(".jpg") || item.getName().endsWith(".svg")
-								|| item.getName().endsWith(".JPEG")) {
-							if (video == true) {
-								continue;
-							} else {
-								image = true;
-								listFilesSize += item.getSize();
-							}
-						}
-					} else {
-						// get text trong request
-						if (item.getFieldName().equalsIgnoreCase("described")) {
-							String described = item.getString();
-							if (described.length() > 0 && described.length() <= 10000) {
-								describedRequest = described;
-							} else {
-								addPostResponse.setCode(1004);
-								addPostResponse.setDataPostResponse(null);
-								addPostResponse.setMessage("Parameter value is invalid");
-								response.getWriter().print(gson.toJson(addPostResponse));
-								return;
-							}
+			boolean image = false, video = false;
+			// co file image thi image = true
+			// co file video thi video = true
+			int listFilesSize = 0;
+			List<FileItem> items = new ArrayList<FileItem>();
+			for (FileItem item : list) {
+				// request co chua File thi getName != null,con khong thi getName == null
+				if (item.getName() != null) {
+					if (item.getName().endsWith(".mp4")) {
+						if (image == true) {
+							continue;
 						} else {
-							// no File no text
-							addPostResponse.setCode(1002);
+							video = true;
+							listFilesSize += item.getSize();
+						}
+					} else if (item.getName().endsWith(".jpg") || item.getName().endsWith(".svg")
+							|| item.getName().endsWith(".JPEG")) {
+						if (video == true) {
+							continue;
+						} else {
+							image = true;
+							listFilesSize += item.getSize();
+						}
+					}
+				} else {
+					// get text trong request
+					if (item.getFieldName().equalsIgnoreCase("described")) {
+						String described = item.getString();
+						if (described.length() > 0 && described.length() <= 10000) {
+							describedRequest = described;
+						} else {
+							addPostResponse.setCode(1004);
 							addPostResponse.setDataPostResponse(null);
-							addPostResponse.setMessage("Parameter is not enough");
+							addPostResponse.setMessage("Parameter value is invalid");
 							response.getWriter().print(gson.toJson(addPostResponse));
 							return;
 						}
-					}
-					// check max size
-					if (listFilesSize > MAX_REQUEST_FILE) {
-						addPostResponse.setCode(1006);
-						addPostResponse.setMessage("File size is too big");
+					} else {
+						// no File no text
+						addPostResponse.setCode(1002);
 						addPostResponse.setDataPostResponse(null);
-						items.clear();
+						addPostResponse.setMessage("Parameter is not enough");
 						response.getWriter().print(gson.toJson(addPostResponse));
 						return;
-					} else {
-						// create 1 list moi de chua cac file ,neu tong size < MAX_REQUEST_FILE thi add
-						// vao, het vong lap lay ra
+					}
+				}
+				// check max size
+				if (listFilesSize > MAX_REQUEST_FILE) {
+					addPostResponse.setCode(1006);
+					addPostResponse.setMessage("File size is too big");
+					addPostResponse.setDataPostResponse(null);
+					items.clear();
+					response.getWriter().print(gson.toJson(addPostResponse));
+					return;
+				} else {
+					// create 1 list moi de chua cac file ,neu tong size < MAX_REQUEST_FILE thi add
+					// vao, het vong lap lay ra
 //						System.out.println("Item = "+item);
-						if (!item.isFormField()) {
-							items.add(item);
-						}
+					if (!item.isFormField()) {
+						items.add(item);
 					}
 				}
-//				System.out.println("size = " + items.size());
-				for (FileItem item : items) {
-					// neu getName != null thi save
-					try {
-
-						if (item.getName() != null) {
-							String fileName = item.getName();
-							item.write(new File(root + "//" + fileName));
-							files.add(fileName);
-						}
-
-					} catch (Exception e) {
-						System.out.println("Exception : " + e.getLocalizedMessage());
-						addPostResponse.setCode(9999);
-						addPostResponse.setDataPostResponse(null);
-						addPostResponse.setMessage("Exception Error");
-					}
-				}
-//				System.out.println("Tong = " + listFilesSize);
 			}
+//				System.out.println("size = " + items.size());
+			for (FileItem item : items) {
+				// neu getName != null thi save
+				try {
+
+					if (item.getName() != null) {
+						String fileName = item.getName();
+						item.write(new File(root + "//" + fileName));
+						files.add(fileName);
+					}
+
+				} catch (Exception e) {
+					System.out.println("Exception : " + e.getLocalizedMessage());
+					addPostResponse.setCode(9999);
+					addPostResponse.setDataPostResponse(null);
+					addPostResponse.setMessage("Exception Error");
+				}
+			}
+//				System.out.println("Tong = " + listFilesSize);
+
 		} catch (FileUploadException e) {
 			addPostResponse.setCode(9994);
 			addPostResponse.setDataPostResponse(null);
@@ -194,7 +194,7 @@ public class PostAPI extends HttpServlet {
 	}
 
 	public String uploadFolder() {
-		String root = System.getProperty("user.dir")+"\\uploadFiles";
+		String root = System.getProperty("user.dir") + "\\uploadFiles";
 		System.out.println("root = " + root);
 		return root;
 
