@@ -29,7 +29,7 @@ import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.FileService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/add_post")
+@WebServlet("/api/add-post")
 //@MultipartConfig
 public class PostAPI extends HttpServlet {
 
