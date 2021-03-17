@@ -53,150 +53,169 @@ public class PostAPI extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		request.setCharacterEncoding("multipart/form-data");
 		response.setContentType("application/json");
 		AddPostResponse addPostResponse = new AddPostResponse();
 		String token = request.getHeader("Authorization");
 		String describedRequest = null;
-		List<String> files = new ArrayList<String>();
+		List<String> files = new ArrayList<String>();// luu ten file de save db
 		Gson gson = new Gson();
+		// get path upload folder
+		String root = uploadFolder();
+		File file = new File(root);
+		if (file.exists() == false) {
+			file.mkdirs();
+		}
+		List<FileItem> containFileItems = new ArrayList<FileItem>(); // chua cac file != null,de ghi ra folder
+		ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());
+		boolean video = false, image = false;// xac dinh file dang nao.
+		int filesSize = 0; // tong size cua cac file upload
+		List<FileItem> list = new ArrayList<FileItem>();
 		try {
-			// get path upload folder
-			String root = uploadFolder();
-			File file = new File(root);
-			if (file.exists() == false) {
-				file.mkdirs();
-			}
-			ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());
-			List<FileItem> list;
+
 			list = servletFileUpload.parseRequest(request);
-//				System.out.println("List size = " + list.size());
-//				System.out.println(list.get(1).getString());
-			boolean image = false, video = false;
-			// co file image thi image = true
-			// co file video thi video = true
-			int listFilesSize = 0;
-			List<FileItem> items = new ArrayList<FileItem>();
-			for (FileItem item : list) {
-				// request co chua File thi getName != null,con khong thi getName == null
-				if (item.getName() != null) {
-					if (item.getName().endsWith(".mp4")) {
-						if (image == true) {
-							continue;
-						} else {
-							video = true;
-							listFilesSize += item.getSize();
-						}
-					} else if (item.getName().endsWith(".jpg") || item.getName().endsWith(".svg")
-							|| item.getName().endsWith(".JPEG")) {
-						if (video == true) {
-							continue;
-						} else {
-							image = true;
-							listFilesSize += item.getSize();
-						}
-					}
-				} else {
-					// get text trong request
-					if (item.getFieldName().equalsIgnoreCase("described")) {
-						String described = item.getString();
-						if (described.length() > 0 && described.length() <= 10000) {
-							describedRequest = described;
-						} else {
-							addPostResponse.setCode(1004);
-							addPostResponse.setDataPostResponse(null);
-							addPostResponse.setMessage("Parameter value is invalid");
-							response.getWriter().print(gson.toJson(addPostResponse));
-							return;
-						}
-					} else {
-						// no File no text
-						addPostResponse.setCode(1002);
-						addPostResponse.setDataPostResponse(null);
-						addPostResponse.setMessage("Parameter is not enough");
-						response.getWriter().print(gson.toJson(addPostResponse));
-						return;
-					}
-				}
-				// check max size
-				if (listFilesSize > MAX_REQUEST_FILE) {
-					addPostResponse.setCode(1006);
-					addPostResponse.setMessage("File size is too big");
-					addPostResponse.setDataPostResponse(null);
-					items.clear();
-					response.getWriter().print(gson.toJson(addPostResponse));
-					return;
-				} else {
-					// create 1 list moi de chua cac file ,neu tong size < MAX_REQUEST_FILE thi add
-					// vao, het vong lap lay ra
-//						System.out.println("Item = "+item);
-					if (!item.isFormField()) {
-						items.add(item);
-					}
-				}
-			}
-//				System.out.println("size = " + items.size());
-			for (FileItem item : items) {
-				// neu getName != null thi save
-				try {
+			if (list.size() > 0 && list.size() < 3) {
+				for (FileItem fileItem : list) {
+					// get key files
+					if (fileItem.getFieldName().equalsIgnoreCase("files")
+							|| fileItem.getFieldName().equalsIgnoreCase("described")) {
 
-					if (item.getName() != null) {
-						String fileName = item.getName();
-						item.write(new File(root + "//" + fileName));
-						files.add(fileName);
-					}
+						if (fileItem.getFieldName().equalsIgnoreCase("files")) {
+							if (fileItem.getName().endsWith(".mp4")) {
+								if (image == true) {
+									continue;
+								} else {
+									video = true;
+									filesSize += fileItem.getSize();
+								}
+								containFileItems.add(fileItem);
+							} else if (fileItem.getName().endsWith(".jpg") || fileItem.getName().endsWith(".svg")
+									|| fileItem.getName().endsWith(".JPEG")) {
+								if (video == true) {
+									continue;
+								} else {
+									image = true;
+									filesSize += fileItem.getSize();
+								}
+								containFileItems.add(fileItem);
+							} else {
+								// file ko phai video || image || file.getName().length() == 0
+								parameterInValid(addPostResponse);
+								response.getWriter().print(gson.toJson(addPostResponse));
+								return;
 
-				} catch (Exception e) {
-					System.out.println("Exception : " + e.getLocalizedMessage());
-					addPostResponse.setCode(9999);
-					addPostResponse.setDataPostResponse(null);
-					addPostResponse.setMessage("Exception Error");
+							}
+							// get key described
+						} else if (fileItem.getFieldName().equalsIgnoreCase("described")) {
+							String described = fileItem.getString();
+							if (described.length() > 0) {
+								describedRequest = described;
+							} else {
+								// decribed vuot qua so tu cho phep
+								parameterInValid(addPostResponse);
+								response.getWriter().print(gson.toJson(addPostResponse));
+								return;
+							}
+
+						}
+					}
 				}
+			} else {
+				parameterInValid(addPostResponse);
+				response.getWriter().print(gson.toJson(addPostResponse));
+				return;
 			}
-//				System.out.println("Tong = " + listFilesSize);
 
 		} catch (FileUploadException e) {
 			addPostResponse.setCode(9994);
 			addPostResponse.setDataPostResponse(null);
-			addPostResponse.setMessage("No Data or end of list data");
-			System.out.println("Error = " + e.getMessage());
-		}
-		// add post
-		AddPostRequest addPostRequest = new AddPostRequest();
-		addPostRequest.setDescribed(describedRequest);
-		addPostRequest.setToken(token);
-		addPostRequest.setFiles(files);
-		Long id = postService.insertOne(addPostRequest);
-		System.out.println("ID  111 = " + id);
-		FileModel fileModel = new FileModel();
-		try {
-			fileModel.setPostId(id);
-		} catch (NullPointerException e) {
-			addPostResponse.setCode(1002);
-			addPostResponse.setDataPostResponse(null);
-			addPostResponse.setMessage("Parameter is not enough");
+			addPostResponse.setMessage("No data or end of list data");
 			response.getWriter().print(gson.toJson(addPostResponse));
 			return;
 		}
-		fileModel.setCreatedBy(genericService.getPhoneNumberFromToken(token));
-		for (String s : files) {
-			fileModel.setContent(s);
-			fileService.insertOne(fileModel);
+
+		// check max size
+		if (filesSize > MAX_REQUEST_FILE) {
+			containFileItems.clear();
+			addPostResponse.setCode(1006);
+			addPostResponse.setDataPostResponse(null);
+			addPostResponse.setMessage("File size is too big");
+			response.getWriter().print(gson.toJson(addPostResponse));
+			return;
+		} else {
+			// <= MAX = > write File
+			for (FileItem item : containFileItems) {
+				String itemName = item.getName();
+				files.add(itemName);
+			}
 		}
-		DataPostResponse dataPostResponse = new DataPostResponse();
-		dataPostResponse.setId(id);
-		dataPostResponse.setUrl("/CZone/api/post?id=" + id);
-		addPostResponse.setCode(1000);
-//		addPostResponse.setId(1L);
-		addPostResponse.setDataPostResponse(dataPostResponse);
-		addPostResponse.setMessage("OK");
-		response.getWriter().print(gson.toJson(addPostResponse));
+//		 add post
+		try {
+			if (describedRequest.length() > 0) {
+				AddPostRequest addPostRequest = new AddPostRequest();
+				addPostRequest.setDescribed(describedRequest);
+				addPostRequest.setToken(token);
+				addPostRequest.setFiles(files);
+				Long id = postService.insertOne(addPostRequest);
+				FileModel fileModel = new FileModel();
+				try {
+					fileModel.setPostId(id);
+				} catch (NullPointerException e) {
+					parameterNotEnough(addPostResponse);
+					response.getWriter().print(gson.toJson(addPostResponse));
+					return;
+				}
+				fileModel.setCreatedBy(genericService.getPhoneNumberFromToken(token));
+				for (String s : files) {
+					fileModel.setContent(s);
+					fileService.insertOne(fileModel);
+				}
+				DataPostResponse dataPostResponse = new DataPostResponse();
+				dataPostResponse.setId(id);
+				dataPostResponse.setUrl("/CZone/api/post?id=" + id);
+				addPostResponse.setCode(1000);
+				addPostResponse.setDataPostResponse(dataPostResponse);
+				addPostResponse.setMessage("OK");
+				writeFile(containFileItems, addPostResponse, gson);
+				response.getWriter().print(gson.toJson(addPostResponse));
+			}
+		} catch (NullPointerException e) {
+			parameterNotEnough(addPostResponse);
+			response.getWriter().print(gson.toJson(addPostResponse));
+		}
 	}
 
 	public String uploadFolder() {
 		String root = System.getProperty("user.dir") + "\\uploadFiles";
 		System.out.println("root = " + root);
 		return root;
+
+	}
+
+	public void parameterInValid(AddPostResponse addPostResponse) {
+		addPostResponse.setCode(1004);
+		addPostResponse.setDataPostResponse(null);
+		addPostResponse.setMessage("Parameter value is invalid");
+	}
+
+	public void parameterNotEnough(AddPostResponse addPostResponse) {
+		addPostResponse.setCode(1002);
+		addPostResponse.setDataPostResponse(null);
+		addPostResponse.setMessage("Parameter is not enough");
+	}
+
+	public void writeFile(List<FileItem> fileItems, AddPostResponse addPostResponse, Gson gson) {
+		for (FileItem item : fileItems) {
+			if (item.getName() != null) {
+				try {
+					item.write(new File(uploadFolder() + "//" + item.getName()));
+				} catch (Exception e) {
+					addPostResponse.setCode(1010);
+					addPostResponse.setDataPostResponse(null);
+					addPostResponse.setMessage("Action has be done previously by this user");
+					System.out.println("Error = " + e.getMessage());
+				}
+			}
+		}
 
 	}
 
