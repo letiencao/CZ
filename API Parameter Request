@@ -1,0 +1,31 @@
+	* 1) /api/signup
+				- Parameter Request : Body (JSON)
+				{
+					phoneNumber : ?,
+					password : ?,
+					uuid : ?
+				}
+				
+==============================================================================
+
+	* 2) /api/login
+				- Parameter Request :Body (JSON)
+				{
+					phoneNumber : ?,
+					password : ?
+				}
+				
+===============================================================================
+
+	* 3) /api/logout
+				-Parameter Request : Headers (KEY = Authorization , VALUE = Token)
+				
+===============================================================================
+	* 4) /api/add-post
+				-Parameter Request : Body (form-data) 
+													  {  
+													     KEY = files , VALUE = ? ;
+													     KEY = described , VALUE = ?
+													  },
+				Headers (Key = Authorization , Value = Token)
+		
