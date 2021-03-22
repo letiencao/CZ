@@ -1,6 +1,6 @@
 package com.letiencao.response;
 
-public class DataAddPostResponse {
+public class ImageGetPostResponse {
 	private Long id;
 	private String url;
 	public Long getId() {
@@ -16,5 +16,4 @@ public class DataAddPostResponse {
 		this.url = url;
 	}
 	
-
 }

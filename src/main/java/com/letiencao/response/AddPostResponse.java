@@ -1,13 +1,13 @@
 package com.letiencao.response;
 
 public class AddPostResponse extends BaseResponse {
-	private DataPostResponse dataPostResponse;
+	private DataAddPostResponse dataPostResponse;
 
-	public DataPostResponse getDataPostResponse() {
+	public DataAddPostResponse getDataPostResponse() {
 		return dataPostResponse;
 	}
 
-	public void setDataPostResponse(DataPostResponse dataPostResponse) {
+	public void setDataPostResponse(DataAddPostResponse dataPostResponse) {
 		this.dataPostResponse = dataPostResponse;
 	}
 
