@@ -24,5 +24,9 @@ public class PostModel extends BaseModel {
 	public void setFiles(List<String> files) {
 		this.files = files;
 	}
+	@Override
+	public String toString() {
+		return "PostModel [content=" + content + ", accountId=" + accountId + ", files=" + files + "]";
+	}
 	
 }
