@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.letiencao.dao.IPostDAO;
+import com.letiencao.mapping.AccountMapping;
 import com.letiencao.mapping.PostMapping;
+import com.letiencao.model.AccountModel;
 import com.letiencao.model.PostModel;
 
 public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
@@ -21,6 +23,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		return id;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public PostModel findPostById(Long id) {
 		Connection connection = null;
@@ -49,7 +52,11 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 				model.setAccountId(resultSet.getLong("post.accountid"));
 				files.add(resultSet.getString("file.content"));
 			}
-			model.setFiles(files);
+			if (files == null) {
+				model.setFiles(null);
+			}else {
+				model.setFiles(files);	
+			}
 			System.out.println("model = "+model.getId());
 			return model;
 
@@ -74,6 +81,20 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 	public List<PostModel> findAll() {
 		String sql = "SELECT * FROM post";
 		return findAll(sql, new PostMapping());
+	}
+
+	@Override
+	public PostModel findById(Long id) {
+		try {
+			String sql = "SELECT * FROM post WHERE id = ?";
+			PostModel postModel = findOne(sql, new PostMapping(), id);
+			if (postModel != null) {
+				return postModel;
+			}
+			return null;
+		} catch (ClassCastException e) {
+			return null;
+		}
 	}
 
 }

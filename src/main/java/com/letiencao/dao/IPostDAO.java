@@ -8,5 +8,7 @@ public interface IPostDAO {
 	List<PostModel> findAll();
 	Long insertOne(PostModel postModel);
 	PostModel findPostById(Long id);
+	PostModel findById(Long id);
+
 
 }

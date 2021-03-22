@@ -8,4 +8,5 @@ public interface IAccountDAO extends GenericDAO<AccountModel> {
 	boolean signUp(AccountModel accountModel);
 	AccountModel signIn(SignInRequest signInRequest);
 	AccountModel findByPhoneNumber(String phoneNumber);
+	AccountModel findById(Long id);
 }

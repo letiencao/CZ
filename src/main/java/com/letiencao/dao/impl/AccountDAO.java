@@ -46,4 +46,18 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 		}
 	}
 
+	@Override
+	public AccountModel findById(Long id) {
+		try {
+			String sql = "SELECT * FROM account WHERE id = ?";
+			AccountModel accountModel = findOne(sql, new AccountMapping(), id);
+			if (accountModel != null) {
+				return accountModel;
+			}
+			return null;
+		} catch (ClassCastException e) {
+			return null;
+		}
+	}
+
 }
