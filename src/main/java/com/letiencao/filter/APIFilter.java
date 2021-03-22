@@ -19,7 +19,7 @@ import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
-@WebFilter(urlPatterns = { "/api/logout", "/api/add_post" })
+@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post" })
 public class APIFilter implements Filter {
 
 	private final static String TOKEN_HEADER = "Authorization";
@@ -53,7 +53,6 @@ public class APIFilter implements Filter {
 			System.out.println("authToken = " + authToken);
 			String url = httpRequest.getRequestURI();
 			System.out.println("url = " + url);
-
 			if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {
 				chain.doFilter(request, response);
 			} else {
@@ -61,7 +60,6 @@ public class APIFilter implements Filter {
 				baseResponse.setMessage("Token is invalid");
 				httpResponse.getWriter().print(gson.toJson(baseResponse));
 			}
-
 		} catch (IllegalArgumentException e) {
 			// token == null
 			baseResponse.setCode(9994);
