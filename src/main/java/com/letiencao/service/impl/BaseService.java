@@ -12,6 +12,7 @@ import javax.xml.bind.DatatypeConverter;
 import com.letiencao.service.GenericService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -97,13 +98,15 @@ public class BaseService implements GenericService {
 
 	@Override
 	public String getPhoneNumberFromToken(String jwt) {
-		@SuppressWarnings({ "deprecation", "unused" })
-		Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY)).parseClaimsJws(jwt)
-				.getBody();
+		try {
+			Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+					.parseClaimsJws(jwt).getBody();
 
-		return claims.getIssuer();
+			return claims.getIssuer();
 
+		} catch (ExpiredJwtException | IllegalArgumentException e) {
+			return null;
+		}
 	}
-
 
 }

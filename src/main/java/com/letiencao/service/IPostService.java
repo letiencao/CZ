@@ -6,4 +6,5 @@ import com.letiencao.request.AddPostRequest;
 public interface IPostService {
 	Long insertOne(AddPostRequest addPostRequest);
 	PostModel findPostById(Long id);
+	PostModel findById(Long id);
 }

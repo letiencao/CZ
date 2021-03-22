@@ -1,6 +1,7 @@
 package com.letiencao.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.letiencao.dao.IFileDAO;
 import com.letiencao.dao.impl.FileDAO;
@@ -24,6 +25,11 @@ public class FileService implements IFileService {
 	public FileModel findOne(Long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<FileModel> findByPostId(Long postId) {
+		return fileDAO.findByPostId(postId);
 	}
 
 }

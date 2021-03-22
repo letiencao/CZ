@@ -43,4 +43,9 @@ public class PostService extends BaseService implements IPostService {
 		return postDAO.findPostById(id);
 	}
 
+	@Override
+	public PostModel findById(Long id) {
+		return postDAO.findById(id);
+	}
+
 }

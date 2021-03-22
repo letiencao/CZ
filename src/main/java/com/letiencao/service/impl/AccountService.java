@@ -56,4 +56,8 @@ public class AccountService extends BaseService implements IAccountService {
 	public AccountModel findByPhoneNumber(String phoneNumber) {
 		return accountDAO.findByPhoneNumber(phoneNumber);
 	}
+	@Override
+	public AccountModel findById(Long id) {
+		return accountDAO.findById(id);
+	}
 }

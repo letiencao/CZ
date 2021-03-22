@@ -9,4 +9,5 @@ public interface IAccountService {
 	AccountModel signUp(SignUpRequest signUpRequest);
 	String signIn(SignInRequest signInRequest);
 	AccountModel findByPhoneNumber(String phoneNumber);
+	AccountModel findById(Long id);
 }
