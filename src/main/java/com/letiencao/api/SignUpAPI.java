@@ -41,41 +41,54 @@ public class SignUpAPI extends HttpServlet {
 		SignUpResponse signUpResponse = new SignUpResponse();
 		SignUpRequest signUpRequest = gson.fromJson(request.getReader(), SignUpRequest.class);
 		try {
-			String phoneNumber = signUpRequest.getPhoneNumber();
-			String password = signUpRequest.getPassword();
-			String uuid = signUpRequest.getUuid();
-			Pattern p = Pattern.compile("[^A-Za-z0-9]");
-			Matcher m = p.matcher(password);
-			AccountModel accountModel = new AccountModel();
+			if (signUpRequest.getPhoneNumber() != null && signUpRequest.getPassword() != null
+					&& signUpRequest.getUuid() != null) {
 
-			if (phoneNumber.length() == 0 || password.length() == 0 || uuid.length() == 0) {
+				String phoneNumber = signUpRequest.getPhoneNumber();
+				String password = signUpRequest.getPassword();
+				String uuid = signUpRequest.getUuid();
+				Pattern p = Pattern.compile("[^A-Za-z0-9]");
+				Matcher m = p.matcher(password);
+				AccountModel accountModel = new AccountModel();
+
+				if (phoneNumber.length() == 0 || password.length() == 0 || uuid.length() == 0) {
+					System.out.println("uuid = " + uuid);
+					System.out.println("phone = " + phoneNumber);
+					signUpResponse.setCode(1003);
+					signUpResponse.setMessage("Parameter type is invalid");
+					signUpResponse.setAccountModel(null);
+				} else {
+					if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0'
+							&& password.length() >= 6 && password.length() <= 10
+							&& !phoneNumber.equalsIgnoreCase(password)) {
+						accountModel = accountService.signUp(signUpRequest);
+						if (accountModel != null) {
+							signUpResponse.setCode(1000);
+							signUpResponse.setMessage("OK");
+							signUpResponse.setAccountModel(accountModel);
+						} else {
+							signUpResponse.setCode(9996);
+							signUpResponse.setMessage("User existed");
+							signUpResponse.setAccountModel(null);
+						}
+					} else {
+						signUpResponse.setCode(1004);
+						signUpResponse.setMessage("Parameter value is invalid");
+						signUpResponse.setAccountModel(null);
+					}
+				}
+			} else {
+
 				signUpResponse.setCode(1002);
 				signUpResponse.setMessage("Parameter is not enough");
 				signUpResponse.setAccountModel(null);
-			} else {
-				if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0' && password.length() >= 6
-						&& password.length() <= 10 && !phoneNumber.equalsIgnoreCase(password)) {
-					accountModel = accountService.signUp(signUpRequest);
-					if (accountModel != null) {
-						signUpResponse.setCode(1000);
-						signUpResponse.setMessage("OK");
-						signUpResponse.setAccountModel(accountModel);
-					} else {
-						signUpResponse.setCode(9996);
-						signUpResponse.setMessage("User existed");
-						signUpResponse.setAccountModel(null);
-					}
-				} else {
-					signUpResponse.setCode(1004);
-					signUpResponse.setMessage("Parameter value is invalid");
-					signUpResponse.setAccountModel(null);
-				}
 			}
 		} catch (NullPointerException e) {
-			signUpResponse.setCode(1003);
-			signUpResponse.setMessage("Parameter type is invalid");
+			signUpResponse.setCode(9994);
+			signUpResponse.setMessage("No data or end of list data");
 			signUpResponse.setAccountModel(null);
 		}
+
 		response.getWriter().print(gson.toJson(signUpResponse));
 
 	}
