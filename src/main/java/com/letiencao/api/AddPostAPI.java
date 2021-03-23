@@ -76,11 +76,20 @@ public class AddPostAPI extends HttpServlet {
 			list = servletFileUpload.parseRequest(request);
 			for (FileItem fileItem : list) {
 				// get key files
+//				if(fileItem.getFieldName().equalsIgnoreCase("video") && fileItem.getFieldName().equalsIgnoreCase("image")) {
+//					System.out.println("111111111111111222222222222222222333333");
+//					parameterTypeInValid(addPostResponse);
+//					return;
+//				}
+				System.out.println("FileITem == " + fileItem.getFieldName());
 				if (fileItem.getFieldName().equalsIgnoreCase("video")) {
 					if (fileItem.getName().endsWith(".mp4")) {
 						if (countVideo < 1) {
 							if (image == true) {
-								continue;
+								System.out.println("11111111111111111111111111111");
+								parameterTypeInValid(addPostResponse);
+								response.getWriter().print(gson.toJson(addPostResponse));
+								return;
 							} else {
 								countVideo++;
 								video = true;
@@ -103,7 +112,10 @@ public class AddPostAPI extends HttpServlet {
 							|| fileItem.getName().endsWith(".JPEG") || fileItem.getName().endsWith(".png")) {
 						if (countImage < 4) {
 							if (video == true) {
-								continue;
+								System.out.println("111111111111111222222222222222222333333");
+								parameterTypeInValid(addPostResponse);
+								response.getWriter().print(gson.toJson(addPostResponse));
+								return;
 							} else {
 								countImage++;
 								image = true;
@@ -138,7 +150,6 @@ public class AddPostAPI extends HttpServlet {
 			response.getWriter().print(gson.toJson(addPostResponse));
 			return;
 		}
-
 		// check max size
 		if (filesSize > MAX_REQUEST_FILE) {
 			containFileItems.clear();
