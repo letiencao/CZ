@@ -15,6 +15,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class BaseService implements GenericService {
@@ -90,7 +91,7 @@ public class BaseService implements GenericService {
 			if (claims != null) {
 				return true;
 			}
-		} catch (io.jsonwebtoken.SignatureException | io.jsonwebtoken.ExpiredJwtException e) {
+		} catch (io.jsonwebtoken.SignatureException | io.jsonwebtoken.ExpiredJwtException | MalformedJwtException e) {
 			return false;
 		}
 		return false;
