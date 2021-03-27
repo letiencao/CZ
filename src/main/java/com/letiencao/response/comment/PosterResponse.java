@@ -1,6 +1,6 @@
-package com.letiencao.response.post;
+package com.letiencao.response.comment;
 
-public class AuthorGetPostResponse {
+public class PosterResponse {
 	private Long id;
 	private String name;
 	private String avatar;

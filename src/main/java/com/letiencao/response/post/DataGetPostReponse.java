@@ -1,4 +1,4 @@
-package com.letiencao.response;
+package com.letiencao.response.post;
 
 import java.util.List;
 

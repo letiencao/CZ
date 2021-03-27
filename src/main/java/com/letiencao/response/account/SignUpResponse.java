@@ -1,6 +1,7 @@
-package com.letiencao.response;
+package com.letiencao.response.account;
 
 import com.letiencao.model.AccountModel;
+import com.letiencao.response.BaseResponse;
 
 public class SignUpResponse extends BaseResponse {
 	private AccountModel accountModel;

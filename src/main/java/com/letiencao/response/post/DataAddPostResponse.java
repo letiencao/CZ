@@ -1,4 +1,4 @@
-package com.letiencao.response;
+package com.letiencao.response.post;
 
 public class DataAddPostResponse {
 	private Long id;
