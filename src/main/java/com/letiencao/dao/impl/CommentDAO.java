@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.html.parser.ContentModel;
+
 import com.letiencao.dao.ICommentDAO;
+import com.letiencao.mapping.CommentMapping;
 import com.letiencao.model.CommentModel;
 
 public class CommentDAO extends BaseDAO<CommentModel> implements ICommentDAO {
@@ -61,5 +64,34 @@ public class CommentDAO extends BaseDAO<CommentModel> implements ICommentDAO {
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public boolean deleteComment(Long postId, Long commentId) {
+		String sql = "DELETE FROM comment WHERE id = ? AND postid = ?";
+		return delete(sql, commentId,postId);
+	}
+
+	@Override
+	public List<CommentModel> findAll() {
+		String sql = "SELECT * FROM comment";
+		return findAll(sql,new CommentMapping());
+	}
+
+	@Override
+	public CommentModel findById(Long id) {
+		String sql = "SELECT * FROM comment WHERE id = ?";
+		try {
+			return findOne(sql,new CommentMapping(),id);	
+		} catch (ClassCastException e) {
+			System.out.println("Failed findById CommentDAO : "+e.getMessage());
+			return null;
+		}
+	}
+
+	@Override
+	public boolean update(Long id,String content) {
+		String sql = "UPDATE comment SET content = ? WHERE id = ?";
+		return update(sql, content,id);
 	}
 }

@@ -161,7 +161,7 @@ public class BaseDAO<T> implements GenericDAO<T> {
 				System.out.println("Failed__Update__AbstractDAO__0");
 				return false;
 			}
-			System.out.println("Failed__Update__AbstractDAO__1");
+			System.out.println("Failed__Update__AbstractDAO__1 : "+e.getMessage());
 			return false;
 		} finally {
 			try {
@@ -169,7 +169,7 @@ public class BaseDAO<T> implements GenericDAO<T> {
 					preparedStatement.close();
 				}
 			} catch (SQLException e2) {
-				System.out.println("Failed__Update__AbstractDAO__2");
+				System.out.println("Failed__Update__AbstractDAO__2 : "+e2.getMessage());
 				return false;
 			}
 		}
@@ -211,5 +211,41 @@ public class BaseDAO<T> implements GenericDAO<T> {
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean delete(String sql, Object... parameters) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = getConnection();
+			connection.setAutoCommit(false);
+			preparedStatement = connection.prepareStatement(sql);
+			setParameter(preparedStatement, parameters);
+			preparedStatement.executeUpdate();
+			connection.commit();
+		} catch (SQLException e) {
+
+			try {
+				if (connection != null) {
+					connection.rollback();
+				}
+			} catch (SQLException e1) {
+				System.out.println("Failed__Delete__AbstractDAO__0");
+				return false;
+			}
+			System.out.println("Failed__Delete__AbstractDAO__1");
+			return false;
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			} catch (SQLException e2) {
+				System.out.println("Failed__Update__AbstractDAO__2");
+				return false;
+			}
+		}
+		return true;
 	}
 }

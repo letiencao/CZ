@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.letiencao.dao.IPostDAO;
-import com.letiencao.mapping.AccountMapping;
 import com.letiencao.mapping.PostMapping;
-import com.letiencao.model.AccountModel;
 import com.letiencao.model.PostModel;
 
 public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
@@ -34,7 +32,8 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		}
 		try {
 			connection = getConnection();
-			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post INNER JOIN file ON post.id = file.postid  WHERE post.id = ?";
+			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,"
+					+ "file.content FROM post INNER JOIN file ON post.id = file.postid  WHERE post.id = ?  AND post.deleted = false";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
@@ -86,7 +85,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 	@Override
 	public PostModel findById(Long id) {
 		try {
-			String sql = "SELECT * FROM post WHERE id = ?";
+			String sql = "SELECT * FROM post WHERE id = ? AND deleted = false";
 			PostModel postModel = findOne(sql, new PostMapping(), id);
 			if (postModel != null) {
 				return postModel;
@@ -95,6 +94,49 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		} catch (ClassCastException e) {
 			return null;
 		}
+	}
+
+	@Override
+	public boolean deleteById(Long id) {
+		String sql = "UPDATE post SET deleted = true WHERE id = ?";
+		return update(sql, id);
+	}
+
+	@Override
+	public Long findAccountIdByPostId(Long id) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		if (id < 1 || id > findAll().size()) {
+			return -1L;
+		}
+		try {
+			connection = getConnection();
+			String sql = "SELECT accountid FROM post  WHERE id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setLong(1, id);
+			resultSet = preparedStatement.executeQuery();
+			Long accountId = -1L;
+			while (resultSet.next()) {
+				accountId = resultSet.getLong("accountid");
+			}
+			return accountId;
+
+		} catch (SQLException e) {
+			System.out.println("" + e.getMessage());
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e2) {
+				return -1L;
+			}
+		}
+		return -1L;
 	}
 
 }

@@ -1,8 +1,8 @@
 package com.letiencao.dao;
 
 import com.letiencao.model.AccountModel;
-import com.letiencao.request.PhoneNumberRequest;
-import com.letiencao.request.SignInRequest;
+import com.letiencao.request.account.PhoneNumberRequest;
+import com.letiencao.request.account.SignInRequest;
 
 public interface IAccountDAO extends GenericDAO<AccountModel> {
 	boolean signUp(AccountModel accountModel);

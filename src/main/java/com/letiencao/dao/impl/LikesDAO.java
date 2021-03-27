@@ -17,7 +17,8 @@ public class LikesDAO extends BaseDAO<LikesModel> implements ILikesDAO {
 	@Override
 	public Long insertOne(LikesModel likesModel) {
 		String sql = "INSERT INTO likes(deleted,createddate,createdby,postid,accountid) VALUES(?,?,?,?,?)";
-		return insertOne(sql, likesModel.isDeleted(),likesModel.getCreatedDate(),likesModel.getCreatedBy(),likesModel.getPostId(),likesModel.getAccountId());
+		return insertOne(sql, likesModel.isDeleted(), likesModel.getCreatedDate(), likesModel.getCreatedBy(),
+				likesModel.getPostId(), likesModel.getAccountId());
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class LikesDAO extends BaseDAO<LikesModel> implements ILikesDAO {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, postId);
 			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				LikesModel likesModel = new LikesModel();
 				likesModel.setAccountId(resultSet.getLong("accountid"));
 				likesModel.setCreatedBy(resultSet.getString("createdby"));
@@ -46,21 +47,27 @@ public class LikesDAO extends BaseDAO<LikesModel> implements ILikesDAO {
 			}
 			return likesModels;
 		} catch (SQLException e) {
-			System.out.println("findByPostId LikesDAO 1 : "+e.getMessage());
+			System.out.println("findByPostId LikesDAO 1 : " + e.getMessage());
 			return null;
-		}finally {
+		} finally {
 			try {
-				if(preparedStatement != null) {
+				if (preparedStatement != null) {
 					preparedStatement.close();
 				}
-				if(resultSet != null) {
+				if (resultSet != null) {
 					resultSet.close();
 				}
 			} catch (SQLException e2) {
-				System.out.println("findByPostId LikesDAO 2 : "+e2.getMessage());
+				System.out.println("findByPostId LikesDAO 2 : " + e2.getMessage());
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public boolean disLike(Long postId, Long accountId) {
+		String sql = "DELETE FROM likes WHERE postid = ? AND accountid = ?";
+		return delete(sql, postId, accountId);
 	}
 
 }

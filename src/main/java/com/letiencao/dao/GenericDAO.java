@@ -9,5 +9,6 @@ public interface GenericDAO<T> {
 	Long insertOne(String sql,Object... parameters );
 	boolean update (String sql,Object... parameters);
 	T findOne(String sql,IRowMapping<T> rowMapping,Object... parameters);
+	boolean delete(String sql,Object... parameters);
 
 }
