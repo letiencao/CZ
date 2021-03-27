@@ -1,4 +1,4 @@
-package com.letiencao.request;
+package com.letiencao.request.account;
 
 public class SignInRequest {
 	private String phoneNumber;

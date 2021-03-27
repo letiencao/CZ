@@ -1,4 +1,4 @@
-package com.letiencao.request;
+package com.letiencao.request.like;
 
 public class LikesRequest {
 	private Long postId;

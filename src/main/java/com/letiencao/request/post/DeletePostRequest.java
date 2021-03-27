@@ -1,8 +1,7 @@
 package com.letiencao.request.post;
 
-public class GetPostRequest {
+public class DeletePostRequest {
 	private Long id;
-
 	public Long getId() {
 		return id;
 	}

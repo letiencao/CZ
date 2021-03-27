@@ -1,4 +1,4 @@
-package com.letiencao.request;
+package com.letiencao.request.blocks;
 
 public class AddBlocksRequest {
 	private Long idBlocks;
