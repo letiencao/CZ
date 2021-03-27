@@ -1,9 +1,9 @@
 package com.letiencao.service;
 
 import com.letiencao.model.AccountModel;
-import com.letiencao.request.PhoneNumberRequest;
-import com.letiencao.request.SignInRequest;
-import com.letiencao.request.SignUpRequest;
+import com.letiencao.request.account.PhoneNumberRequest;
+import com.letiencao.request.account.SignInRequest;
+import com.letiencao.request.account.SignUpRequest;
 
 public interface IAccountService {
 	AccountModel signUp(SignUpRequest signUpRequest);

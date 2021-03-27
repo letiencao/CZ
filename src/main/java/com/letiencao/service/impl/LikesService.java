@@ -9,7 +9,7 @@ import com.letiencao.dao.impl.AccountDAO;
 import com.letiencao.dao.impl.LikesDAO;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.LikesModel;
-import com.letiencao.request.LikesRequest;
+import com.letiencao.request.like.LikesRequest;
 import com.letiencao.service.ILikesService;
 
 public class LikesService extends BaseService implements ILikesService {
@@ -28,7 +28,13 @@ public class LikesService extends BaseService implements ILikesService {
 		likesModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		AccountModel accountModel = accountDAO.findById(likesRequest.getAccountId());
 		likesModel.setCreatedBy(accountModel.getPhoneNumber());
-		return likesDAO.insertOne(likesModel);
+		Long id = likesDAO.insertOne(likesModel);
+		if(id > 0) {
+			return id;
+		}
+		else {
+			return -1L;
+		}
 	}
 	@Override
 	public int findByPostId(Long postId) {
@@ -40,13 +46,17 @@ public class LikesService extends BaseService implements ILikesService {
 	public boolean checkThisUserLiked(Long accountId,Long postId) {
 		List<LikesModel> list = likesDAO.findByPostId(postId);
 		for(int i = 0;i<list.size();i++) {
+			System.out.println(i);
 			if(accountId == list.get(i).getAccountId()) {
 				return true;
-			}else {
-				return false;
 			}
 		}
 		return false;
+	}
+	@Override
+	public boolean disLike(Long postId, Long accountId) {
+		boolean check = likesDAO.disLike(postId, accountId);
+		return check;
 	}
 
 }

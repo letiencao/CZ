@@ -9,7 +9,7 @@ import com.letiencao.dao.impl.AccountDAO;
 import com.letiencao.dao.impl.CommentDAO;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.CommentModel;
-import com.letiencao.request.AddCommentRequest;
+import com.letiencao.request.comment.AddCommentRequest;
 import com.letiencao.service.ICommentService;
 
 public class CommentService extends BaseService implements ICommentService {
@@ -39,6 +39,36 @@ public class CommentService extends BaseService implements ICommentService {
 	public int findByPostId(Long postId) {
 		List<CommentModel> commentModels = commentDAO.findByPostId(postId);
 		return commentModels.size();
+	}
+
+	@Override
+	public boolean deleteComment(Long postId, Long commentId) {
+		return commentDAO.deleteComment(postId, commentId);
+	}
+
+	@Override
+	public List<CommentModel> findAll() {
+		return commentDAO.findAll();
+	}
+
+	@Override
+	public CommentModel findById(Long id) {
+		return commentDAO.findById(id);
+	}
+
+	@Override
+	public CommentModel update(Long id,String content) {
+		boolean b = commentDAO.update(id, content);
+		if(b ==true) {
+			return findById(id);
+		}else {
+			return null;	
+		}
+	}
+
+	@Override
+	public List<CommentModel> getListCommentByPostId(Long postId) {
+		return commentDAO.findByPostId(postId);
 	}
 
 }

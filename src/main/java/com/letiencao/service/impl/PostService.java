@@ -1,6 +1,7 @@
 package com.letiencao.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.letiencao.dao.IAccountDAO;
 import com.letiencao.dao.IPostDAO;
@@ -8,7 +9,7 @@ import com.letiencao.dao.impl.AccountDAO;
 import com.letiencao.dao.impl.PostDAO;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.PostModel;
-import com.letiencao.request.AddPostRequest;
+import com.letiencao.request.post.AddPostRequest;
 import com.letiencao.service.IPostService;
 
 public class PostService extends BaseService implements IPostService {
@@ -46,6 +47,31 @@ public class PostService extends BaseService implements IPostService {
 	@Override
 	public PostModel findById(Long id) {
 		return postDAO.findById(id);
+	}
+
+	@Override
+	public boolean deleteById(Long id) {
+		PostModel model = findById(id);
+		try {
+			if(model.isDeleted() == false) {
+				return postDAO.deleteById(id);
+				
+			}else {
+				return false;
+			}	
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public List<PostModel> findAll() {
+		return postDAO.findAll();
+	}
+
+	@Override
+	public Long findAccountIdByPostId(Long id) {
+		return postDAO.findAccountIdByPostId(id);
 	}
 
 }
