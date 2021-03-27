@@ -1,4 +1,4 @@
-package com.letiencao.api;
+package com.letiencao.api.post;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,13 +16,13 @@ import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.FileModel;
 import com.letiencao.model.PostModel;
-import com.letiencao.request.GetPostRequest;
-import com.letiencao.response.AuthorGetPostResponse;
+import com.letiencao.request.post.GetPostRequest;
 import com.letiencao.response.BaseResponse;
-import com.letiencao.response.DataGetPostReponse;
-import com.letiencao.response.GetPostResponse;
-import com.letiencao.response.ImageGetPostResponse;
-import com.letiencao.response.VideoGetPostResponse;
+import com.letiencao.response.post.AuthorGetPostResponse;
+import com.letiencao.response.post.DataGetPostReponse;
+import com.letiencao.response.post.GetPostResponse;
+import com.letiencao.response.post.ImageGetPostResponse;
+import com.letiencao.response.post.VideoGetPostResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.IBlocksService;
@@ -204,7 +204,7 @@ public class GetPostAPI extends HttpServlet {
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
 			getPostResponse.setCode(1004);
-			getPostResponse.setMessage("Parameter value is invalid");
+			getPostResponse.setMessage("Parameter type is invalid");
 			getPostResponse.setDataGetPostReponse(null);
 		} catch (NullPointerException e) {
 			getPostResponse.setCode(9992);

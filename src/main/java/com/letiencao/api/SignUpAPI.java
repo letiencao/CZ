@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.letiencao.model.AccountModel;
-import com.letiencao.request.SignUpRequest;
-import com.letiencao.response.SignUpResponse;
+import com.letiencao.request.account.SignUpRequest;
+import com.letiencao.response.account.SignUpResponse;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
 

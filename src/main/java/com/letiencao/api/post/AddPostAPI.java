@@ -1,4 +1,4 @@
-package com.letiencao.api;
+package com.letiencao.api.post;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +18,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.google.gson.Gson;
 import com.letiencao.model.FileModel;
-import com.letiencao.request.AddPostRequest;
-import com.letiencao.response.AddPostResponse;
-import com.letiencao.response.DataAddPostResponse;
+import com.letiencao.request.post.AddPostRequest;
+import com.letiencao.response.post.AddPostResponse;
+import com.letiencao.response.post.DataAddPostResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IFileService;
 import com.letiencao.service.IPostService;
