@@ -19,7 +19,8 @@ import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
-@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post","/api/blocks","/api/like"})
+@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post", "/api/blocks", "/api/like",
+		"/api/delete-post", "/api/get-comments", "/api/get-list-posts" })
 public class APIFilter implements Filter {
 
 	private final static String TOKEN_HEADER = "Authorization";
