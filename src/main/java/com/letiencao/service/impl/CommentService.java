@@ -38,7 +38,11 @@ public class CommentService extends BaseService implements ICommentService {
 	@Override
 	public int findByPostId(Long postId) {
 		List<CommentModel> commentModels = commentDAO.findByPostId(postId);
-		return commentModels.size();
+		if(commentModels != null) {
+			return commentModels.size();	
+		}else {
+			return 0;
+		}
 	}
 
 	@Override
