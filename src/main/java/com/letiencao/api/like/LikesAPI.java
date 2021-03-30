@@ -108,7 +108,7 @@ public class LikesAPI extends HttpServlet {
 							likesResponse.setDataLikesResponse(null);
 						}
 					} catch (NullPointerException e) {
-						System.out.println("Null Pointer Exception LikesAPI : "+e.getMessage());
+						System.out.println("Null Pointer Exception LikesAPI : " + e.getMessage());
 						likesResponse.setCode(9992);
 						likesResponse.setMessage("Post is not existed");
 						likesResponse.setDataLikesResponse(null);
@@ -150,21 +150,34 @@ public class LikesAPI extends HttpServlet {
 					AccountModel accountModel = accountService
 							.findByPhoneNumber((genericService.getPhoneNumberFromToken(jwt)));
 					likesRequest.setAccountId(accountModel.getId());
-					boolean check = likesService.checkThisUserLiked(likesRequest.getAccountId(),
-							likesRequest.getPostId());
-					System.out.println("Check = " + check);
-					if (check == true) {
-						boolean b = likesService.disLike(likesRequest.getPostId(), likesRequest.getAccountId());
-						if (b == false) {
-							baseResponse.setCode(1001);
-							baseResponse.setMessage("Can not connect to DB");
+					PostModel postModel = postService.findById(likesRequest.getPostId());
+					if (postModel != null) {
+						BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountModel.getId());
+						if (blocksModel == null) {
+							boolean check = likesService.checkThisUserLiked(likesRequest.getAccountId(),
+									likesRequest.getPostId());
+							System.out.println("Check = " + check);
+							if (check == true) {
+								boolean b = likesService.disLike(likesRequest.getPostId(), likesRequest.getAccountId());
+								if (b == false) {
+									baseResponse.setCode(1001);
+									baseResponse.setMessage("Can not connect to DB");
+								} else {
+									baseResponse.setCode(1000);
+									baseResponse.setMessage("OK");
+								}
+							} else {
+								baseResponse.setCode(1010);
+								baseResponse.setMessage("Action has been done previously by this user");
+							}
 						} else {
-							baseResponse.setCode(1000);
-							baseResponse.setMessage("OK");
+							baseResponse.setCode(1009);
+							baseResponse.setMessage("Not Access");
 						}
+
 					} else {
-						baseResponse.setCode(9999);
-						baseResponse.setMessage("Exception Error");
+						baseResponse.setCode(9992);
+						baseResponse.setMessage("Post is not existed");
 					}
 
 				} else {
