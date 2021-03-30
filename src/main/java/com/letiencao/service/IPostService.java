@@ -12,4 +12,5 @@ public interface IPostService {
 	boolean deleteById(Long id);
 	List<PostModel> findAll();
 	Long findAccountIdByPostId(Long id);
+	List<PostModel> findPostByAccountId(Long accountId);
 }
