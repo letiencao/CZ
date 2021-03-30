@@ -192,7 +192,7 @@ public class BaseDAO<T> implements GenericDAO<T> {
 				t = rowMapping.mapRow(resultSet);
 			}
 			return t;
-		} catch (SQLException e) {
+		} catch (SQLException | NullPointerException e) {
 			
 			System.out.println("Failed_FindOne_AbstractDAO_1");
 			System.out.println(""+e.getMessage());
@@ -204,7 +204,7 @@ public class BaseDAO<T> implements GenericDAO<T> {
 				if (resultSet != null) {
 					resultSet.close();
 				}
-			} catch (SQLException e2) {
+			} catch (SQLException | NullPointerException e2) {
 				System.out.println("Failed_FindOne_AbstractDAO_2");
 				return null;
 			}

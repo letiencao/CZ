@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.html.parser.ContentModel;
-
 import com.letiencao.dao.ICommentDAO;
 import com.letiencao.mapping.CommentMapping;
 import com.letiencao.model.CommentModel;

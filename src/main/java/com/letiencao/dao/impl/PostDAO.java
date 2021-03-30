@@ -50,13 +50,9 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 				model.setModifiedDate(resultSet.getTimestamp("post.modifieddate"));
 				model.setAccountId(resultSet.getLong("post.accountid"));
 				files.add(resultSet.getString("file.content"));
+				model.setFiles(files);
 			}
-			if (files == null) {
-				model.setFiles(null);
-			}else {
-				model.setFiles(files);	
-			}
-			System.out.println("model = "+model.getId());
+			System.out.println("model = " + model.getId());
 			return model;
 
 		} catch (SQLException e) {
@@ -137,6 +133,55 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 			}
 		}
 		return -1L;
+	}
+
+	@Override
+	public List<PostModel> findPostByAccountId(Long accountId) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = getConnection();
+			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,"
+					+ "file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.accountid = ?  AND post.deleted = false";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setLong(1, accountId);
+			resultSet = preparedStatement.executeQuery();
+			List<PostModel> list = new ArrayList<PostModel>();
+			List<String> files = new ArrayList<String>();
+			while (resultSet.next()) {
+				PostModel model = new PostModel();
+				model.setId(resultSet.getLong("post.id"));
+				model.setDeleted(resultSet.getBoolean("post.deleted"));
+				model.setContent(resultSet.getString("post.content"));
+				model.setCreatedBy(resultSet.getString("post.createdby"));
+				model.setCreatedDate(resultSet.getTimestamp("post.createddate"));
+				model.setModifiedBy(resultSet.getString("post.modifiedby"));
+				model.setModifiedDate(resultSet.getTimestamp("post.modifieddate"));
+				model.setAccountId(resultSet.getLong("post.accountid"));
+				files.add(resultSet.getString("file.content"));
+				model.setFiles(files);
+				list.add(model);
+			}
+//			System.out.println("model = " + model.getId());
+			return list;
+
+		} catch (SQLException e) {
+			System.out.println("" + e.getMessage());
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e2) {
+				return null;
+			}
+		}
+		return null;
+
 	}
 
 }

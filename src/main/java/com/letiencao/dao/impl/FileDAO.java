@@ -38,6 +38,7 @@ public class FileDAO extends BaseDAO<FileModel> implements IFileDAO {
 		ResultSet resultSet = null;
 		List<FileModel> list = new ArrayList<FileModel>();
 		try {
+			
 			String sql = "SELECT * FROM file WHERE postid = ?";
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(sql);

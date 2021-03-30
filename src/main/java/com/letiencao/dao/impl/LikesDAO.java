@@ -57,7 +57,7 @@ public class LikesDAO extends BaseDAO<LikesModel> implements ILikesDAO {
 				if (resultSet != null) {
 					resultSet.close();
 				}
-			} catch (SQLException e2) {
+			} catch (SQLException | NullPointerException e2) {
 				System.out.println("findByPostId LikesDAO 2 : " + e2.getMessage());
 				return null;
 			}
