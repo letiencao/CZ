@@ -15,4 +15,5 @@ public interface IPostDAO {
 
 	boolean deleteById(Long id);
 	Long findAccountIdByPostId(Long id);
+	List<PostModel> findPostByAccountId(Long accountId);
 }
