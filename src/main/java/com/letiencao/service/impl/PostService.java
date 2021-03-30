@@ -1,6 +1,7 @@
 package com.letiencao.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.letiencao.dao.IAccountDAO;
@@ -72,6 +73,21 @@ public class PostService extends BaseService implements IPostService {
 	@Override
 	public Long findAccountIdByPostId(Long id) {
 		return postDAO.findAccountIdByPostId(id);
+	}
+
+	@Override
+	public List<PostModel> findPostByAccountId(Long accountId) {
+		List<PostModel> list = postDAO.findPostByAccountId(accountId);
+		List<PostModel> list2 = new ArrayList<PostModel>();
+		for(int i = 0;i<list.size()-1;i++) {
+			PostModel model = list.get(i);
+			if(model.getId() == list.get(i+1).getId()) {
+				continue;
+			}else {
+				list2.add(model);
+			}
+		}
+		return list2;
 	}
 
 }
