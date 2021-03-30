@@ -15,10 +15,12 @@ import com.letiencao.service.ILikesService;
 public class LikesService extends BaseService implements ILikesService {
 	private ILikesDAO likesDAO;
 	private IAccountDAO accountDAO;
+
 	public LikesService() {
 		likesDAO = new LikesDAO();
 		accountDAO = new AccountDAO();
 	}
+
 	@Override
 	public Long insertOne(LikesRequest likesRequest) {
 		LikesModel likesModel = new LikesModel();
@@ -29,30 +31,38 @@ public class LikesService extends BaseService implements ILikesService {
 		AccountModel accountModel = accountDAO.findById(likesRequest.getAccountId());
 		likesModel.setCreatedBy(accountModel.getPhoneNumber());
 		Long id = likesDAO.insertOne(likesModel);
-		if(id > 0) {
+		if (id > 0) {
 			return id;
-		}
-		else {
+		} else {
 			return -1L;
 		}
 	}
+
 	@Override
 	public int findByPostId(Long postId) {
 		List<LikesModel> list = likesDAO.findByPostId(postId);
-		return list.size();
+		if(list != null) {
+			return list.size();
+		}
+		return 0;
 	}
+
 	@SuppressWarnings("unused")
 	@Override
-	public boolean checkThisUserLiked(Long accountId,Long postId) {
+	public boolean checkThisUserLiked(Long accountId, Long postId) {
 		List<LikesModel> list = likesDAO.findByPostId(postId);
-		for(int i = 0;i<list.size();i++) {
-			System.out.println(i);
-			if(accountId == list.get(i).getAccountId()) {
-				return true;
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(i);
+				if (accountId == list.get(i).getAccountId()) {
+					return true;
+				}
 			}
 		}
 		return false;
+
 	}
+
 	@Override
 	public boolean disLike(Long postId, Long accountId) {
 		boolean check = likesDAO.disLike(postId, accountId);
