@@ -1,28 +1,20 @@
 package com.letiencao.request.post;
 
 public class GetListPostRequest {
-	private Long accountId; // neu != null tra ve cac bai viet cua account do 
-	private Long last_id;//id cua bai viet moi nhat
-	private Long index; // start select
+	private static long last_id;//id cua bai viet moi nhat
+	private static long index; // start select
 	private int count; //default = 20
-	
-	public Long getAccountId() {
-		return accountId;
-	}
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
-	}
-	public Long getLast_id() {
+	public static long getLast_id() {
 		return last_id;
 	}
-	public void setLast_id(Long last_id) {
-		this.last_id = last_id;
+	public static void setLast_id(long last_id) {
+		GetListPostRequest.last_id = last_id;
 	}
-	public Long getIndex() {
+	public static long getIndex() {
 		return index;
 	}
-	public void setIndex(Long index) {
-		this.index = index;
+	public static void setIndex(long index) {
+		GetListPostRequest.index = index;
 	}
 	public int getCount() {
 		return count;
@@ -30,6 +22,10 @@ public class GetListPostRequest {
 	public void setCount(int count) {
 		this.count = count;
 	}
+	
+	
+	
+	
 	
 
 }
