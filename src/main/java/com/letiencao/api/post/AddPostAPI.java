@@ -212,7 +212,7 @@ public class AddPostAPI extends HttpServlet {
 	}
 
 	public void parameterTypeInValid(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(1004);
+		addPostResponse.setCode(1003);
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage("Parameter type is invalid");
 	}

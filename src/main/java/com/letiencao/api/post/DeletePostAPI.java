@@ -73,11 +73,11 @@ public class DeletePostAPI extends HttpServlet {
 						String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
 						AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
 						if (id == accountModel.getId()) {
-							boolean b =  postService.deleteById(deletePostRequest.getId());
-							if(b == true) {
+							boolean b = postService.deleteById(deletePostRequest.getId());
+							if (b == true) {
 								baseResponse.setCode(1000);
 								baseResponse.setMessage("OK");
-							}else {
+							} else {
 								baseResponse.setCode(1010);
 								baseResponse.setMessage("Action has been done previously by this user");
 //								// Định dạng thời gian
@@ -102,7 +102,7 @@ public class DeletePostAPI extends HttpServlet {
 //
 //						        System.out.println(noDay);
 							}
-							
+
 						} else {
 							baseResponse.setCode(1009);
 							baseResponse.setMessage("Not Access");

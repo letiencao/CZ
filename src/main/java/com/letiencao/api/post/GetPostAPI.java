@@ -71,27 +71,30 @@ public class GetPostAPI extends HttpServlet {
 		BaseResponse baseResponse = new BaseResponse();
 		try {
 			String idStr = request.getParameter("id");
-			Long id = Long.valueOf(idStr);
-			System.out.println("id = " + id);
-			PostModel model = postService.findPostById(id);
-			if (model == null) {
-				baseResponse.setCode(9995);
-				baseResponse.setMessage("User is not validated");
-				response.getWriter().print(gson.toJson(baseResponse));
-			} else {
-				response.getWriter().print(gson.toJson(model));
-			}
-
-		} catch (NumberFormatException e) {
-			if (e.getMessage().contains("null")) {
+			if (idStr == null) {
 				baseResponse.setCode(9994);
 				baseResponse.setMessage("No data or end of list data");
 			} else {
-				baseResponse.setCode(1004);
-				baseResponse.setMessage("Parameter value is invalid");
+				Long id = Long.valueOf(idStr);
+				System.out.println("id = " + id);
+				PostModel model = postService.findPostById(id);
+				if (model == null) {
+					baseResponse.setCode(9995);
+					baseResponse.setMessage("User is not validated");
+					response.getWriter().print(gson.toJson(baseResponse));
+					return;
+				} else {
+					response.getWriter().print(gson.toJson(model));
+					return;
+				}
+
 			}
-			response.getWriter().print(gson.toJson(baseResponse));
+		} catch (NumberFormatException e) {
+			baseResponse.setCode(1003);
+			baseResponse.setMessage("Parameter type is invalid");
 		}
+		response.getWriter().print(gson.toJson(baseResponse));
+
 	}
 
 	@Override
@@ -125,12 +128,12 @@ public class GetPostAPI extends HttpServlet {
 					// search post by id
 //					PostModel postModel = postService.findPostById(postId);// get author
 					PostModel postModel = new PostModel();
-					if(postService.findPostById(postId).getId() == null) {
+					if (postService.findPostById(postId).getId() == null) {
 						postModel = postService.findById(postId);
-					}else {
+					} else {
 						postModel = postService.findPostById(postId);
 					}
-					System.out.println("postModel = "+postModel.getId());
+					System.out.println("postModel = " + postModel.getId());
 					dataGetPostReponse.setDescribed(postModel.getContent());
 					dataGetPostReponse.setCreated(String.valueOf(postModel.getCreatedDate()));
 					dataGetPostReponse.setModified(String.valueOf(postModel.getModifiedDate()));
@@ -169,7 +172,7 @@ public class GetPostAPI extends HttpServlet {
 					List<VideoGetPostResponse> videoGetPostResponses = new ArrayList<VideoGetPostResponse>();
 					if (fileService.findByPostId(postId) != null) {
 						List<FileModel> list = fileService.findByPostId(postId);
-						System.out.println("size = "+fileService.findByPostId(postId).size());
+						System.out.println("size = " + fileService.findByPostId(postId).size());
 						for (FileModel fileModel : list) {
 							if (fileModel.getContent().endsWith(".jpg") || fileModel.getContent().endsWith(".svg")
 									|| fileModel.getContent().endsWith(".JPEG")
@@ -203,7 +206,7 @@ public class GetPostAPI extends HttpServlet {
 				}
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			getPostResponse.setCode(1004);
+			getPostResponse.setCode(1003);
 			getPostResponse.setMessage("Parameter type is invalid");
 			getPostResponse.setDataGetPostReponse(null);
 		} catch (NullPointerException e) {
