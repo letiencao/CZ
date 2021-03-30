@@ -68,8 +68,13 @@ public class CommentAPI extends HttpServlet {
 			// get account model thong qua account id,get comment model,check blocks
 			// set count ,index
 			List<CommentModel> commentModels = commentService.findAll();
-			addCommentRequest.setIndex(commentModels.get(0).getId());
-			addCommentRequest.setCount(commentModels.size());
+			if (commentModels.size() == 0) {
+				addCommentRequest.setIndex(0L);
+				addCommentRequest.setCount(commentModels.size());
+			} else {
+				addCommentRequest.setIndex(commentModels.get(0).getId());
+				addCommentRequest.setCount(commentModels.size());
+			}
 			//
 			Long postId = addCommentRequest.getPostId();
 			String content = addCommentRequest.getContent();
@@ -97,7 +102,6 @@ public class CommentAPI extends HttpServlet {
 							posterResponse.setId(model.getId());
 							posterResponse.setName(model.getName());
 							posterResponse.setAvatar(model.getAvatar());
-
 							DataGetCommentResponse dataGetCommentResponse = new DataGetCommentResponse();
 							dataGetCommentResponse.setContent(commentModel.getContent());
 							dataGetCommentResponse.setId(commentModel.getId());
@@ -212,7 +216,8 @@ public class CommentAPI extends HttpServlet {
 				baseResponse.setCode(1002);
 				baseResponse.setMessage("Parameter is not enough");
 			} else {
-				if (commentId.toString().length() == 0 || contentUpdate.length() == 0 || postId.toString().length() == 0) {
+				if (commentId.toString().length() == 0 || contentUpdate.length() == 0
+						|| postId.toString().length() == 0) {
 					baseResponse.setCode(1004);
 					baseResponse.setMessage("Parameter value is invalid");
 				} else {
