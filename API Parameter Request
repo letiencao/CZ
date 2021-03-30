@@ -1,4 +1,4 @@
-	* 1) /api/signup
+* 1) /api/signup
 				- Parameter Request : Body (JSON)
 				{
 					phoneNumber : ?,
