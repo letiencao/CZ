@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.CommentModel;
@@ -60,7 +61,7 @@ public class GetListCommentAPI extends HttpServlet {
 		Gson gson = new Gson();
 		GetListCommentRequest getListCommentRequest = gson.fromJson(request.getReader(), GetListCommentRequest.class);
 		GetListCommentResponse listCommentResponse = new GetListCommentResponse();
-		String jwt = request.getHeader("Authorization");
+		String jwt = request.getHeader(BaseHTTP.Authorization);
 		if (getListCommentRequest != null) {
 			Long postId = getListCommentRequest.getPostId();
 			int index = getListCommentRequest.getIndex();

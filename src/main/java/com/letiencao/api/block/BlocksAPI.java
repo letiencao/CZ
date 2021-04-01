@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.request.blocks.AddBlocksRequest;
@@ -24,9 +25,11 @@ import com.letiencao.service.impl.BlocksService;
 @WebServlet("/api/blocks")
 public class BlocksAPI extends HttpServlet {
 
-	/**
+	/*********************************
+	 * Created By Cao LT
+	 * Created Date 31/03/2021
 	 * 
-	 */
+	 *////////////////////////////////
 	private static final long serialVersionUID = 1L;
 	private IBlocksService blocksService;
 	private IAccountService accountService;
@@ -44,7 +47,7 @@ public class BlocksAPI extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		String jwt = request.getHeader("Authorization");
+		String jwt = request.getHeader(BaseHTTP.Authorization);
 		BaseResponse baseResponse = new BaseResponse();
 		try {
 			AddBlocksRequest addBlocksRequest = gson.fromJson(request.getReader(), AddBlocksRequest.class);
@@ -75,7 +78,7 @@ public class BlocksAPI extends HttpServlet {
 						baseResponse.setMessage("User is not validated");
 
 					} else {
-						//Check Da Block
+						//Check Block
 						BlocksModel blocksModel = blocksService.findOne(idBlocks, addBlocksRequest.getIdBlocked());
 						if(blocksModel == null) {
 							id = blocksService.insertOne(idBlocks, addBlocksRequest.getIdBlocked());

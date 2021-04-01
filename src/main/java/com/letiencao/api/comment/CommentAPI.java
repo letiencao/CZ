@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.CommentModel;
@@ -35,9 +36,12 @@ import com.letiencao.service.impl.PostService;
 @WebServlet("/api/comment")
 public class CommentAPI extends HttpServlet {
 
-	/**
+	/*************************
+	 * Created By Cao LT
+	 * Created Date 31/03/2021
 	 * 
-	 */
+	 *////////////////////////
+	
 	private static final long serialVersionUID = 1L;
 	private ICommentService commentService;
 	private IAccountService accountService;
@@ -61,21 +65,22 @@ public class CommentAPI extends HttpServlet {
 		Gson gson = new Gson();
 		AddCommentRequest addCommentRequest = gson.fromJson(request.getReader(), AddCommentRequest.class);
 		GetCommentResponse commentResponse = new GetCommentResponse();
+		// Request = ..............
 		if (addCommentRequest != null) {
-			String jwt = request.getHeader("Authorization");
+			//get AccountId From token
+			String jwt = request.getHeader(BaseHTTP.Authorization);
 			AccountModel accountModel = accountService.findByPhoneNumber((genericService.getPhoneNumberFromToken(jwt)));
+			// set accountId For Request
 			addCommentRequest.setAccountId(accountModel.getId());
-			// get account model thong qua account id,get comment model,check blocks
-			// set count ,index
 			List<CommentModel> commentModels = commentService.findAll();
+			//set index and count for Request
 			if (commentModels.size() == 0) {
 				addCommentRequest.setIndex(0L);
-				addCommentRequest.setCount(commentModels.size());
 			} else {
 				addCommentRequest.setIndex(commentModels.get(0).getId());
-				addCommentRequest.setCount(commentModels.size());
 			}
-			//
+			addCommentRequest.setCount(commentModels.size());
+			
 			Long postId = addCommentRequest.getPostId();
 			String content = addCommentRequest.getContent();
 			Long accountId = addCommentRequest.getAccountId();
@@ -88,11 +93,12 @@ public class CommentAPI extends HttpServlet {
 					commentResponse.setCode(1004);
 					commentResponse.setMessage("Parameter value is invalid");
 				} else {
-					// Check block
 					try {
 						PostModel postModel = postService.findById(postId);
+						//Check Block
 						BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountModel.getId());
 						if (blocksModel == null) {
+							//insert Comment
 							Long id = commentService.insertOne(addCommentRequest);
 							CommentModel commentModel = commentService.findById(id);
 							PosterResponse posterResponse = new PosterResponse();
@@ -112,13 +118,14 @@ public class CommentAPI extends HttpServlet {
 							commentResponse.setDataGetCommentResponse(dataGetCommentResponse);
 							commentResponse.setIs_blocked(false);
 						} else {
+							// This User was blocked by The Author
 							commentResponse.setDataGetCommentResponse(null);
 							commentResponse.setIs_blocked(true);
 							commentResponse.setCode(1009);
 							commentResponse.setMessage("Not Access");
 						}
 					} catch (NullPointerException e) {
-						// bai viet da bi xoa
+						// post deleted or not existed
 						commentResponse.setCode(9992);
 						commentResponse.setMessage("Post is not existed");
 					}
@@ -126,6 +133,7 @@ public class CommentAPI extends HttpServlet {
 				}
 			}
 		} else {
+			//Request ..............
 			commentResponse.setCode(9994);
 			commentResponse.setMessage("No data or end of list data");
 		}
@@ -141,59 +149,61 @@ public class CommentAPI extends HttpServlet {
 		Gson gson = new Gson();
 		DeleteCommentRequest deleteCommentRequest = gson.fromJson(request.getReader(), DeleteCommentRequest.class);
 		BaseResponse baseResponse = new BaseResponse();
-		String jwt = request.getHeader("Authorization");
+		
 		if (deleteCommentRequest != null) {
 			Long commentId = deleteCommentRequest.getCommentId();
 			Long postId = deleteCommentRequest.getPostId();
 			if (commentId == null || postId == null) {
-				baseResponse.setCode(1002);
-				baseResponse.setMessage("Parameter is not enough");
+				parameterNotEnough(baseResponse);
 			} else {
 				if (commentId.toString().length() == 0 || postId.toString().length() == 0) {
-					baseResponse.setCode(1004);
-					baseResponse.setMessage("Parameter value is invalid");
+					valueInValid(baseResponse);
 				} else {
 
-					// Check ton tai bai viet
+					String jwt = request.getHeader("Authorization");
 					AccountModel accountModel = accountService
 							.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 					PostModel postModel = postService.findById(postId);
+					//Check post existed
 					if (postModel != null) {
-						// Check quyen truy cap bai viet
+						//Check Block
 						BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountModel.getId());
 						if (blocksModel == null) {
-							// Check ton tai comment
+							// Check comment existed
 							CommentModel commentModel = commentService.findById(commentId);
-							if (commentModel.getPostId() == postId) {
-								// Check quyen tac gia comment
-								System.out.println("Account Id = " + postModel.getAccountId());
-								System.out.println("Id Account = " + accountModel.getId());
-								if (commentModel.getAccountId() == accountModel.getId()
-										|| postModel.getAccountId() == accountModel.getId()) {
-									commentService.deleteComment(postId, commentId);
-									baseResponse.setCode(1000);
-									baseResponse.setMessage("OK");
+							if (commentModel != null) {
+								// check comment from commentId of post from postId
+								if (commentModel.getPostId() == postId) {
+									// Check author
+									if (commentModel.getAccountId() == accountModel.getId()
+											|| postModel.getAccountId() == accountModel.getId()) {
+										commentService.deleteComment(postId, commentId);
+										ok(baseResponse);
+									} else {
+										//Not author
+										notAccess(baseResponse);
+									}
 								} else {
-									baseResponse.setCode(1009);
-									baseResponse.setMessage("Not Access");
+									//Comment existed but this post does not have
+									System.out.println("11111111111111111");
+									exceptionError(baseResponse);
 								}
 							} else {
-								baseResponse.setCode(9999);
-								baseResponse.setMessage("Exception Error");
+								//Comment not existed
+								System.out.println("222222222222222");
+								exceptionError(baseResponse);
 							}
 						} else {
-							baseResponse.setCode(1009);
-							baseResponse.setMessage("Not Access");
+							//Blocked
+							notAccess(baseResponse);
 						}
 					} else {
-						baseResponse.setCode(9992);
-						baseResponse.setMessage("Post is not existed");
+						postNotExisted(baseResponse);
 					}
 				}
 			}
 		} else {
-			baseResponse.setCode(9994);
-			baseResponse.setMessage("No data or end of list data");
+			noData(baseResponse);
 		}
 		response.getWriter().print(gson.toJson(baseResponse));
 
@@ -213,57 +223,86 @@ public class CommentAPI extends HttpServlet {
 			Long postId = editCommentRequest.getPostId();
 			String contentUpdate = editCommentRequest.getContentUpdate();
 			if (commentId == null || postId == null || contentUpdate == null) {
-				baseResponse.setCode(1002);
-				baseResponse.setMessage("Parameter is not enough");
+				parameterNotEnough(baseResponse);
 			} else {
 				if (commentId.toString().length() == 0 || contentUpdate.length() == 0
 						|| postId.toString().length() == 0) {
-					baseResponse.setCode(1004);
-					baseResponse.setMessage("Parameter value is invalid");
+					valueInValid(baseResponse);
 				} else {
 
-					// Check ton tai bai viet
+					
 					AccountModel accountModel = accountService
 							.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 					PostModel postModel = postService.findById(postId);
+					//Check post existed
 					if (postModel != null) {
-						// Check quyen truy cap bai viet
+						//Check Block
 						BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountModel.getId());
 						if (blocksModel == null) {
-							// Check ton tai comment
+							// Check comment existed
 							CommentModel commentModel = commentService.findById(commentId);
-							if (commentModel.getPostId() == postId) {
-								// Check quyen tac gia comment
-								System.out.println("Account Id = " + postModel.getAccountId());
-								System.out.println("Id Account = " + accountModel.getId());
-								if (commentModel.getAccountId() == accountModel.getId()) {
-									commentService.update(commentId, contentUpdate);
-									baseResponse.setCode(1000);
-									baseResponse.setMessage("OK");
+							if (commentModel != null) {
+								if (commentModel.getPostId() == postId) {
+									// find the comment of this account in list comment of that post
+									if (commentModel.getAccountId() == accountModel.getId()) {
+										commentService.update(commentId, contentUpdate);
+										ok(baseResponse);
+									} else {
+										//Not author
+										notAccess(baseResponse);
+									}
 								} else {
-									baseResponse.setCode(1009);
-									baseResponse.setMessage("Not Access");
+									//Comment existed but this post does not have
+									exceptionError(baseResponse);
 								}
+
 							} else {
-								baseResponse.setCode(9999);
-								baseResponse.setMessage("Exception Error");
+								//Comment not existed
+								exceptionError(baseResponse);
 							}
 						} else {
-							baseResponse.setCode(1009);
-							baseResponse.setMessage("Not Access");
+							//Blocked
+							notAccess(baseResponse);
 						}
 					} else {
-						baseResponse.setCode(9992);
-						baseResponse.setMessage("Post is not existed");
+						postNotExisted(baseResponse);
 					}
 				}
 			}
 		} else {
-			baseResponse.setCode(9994);
-			baseResponse.setMessage("No data or end of list data");
+			noData(baseResponse);
 		}
 		response.getWriter().print(gson.toJson(baseResponse));
 
 	}
+	private void ok(BaseResponse baseResponse) {
+		baseResponse.setCode(1000);
+		baseResponse.setMessage("OK");
+	}
+	private void noData(BaseResponse baseResponse) {
+		baseResponse.setCode(9994);
+		baseResponse.setMessage("No data or end of list data");
+	}
+	private void postNotExisted(BaseResponse baseResponse) {
+		baseResponse.setCode(9992);
+		baseResponse.setMessage("Post is not existed");
+	}
+	private void notAccess(BaseResponse baseResponse) {
+		baseResponse.setCode(1009);
+		baseResponse.setMessage("Not Access");
+	}
+	private void exceptionError(BaseResponse baseResponse) {
+		baseResponse.setCode(9999);
+		baseResponse.setMessage("Exception Error");
+	}
+	private void valueInValid(BaseResponse baseResponse) {
+		baseResponse.setCode(1004);
+		baseResponse.setMessage("Parameter value is invalid");
+	}
+	private void parameterNotEnough(BaseResponse baseResponse) {
+		baseResponse.setCode(1002);
+		baseResponse.setMessage("Parameter is not enough");
+	}
+	
 
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.FileModel;
@@ -90,7 +91,7 @@ public class GetListPostAPI extends HttpServlet {
 					// tim tat ca cac bai viet cua ca nhan
 					long index = GetListPostRequest.getIndex();
 					int count = getListPostRequest.getCount();
-					String jwt = request.getHeader("Authorization");
+					String jwt = request.getHeader(BaseHTTP.Authorization);
 					AccountModel accountModel = accountService
 							.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 					Long accountId = accountModel.getId();

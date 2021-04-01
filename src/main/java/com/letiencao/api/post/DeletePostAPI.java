@@ -1,10 +1,6 @@
 package com.letiencao.api.post;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.PostModel;
 import com.letiencao.request.post.DeletePostRequest;
@@ -30,6 +27,8 @@ import com.letiencao.service.impl.PostService;
 public class DeletePostAPI extends HttpServlet {
 
 	/**
+	 * Created By : Cao LT
+	 * Created Date : 01/04/2021
 	 * 
 	 */
 	private IPostService postService;
@@ -51,7 +50,7 @@ public class DeletePostAPI extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		String jwt = request.getHeader("Authorization");
+		String jwt = request.getHeader(BaseHTTP.Authorization);
 		BaseResponse baseResponse = new BaseResponse();
 		List<PostModel> list = postService.findAll();
 		// check author
@@ -65,9 +64,8 @@ public class DeletePostAPI extends HttpServlet {
 					baseResponse.setCode(1002);
 					baseResponse.setMessage("Parameter is not enough");
 				} else {
-					if (deletePostRequest.getId() > list.size() || deletePostRequest.getId() < 0) {
-						valueInvalid(baseResponse);
-					} else {
+					PostModel postModel = postService.findById(deletePostRequest.getId());
+					if (postModel != null) {
 						Long id = postService.findAccountIdByPostId(deletePostRequest.getId());
 						System.out.println("ID = " + id);
 						String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
@@ -80,46 +78,25 @@ public class DeletePostAPI extends HttpServlet {
 							} else {
 								baseResponse.setCode(1010);
 								baseResponse.setMessage("Action has been done previously by this user");
-//								// Định dạng thời gian
-//						        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh-mm-ss");
-//
-//						        Calendar c1 = Calendar.getInstance();
-//						        Calendar c2 = Calendar.getInstance();
-//
-//						        // Định nghĩa 2 mốc thời gian ban đầu
-//						        Date date1 = Date.valueOf(new Timestamp(System.currentTimeMillis()).toString());
-//						        Date date2 = Date.valueOf(accountModel.getCreatedDate().toString());
-//
-//						        c1.setTime(date1);
-//						        c2.setTime(date2);
-//
-//						        // Công thức tính số ngày giữa 2 mốc thời gian:
-//						        long noDay = (c2.getTime().getTime() - c1.getTime().getTime()) / (24 * 3600 * 1000);
-//
-//						        System.out.print("Số ngày giữa " + dateFormat.format(c1.getTime())
-//
-//						                + " và " + dateFormat.format(c2.getTime()) + ": ");
-//
-//						        System.out.println(noDay);
 							}
 
 						} else {
 							baseResponse.setCode(1009);
 							baseResponse.setMessage("Not Access");
 						}
+
+					} else {
+						baseResponse.setCode(9992);
+						baseResponse.setMessage("Post is not existed");
 					}
+
 				}
 			}
 		} catch (JsonSyntaxException | NumberFormatException e) {
-			valueInvalid(baseResponse);
+			baseResponse.setCode(1004);
+			baseResponse.setMessage("Parameter value is invalid");
 		}
 		response.getWriter().print(gson.toJson(baseResponse));
-
-	}
-
-	public void valueInvalid(BaseResponse baseResponse) {
-		baseResponse.setCode(1004);
-		baseResponse.setMessage("Parameter value is invalid");
 
 	}
 

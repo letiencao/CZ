@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.FileModel;
@@ -115,7 +116,7 @@ public class GetPostAPI extends HttpServlet {
 				return;
 			} else {
 				// get token
-				String jwt = request.getHeader("Authorization");
+				String jwt = request.getHeader(BaseHTTP.Authorization);
 				Long postId = getPostRequest.getId();
 				if (postId == null) {
 					getPostResponse.setCode(1002);

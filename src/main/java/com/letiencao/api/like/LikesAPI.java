@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.PostModel;
@@ -56,7 +57,7 @@ public class LikesAPI extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		String jwt = request.getHeader("Authorization");
+		String jwt = request.getHeader(BaseHTTP.Authorization);
 		LikesResponse likesResponse = new LikesResponse();
 		try {
 			LikesRequest likesRequest = gson.fromJson(request.getReader(), LikesRequest.class);
@@ -137,7 +138,7 @@ public class LikesAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
-		String jwt = request.getHeader("Authorization");
+		String jwt = request.getHeader(BaseHTTP.Authorization);
 		try {
 			LikesRequest likesRequest = gson.fromJson(request.getReader(), LikesRequest.class);
 			if (likesRequest == null) {
@@ -167,8 +168,8 @@ public class LikesAPI extends HttpServlet {
 									baseResponse.setMessage("OK");
 								}
 							} else {
-								baseResponse.setCode(1010);
-								baseResponse.setMessage("Action has been done previously by this user");
+								baseResponse.setCode(9999);
+								baseResponse.setMessage("Exception Error");
 							}
 						} else {
 							baseResponse.setCode(1009);

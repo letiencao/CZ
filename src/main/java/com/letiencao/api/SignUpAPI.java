@@ -20,9 +20,11 @@ import com.letiencao.service.impl.AccountService;
 @WebServlet("/api/signup")
 public class SignUpAPI extends HttpServlet {
 
-	/**
+	/***************************
+	 * Created By Cao LT 
+	 * Created Date 31/03/2021
 	 * 
-	 */
+	 *//////////////////////////
 	private static final long serialVersionUID = 1L;
 
 	private IAccountService accountService;
@@ -52,45 +54,50 @@ public class SignUpAPI extends HttpServlet {
 				AccountModel accountModel = new AccountModel();
 
 				if (phoneNumber.length() == 0 || password.length() == 0 || uuid.length() == 0) {
-					System.out.println("uuid = " + uuid);
-					System.out.println("phone = " + phoneNumber);
-					signUpResponse.setCode(1003);
-					signUpResponse.setMessage("Parameter type is invalid");
-					signUpResponse.setAccountModel(null);
+					//Modified By : Cao LT
+					//Modified Date 31/03/2021
+					
+//					signUpResponse.setCode(1003);
+//					signUpResponse.setMessage("Parameter type is invalid");
+					
+					valueInValid(signUpResponse);
 				} else {
 					if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0'
 							&& password.length() >= 6 && password.length() <= 10
 							&& !phoneNumber.equalsIgnoreCase(password)) {
 						accountModel = accountService.signUp(signUpRequest);
 						if (accountModel != null) {
-							signUpResponse.setCode(1000);
-							signUpResponse.setMessage("OK");
+							signUpResponse.setCode(BaseHTTP.CODE_1000);
+							signUpResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							signUpResponse.setAccountModel(accountModel);
 						} else {
-							signUpResponse.setCode(9996);
-							signUpResponse.setMessage("User existed");
+							signUpResponse.setCode(BaseHTTP.CODE_9996);
+							signUpResponse.setMessage(BaseHTTP.MESSAGE_9996);
 							signUpResponse.setAccountModel(null);
 						}
 					} else {
-						signUpResponse.setCode(1004);
-						signUpResponse.setMessage("Parameter value is invalid");
-						signUpResponse.setAccountModel(null);
+						valueInValid(signUpResponse);
 					}
 				}
 			} else {
 
-				signUpResponse.setCode(1002);
-				signUpResponse.setMessage("Parameter is not enough");
+				signUpResponse.setCode(BaseHTTP.CODE_1002);
+				signUpResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				signUpResponse.setAccountModel(null);
 			}
 		} catch (NullPointerException e) {
-			signUpResponse.setCode(9994);
-			signUpResponse.setMessage("No data or end of list data");
+			signUpResponse.setCode(BaseHTTP.CODE_9994);//9994
+			signUpResponse.setMessage(BaseHTTP.MESSAGE_9994);
 			signUpResponse.setAccountModel(null);
 		}
 
 		response.getWriter().print(gson.toJson(signUpResponse));
 
+	}
+	public void valueInValid(SignUpResponse signUpResponse) {
+		signUpResponse.setCode(BaseHTTP.CODE_1004);
+		signUpResponse.setMessage(BaseHTTP.MESSAGE_1004);
+		signUpResponse.setAccountModel(null);
 	}
 
 }
