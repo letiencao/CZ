@@ -32,8 +32,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		}
 		try {
 			connection = getConnection();
-			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,"
-					+ "file.content FROM post INNER JOIN file ON post.id = file.postid  WHERE post.id = ?  AND post.deleted = false";
+			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post INNER JOIN file ON post.id = file.postid  WHERE post.id = ?  AND post.deleted = false";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
@@ -142,8 +141,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		ResultSet resultSet = null;
 		try {
 			connection = getConnection();
-			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,"
-					+ "file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.accountid = ?  AND post.deleted = false";
+			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.accountid = ?  AND post.deleted = false";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, accountId);
 			resultSet = preparedStatement.executeQuery();
