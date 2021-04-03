@@ -68,7 +68,8 @@ create table friend
     modifieddate timestamp null,
     modifiedby varchar(255) null,
     idA bigint not null,
-    idB bigint not null
+    idB bigint not null,
+    is_friend bool not null
 );
 create table likes
 (
@@ -93,6 +94,25 @@ create table file
     postid bigint not null
     
 );
+create table report
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    createddate timestamp not null,
+    createdby varchar(255) not null,
+    modifieddate timestamp null,
+    modifiedby varchar(255) null,
+    details varchar(255) not null,
+    accountid bigint not null,
+    postid bigint not null,
+    typereportid bigint not null
+);
+create table typereport
+(
+	id bigint not null primary key auto_increment,
+    deleted bool not null,
+    name varchar(255) not null
+);
 alter table file add constraint fk_file_post foreign key (postid) references post(id);
 alter table blocks add constraint fk_blocks_account_1 foreign key (idblocks) references account(id);
 alter table blocks add constraint fk_blocks_account_2 foreign key (idblocked) references account(id);
@@ -108,3 +128,12 @@ alter table friend add constraint fk_friend_account_2 foreign key (idB) referenc
 alter table chat add constraint fk_chat_account_1 foreign key (idA) references account(id);
 alter table chat add constraint fk_chat_account_2 foreign key (idB) references account(id);
 
+alter table report add constraint fk_report_account foreign key (accountid) references account(id);
+alter table report add constraint fk_report_post foreign key (postid) references post(id);
+alter table report add constraint fk_report_typereport foreign key (typereportid) references typereport(id);
+
+
+INSERT INTO typereport(deleted,name) VALUES(false,"Nội dung nhạy cảm");
+INSERT INTO typereport(deleted,name) VALUES(false,"Làm phiền");
+INSERT INTO typereport(deleted,name) VALUES(false,"Lừa đảo");
+INSERT INTO typereport(deleted,name) VALUES(false,"Lí do khác")
