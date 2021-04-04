@@ -63,6 +63,7 @@ public class GetListPostAPI extends HttpServlet {
 		fileService = new FileService();
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
