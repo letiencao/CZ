@@ -1,0 +1,125 @@
+package com.letiencao.api.friend;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+import com.letiencao.api.BaseHTTP;
+import com.letiencao.model.AccountModel;
+import com.letiencao.model.FriendModel;
+import com.letiencao.request.friend.FriendAcceptRequest;
+import com.letiencao.response.BaseResponse;
+import com.letiencao.service.GenericService;
+import com.letiencao.service.IAccountService;
+import com.letiencao.service.IFriendService;
+import com.letiencao.service.impl.AccountService;
+import com.letiencao.service.impl.BaseService;
+import com.letiencao.service.impl.FriendService;
+
+@WebServlet("/api/set-accept-friend")
+public class SetAcceptFriendAPI extends HttpServlet {
+
+	/**
+	 * 
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private IFriendService friendService;
+	private IAccountService accountService;
+	private GenericService genericService;
+
+	public SetAcceptFriendAPI() {
+		genericService = new BaseService();
+		friendService = new FriendService();
+		accountService = new AccountService();
+
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("application/json");
+		Gson gson = new Gson();
+		BaseResponse baseResponse = new BaseResponse();
+		FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
+		if (friendAcceptRequest != null) {
+			Long userId = friendAcceptRequest.getUserId();
+			boolean isAccept = friendAcceptRequest.isAccept();
+			if (userId != null && String.valueOf(isAccept) != null) {
+				if (userId.toString().length() > 0 && String.valueOf(isAccept).length() > 0) {
+					// check user existed
+					AccountModel accountModel = accountService.findById(userId);
+					if (accountModel != null) {
+						// get token
+						String jwt = request.getHeader(BaseHTTP.Authorization);
+						AccountModel model = accountService
+								.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
+						// idRequest == idRequested
+						if (model.getId() != userId) {
+							// check request existed
+							boolean checkRequested = friendService.checkRequestExisted(userId, model.getId());
+							if (checkRequested == true) {
+								if (isAccept == true) {
+									// if existed => is_friend == true
+									friendService.setIsFriend(userId, model.getId());
+									baseResponse.setCode(BaseHTTP.CODE_1000);
+									baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+									
+								} else if (isAccept == false) {
+									// if isAccept == 0 => remove request
+									FriendModel friendModel = friendService.findOne(userId, model.getId());
+									if(friendModel.isFriend() == false) {
+										//if is_friend == false ,can delete
+										friendService.deleteRequest(userId, model.getId());
+										baseResponse.setCode(BaseHTTP.CODE_1000);
+										baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+									}else {
+										//exception
+										baseResponse.setCode(BaseHTTP.CODE_9999);
+										baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
+									}
+								}
+
+							} else {
+								// if not existed => exception
+								baseResponse.setCode(BaseHTTP.CODE_9999);
+								baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
+							}
+
+						} else {
+							// Exception
+							baseResponse.setCode(BaseHTTP.CODE_9999);
+							baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
+						}
+
+					} else {
+						// user not validate
+						baseResponse.setCode(BaseHTTP.CODE_9995);
+						baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
+					}
+
+				} else {
+					// value invalid
+					baseResponse.setCode(BaseHTTP.CODE_1004);
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
+				}
+			} else {
+				// not enough
+				baseResponse.setCode(BaseHTTP.CODE_1002);
+				baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
+			}
+
+		} else {
+			// no data
+			baseResponse.setCode(BaseHTTP.CODE_9994);
+			baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
+		}
+		response.getWriter().print(gson.toJson(baseResponse));
+	}
+}

@@ -23,104 +23,114 @@
 			<div class="card mb-4">
 				<div class="card-body">
 					<form>
-					<img id="avatar" src="" alt="Avatar" style="width: 150px;height: 200px">
+						<img id="avatar" src="" alt="Avatar"
+							style="width: 150px; height: 200px">
 						<div class="form-group row">
-							<label for="id" class="col-sm-2 col-form-label" style="font-weight: bold;">ID</label>
+							<label for="id" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">ID</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="id">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="fullname" class="col-sm-2 col-form-label" style="font-weight: bold;">Fullname</label>
+							<label for="fullname" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Fullname</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="fullname">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="birthday" class="col-sm-2 col-form-label" style="font-weight: bold;">Birthday</label>
+							<label for="birthday" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Birthday</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="birthday">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="address" class="col-sm-2 col-form-label" style="font-weight: bold;">Address</label>
+							<label for="address" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Address</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="address">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="telephone" class="col-sm-2 col-form-label" style="font-weight: bold;">Telephone</label>
+							<label for="telephone" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Telephone</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="telephone">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="email" class="col-sm-2 col-form-label" style="font-weight: bold;">Email</label>
+							<label for="email" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Email</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="email">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="password" class="col-sm-2 col-form-label" style="font-weight: bold;">Password</label>
+							<label for="password" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Password</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="password">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="rolename" class="col-sm-2 col-form-label" style="font-weight: bold;">Role
-								Name</label>
+							<label for="rolename" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Role Name</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="rolename">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="deleted" class="col-sm-2 col-form-label" style="font-weight: bold;">Deleted</label>
+							<label for="deleted" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Deleted</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="deleted">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="createddate" class="col-sm-2 col-form-label" style="font-weight: bold;">Created
-								Date</label>
+							<label for="createddate" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Created Date</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="createddate">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="createdby" class="col-sm-2 col-form-label" style="font-weight: bold;">Created
-								By</label>
+							<label for="createdby" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Created By</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="createdby">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="modifieddate" class="col-sm-2 col-form-label" style="font-weight: bold;">Modified
-								Date</label>
+							<label for="modifieddate" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Modified Date</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="modifieddate">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="modifiedby" class="col-sm-2 col-form-label" style="font-weight: bold;">Modified
-								By</label>
+							<label for="modifiedby" class="col-sm-2 col-form-label"
+								style="font-weight: bold;">Modified By</label>
 							<div class="col-sm-10">
 								<input type="text" readonly="readonly" style="outline: none"
 									class="form-control-plaintext" id="modifiedby">
 							</div>
 						</div>
-						<button type="button" class="btn btn-primary" style="width:100px;margin: 0 auto;position: relative;"
+						<button type="button" class="btn btn-primary"
+							style="width: 100px; margin: 0 auto; position: relative;"
 							onclick="redirect()">Update</button>
 					</form>
 					<script type="text/javascript"

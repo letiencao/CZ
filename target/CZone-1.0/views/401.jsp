@@ -26,14 +26,14 @@
 								<!-- neu co quyen user thi back ve trang-chu
 								neu co quyen admin thi back ve dashboard -->
 								<c:if test="${sessionScope.model.roleId == 1 }">
-								<a href="admin-users"> <i class="fas fa-arrow-left mr-1"></i>
-									Return to Main Page
-								</a>
+									<a href="admin-users"> <i class="fas fa-arrow-left mr-1"></i>
+										Return to Main Page
+									</a>
 								</c:if>
 								<c:if test="${sessionScope.model.roleId == 2 }">
-								<a href="web-trang-chu"> <i class="fas fa-arrow-left mr-1"></i>
-									Return to Main Page
-								</a>
+									<a href="web-trang-chu"> <i class="fas fa-arrow-left mr-1"></i>
+										Return to Main Page
+									</a>
 								</c:if>
 							</div>
 						</div>

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.letiencao.api.BaseHTTP;
 import com.letiencao.response.BaseResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
@@ -20,10 +21,8 @@ import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
 @WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post", "/api/blocks", "/api/like",
-		"/api/delete-post", "/api/get-comments", "/api/get-list-posts" })
+		"/api/delete-post", "/api/get-comments", "/api/get-list-posts","/api/report","/api/set-accept-friend","/api/set-request-friend" })
 public class APIFilter implements Filter {
-
-	private final static String TOKEN_HEADER = "Authorization";
 
 	private GenericService genericService;
 
@@ -49,7 +48,7 @@ public class APIFilter implements Filter {
 		httpResponse.setContentType("application/json");
 		BaseResponse baseResponse = new BaseResponse();
 		Gson gson = new Gson();
-		String authToken = httpRequest.getHeader(TOKEN_HEADER);
+		String authToken = httpRequest.getHeader(BaseHTTP.Authorization);
 		try {
 			System.out.println("authToken = " + authToken);
 			String url = httpRequest.getRequestURI();

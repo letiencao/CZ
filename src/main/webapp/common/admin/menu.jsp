@@ -5,16 +5,17 @@
 		<div class="sb-sidenav-menu">
 			<div class="nav">
 				<div class="sb-sidenav-menu-heading">Main</div>
-					<a class="nav-link active" href="http://localhost:8080/CShop/admin-user">
-						<div class="sb-nav-link-icon">
-							<i class="fas fa-user"></i>
-						</div> Quản lý người dùng
-				    </a>
-					<a class="nav-link active" href="http://localhost:8080/CShop/admin-product">
-						<div class="sb-nav-link-icon">
-							<i class="fab fa-product-hunt"></i>
-						</div> Quản lý sản phẩm
-				    </a>
+				<a class="nav-link active"
+					href="http://localhost:8080/CShop/admin-user">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-user"></i>
+					</div> Quản lý người dùng
+				</a> <a class="nav-link active"
+					href="http://localhost:8080/CShop/admin-product">
+					<div class="sb-nav-link-icon">
+						<i class="fab fa-product-hunt"></i>
+					</div> Quản lý sản phẩm
+				</a>
 				<!-- <div class="sb-sidenav-menu-heading">Interface</div>
 				<a class="nav-link collapsed" href="#" data-toggle="collapse"
 					data-target="#collapseLayouts" aria-expanded="false"

@@ -32,7 +32,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		}
 		try {
 			connection = getConnection();
-			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post INNER JOIN file ON post.id = file.postid  WHERE post.id = ?  AND post.deleted = false";
+			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.id = ?  AND post.deleted = false";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
@@ -51,7 +51,6 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 				files.add(resultSet.getString("file.content"));
 				model.setFiles(files);
 			}
-			System.out.println("model = " + model.getId());
 			return model;
 
 		} catch (SQLException e) {

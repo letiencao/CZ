@@ -25,7 +25,7 @@
 					<div class="wrap-input100 validate-input m-b-23"
 						data-validate="Email is reauired">
 						<span class="label-input100">Email</span> <input class="input100"
-							type="email" name="email" placeholder="Type your email" >
+							type="email" name="email" placeholder="Type your email">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
@@ -33,7 +33,7 @@
 						data-validate="Password is required">
 						<span class="label-input100">Password</span> <input
 							class="input100" type="password" name="password"
-							placeholder="Type your password" > <span
+							placeholder="Type your password"> <span
 							class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 
@@ -44,7 +44,7 @@
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">
 							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn" >Login</button>
+							<button class="login100-form-btn">Login</button>
 						</div>
 					</div>
 
@@ -77,7 +77,7 @@
 	<script type="text/javascript">
 		window.history.forward();
 	</script>
-	
+
 </body>
 
 </html>

@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-	<a class="navbar-brand" href="http://localhost:8080/CShop/admin-user">C.Shop Admin</a>
+	<a class="navbar-brand" href="http://localhost:8080/CShop/admin-user">C.Shop
+		Admin</a>
 	<button class="btn btn-link btn-sm order-1 order-lg-0"
 		id="sidebarToggle" href="#">
 		<i class="fas fa-bars"></i>

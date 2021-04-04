@@ -81,23 +81,23 @@
 		<div class="container">
 			<div class="row">
 				<div class="categories__slider owl-carousel">
-					<div class="col-lg-3 1" onclick="click1();" id = "1" >
-						<div class="categories__item set-bg" 
+					<div class="col-lg-3 1" onclick="click1();" id="1">
+						<div class="categories__item set-bg"
 							data-setbg="<c:url value='template/web/img/categories/smartphone.PNG' />">
 							<h5>
-								<a href="#" >Điện thoại-Máy tính bảng</a>
+								<a href="#">Điện thoại-Máy tính bảng</a>
 							</h5>
 						</div>
 					</div>
-					<div class="col-lg-3 2" onclick="click2();" id = "2">
-						<div class="categories__item set-bg" 
+					<div class="col-lg-3 2" onclick="click2();" id="2">
+						<div class="categories__item set-bg"
 							data-setbg="<c:url value='template/web/img/categories/laptop.PNG' />">
 							<h5>
 								<a href="#">Laptop-thiết bị IT</a>
 							</h5>
 						</div>
 					</div>
-					<div class="col-lg-3 3" onclick="click3();" id = "3">
+					<div class="col-lg-3 3" onclick="click3();" id="3">
 						<div class="categories__item set-bg"
 							data-setbg="<c:url value='template/web/img/categories/camera.PNG' />">
 							<h5>
@@ -105,7 +105,7 @@
 							</h5>
 						</div>
 					</div>
-					<div class="col-lg-3 4" onclick="click4();" id = "4">
+					<div class="col-lg-3 4" onclick="click4();" id="4">
 						<div class="categories__item set-bg"
 							data-setbg="<c:url value='template/web/img/categories/electronics.PNG' />">
 							<h5>
@@ -113,7 +113,7 @@
 							</h5>
 						</div>
 					</div>
-					<div class="col-lg-3 5" onclick="click5();" id = "5">
+					<div class="col-lg-3 5" onclick="click5();" id="5">
 						<div class="categories__item set-bg"
 							data-setbg="<c:url value='template/web/img/categories/dien-gia-dung.PNG' />">
 							<h5>
@@ -135,15 +135,15 @@
 					<div class="section-title">
 						<h2>Featured Product</h2>
 					</div>
-					 <div class="featured__controls">
-                        <ul>
-                            <li class="active" data-filter="*">All</li>
-                            <li data-filter=".oranges">Oranges</li>
-                            <li data-filter=".fresh-meat">Fresh Meat</li>
-                            <li data-filter=".vegetables">Vegetables</li>
-                            <li data-filter=".fastfood">Fastfood</li>
-                        </ul>
-                    </div>
+					<div class="featured__controls">
+						<ul>
+							<li class="active" data-filter="*">All</li>
+							<li data-filter=".oranges">Oranges</li>
+							<li data-filter=".fresh-meat">Fresh Meat</li>
+							<li data-filter=".vegetables">Vegetables</li>
+							<li data-filter=".fastfood">Fastfood</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="row featured__filter">
@@ -515,8 +515,7 @@
 										<h6>Crab Pool Security</h6>
 										<span>$30.00</span>
 									</div>
-								</a> 
-								<a href="#" class="latest-product__item">
+								</a> <a href="#" class="latest-product__item">
 									<div class="latest-product__item__pic">
 										<img
 											src="<c:url value='template/web/img/latest-product/lp-2.jpg' />"

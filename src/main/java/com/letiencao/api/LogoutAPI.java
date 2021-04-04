@@ -36,6 +36,7 @@ public class LogoutAPI extends HttpServlet {
 		if(genericService.getPhoneNumberFromToken(jwt) != null) {
 			baseResponse.setCode(BaseHTTP.CODE_1000);
 			baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+			System.out.println("Check = "+genericService.validateToken(jwt));
 		}else {
 			baseResponse.setCode(BaseHTTP.CODE_9998);
 			baseResponse.setMessage(BaseHTTP.MESSAGE_9998);
