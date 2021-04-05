@@ -6,9 +6,11 @@ public class BaseModel {
 	private Long id;
 	private boolean deleted;
 	private Timestamp createdDate;
+	private long createdDateLong;
 	private String createdBy;
 	private Timestamp modifiedDate;
 	private String modifiedBy;
+	private Long modifiedDateLong;
 	public Long getId() {
 		return id;
 	}
@@ -44,6 +46,18 @@ public class BaseModel {
 	}
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+	public long getCreatedDateLong() {
+		return createdDateLong;
+	}
+	public void setCreatedDateLong(long createdDateLong) {
+		this.createdDateLong = createdDateLong;
+	}
+	public Long getModifiedDateLong() {
+		return modifiedDateLong;
+	}
+	public void setModifiedDateLong(Long modifiedDateLong) {
+		this.modifiedDateLong = modifiedDateLong;
 	}
 	
 }

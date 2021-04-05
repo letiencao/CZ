@@ -58,6 +58,7 @@ public class SignInAPI extends HttpServlet {
 				if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0' && password.length() >= 6
 						&& password.length() <= 10 && !phoneNumber.equalsIgnoreCase(password)) {
 					AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
+					
 					if (accountModel == null) {
 						signInResponse.setCode(BaseHTTP.CODE_9995);
 						signInResponse.setMessage(BaseHTTP.MESSAGE_9995);
@@ -66,6 +67,11 @@ public class SignInAPI extends HttpServlet {
 					} else {
 						String jwt = accountService.signIn(signInRequest);
 						phoneNumber = genericService.getPhoneNumberFromToken(jwt);
+						//Convert Date to seconds
+						accountModel.setCreatedDateLong(genericService.convertTimestampToSeconds(accountModel.getCreatedDate()));
+						if(accountModel.getModifiedDate() != null) {
+							accountModel.setModifiedDateLong(genericService.convertTimestampToSeconds(accountModel.getModifiedDate()));
+						}
 						signInResponse.setCode(BaseHTTP.CODE_1000);
 						signInResponse.setMessage(BaseHTTP.MESSAGE_1000);
 						signInResponse.setToken(jwt);

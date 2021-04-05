@@ -112,7 +112,7 @@ public class GetListCommentAPI extends HttpServlet {
 									DataGetCommentResponse commentResponse = new DataGetCommentResponse();
 									// lay thong tin ve comment
 									commentResponse.setContent(commentModel.getContent());
-									commentResponse.setCreated(1000L);
+									commentResponse.setCreated(genericService.convertTimestampToSeconds(commentModel.getCreatedDate()));
 									commentResponse.setId(commentModel.getId());
 									commentResponse.setPosterResponse(posterResponse);
 									commentResponses.add(commentResponse);

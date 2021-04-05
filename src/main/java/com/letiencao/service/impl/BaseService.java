@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -108,6 +109,14 @@ public class BaseService implements GenericService {
 		} catch (ExpiredJwtException | IllegalArgumentException e) {
 			return null;
 		}
+	}
+
+	@Override
+	public long convertTimestampToSeconds(Timestamp timestamp) {
+		Timestamp t = new Timestamp(0);
+		long seconds = timestamp.getTime() - t.getTime();
+		System.out.println("seconds = "+seconds);
+		return seconds;
 	}
 
 }

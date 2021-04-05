@@ -201,6 +201,13 @@ public class GetPostAPI extends HttpServlet {
 					dataGetPostReponse.setAuthorGetPostResponse(authorGetPostResponse);
 					dataGetPostReponse.setListImage(imageGetPostResponses);
 					dataGetPostReponse.setListVideo(videoGetPostResponses);
+					// set created modified in long type
+					dataGetPostReponse.setCreated(
+							String.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
+					if (postModel.getModifiedDate() != null) {
+						dataGetPostReponse.setModified(String
+								.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
+					}
 					getPostResponse.setDataGetPostReponse(dataGetPostReponse);
 					getPostResponse.setCode(1000);
 					getPostResponse.setMessage("OK");

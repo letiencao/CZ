@@ -112,7 +112,8 @@ public class CommentAPI extends HttpServlet {
 							dataGetCommentResponse.setContent(commentModel.getContent());
 							dataGetCommentResponse.setId(commentModel.getId());
 							dataGetCommentResponse.setPosterResponse(posterResponse);
-							dataGetCommentResponse.setCreated(1000L);
+							//Convert Date to seconds
+							dataGetCommentResponse.setCreated(genericService.convertTimestampToSeconds(commentModel.getCreatedDate()));
 							commentResponse.setCode(1000);
 							commentResponse.setMessage("OK");
 							commentResponse.setDataGetCommentResponse(dataGetCommentResponse);

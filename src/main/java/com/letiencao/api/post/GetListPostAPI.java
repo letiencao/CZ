@@ -168,6 +168,11 @@ public class GetListPostAPI extends HttpServlet {
 						System.out.println("IDDDD = " + list.get(i).getId());
 						dataGetPostReponse.setListImage(imageGetPostResponses);
 						dataGetPostReponse.setListVideo(videoGetPostResponses);
+						//set created modified in long type
+						dataGetPostReponse.setCreated(String.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
+						if(postModel.getModifiedDate() != null) {
+							dataGetPostReponse.setModified(String.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
+						}
 						dataGetPostReponses.add(dataGetPostReponse);
 					}
 					GetListPostRequest.setLast_id(list.get((int) index + count - 1).getId());

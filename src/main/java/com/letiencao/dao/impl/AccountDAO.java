@@ -49,15 +49,15 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 	@Override
 	public AccountModel findById(Long id) {
 		String sql = "SELECT * FROM account WHERE id = ?";
-		AccountModel accountModel = findOne(sql, new AccountMapping(), id);
 		try {
+			AccountModel accountModel = findOne(sql, new AccountMapping(), id);
 			if (accountModel != null) {
 				return accountModel;
 			}
 		} catch (ClassCastException e) {
 			return null;	
 		}
-		return accountModel;
+		return null;
 	}
 
 }
