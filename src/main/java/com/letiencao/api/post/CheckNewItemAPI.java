@@ -41,11 +41,12 @@ public class CheckNewItemAPI extends HttpServlet {
 		List<Long> models = new ArrayList<Long>(); // list data new items
 		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
 		CheckNewItemResponse checkNewItemResponse = new CheckNewItemResponse();
-		if (String.valueOf(checkNewItemRequest.getCategory_id()) == null) {
-			checkNewItemRequest.setCategory_id(0);
-		}
+		
 		if (checkNewItemRequest != null) {
-			Long last_id = checkNewItemRequest.getLast_id();
+			Long last_id = checkNewItemRequest.getLastId();
+			if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
+				checkNewItemRequest.setCategoryId(0);
+			}
 			if (last_id != null) {
 				if (last_id.toString().length() > 0) {
 					// Check last_id

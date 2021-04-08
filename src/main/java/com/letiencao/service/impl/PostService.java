@@ -87,7 +87,9 @@ public class PostService extends BaseService implements IPostService {
 			}else {
 				list2.add(model);
 			}
+			
 		}
+		list2.add(list.get(list.size()-1));
 		return list2;
 	}
 

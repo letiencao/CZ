@@ -9,13 +9,13 @@ public class DataGetPostReponse {
 	private String modified;
 	private int like;// so luong
 	private int comment;
-	private boolean is_liked;
+	private boolean isLiked;
 	private List<ImageGetPostResponse> listImage;
 	private List<VideoGetPostResponse> listVideo;
 	private AuthorGetPostResponse authorGetPostResponse;
-	private String is_blocked;
-	private String can_edit;
-	private String can_comment;
+	private String isBlocked;
+	private String canEdit;
+	private String canComment;
 
 	public Long getId() {
 		return id;
@@ -65,36 +65,38 @@ public class DataGetPostReponse {
 		this.comment = comment;
 	}
 
-	public boolean isIs_liked() {
-		return is_liked;
+	
+
+	public boolean isLiked() {
+		return isLiked;
 	}
 
-	public void setIs_liked(boolean is_liked) {
-		this.is_liked = is_liked;
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
 	}
 
-	public String getIs_blocked() {
-		return is_blocked;
+	public String getIsBlocked() {
+		return isBlocked;
 	}
 
-	public void setIs_blocked(String is_blocked) {
-		this.is_blocked = is_blocked;
+	public void setIsBlocked(String isBlocked) {
+		this.isBlocked = isBlocked;
 	}
 
-	public String getCan_edit() {
-		return can_edit;
+	public String getCanEdit() {
+		return canEdit;
 	}
 
-	public void setCan_edit(String can_edit) {
-		this.can_edit = can_edit;
+	public void setCanEdit(String canEdit) {
+		this.canEdit = canEdit;
 	}
 
-	public String getCan_comment() {
-		return can_comment;
+	public String getCanComment() {
+		return canComment;
 	}
 
-	public void setCan_comment(String can_comment) {
-		this.can_comment = can_comment;
+	public void setCanComment(String canComment) {
+		this.canComment = canComment;
 	}
 
 	public List<ImageGetPostResponse> getListImage() {

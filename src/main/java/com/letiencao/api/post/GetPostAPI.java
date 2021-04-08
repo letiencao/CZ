@@ -72,23 +72,21 @@ public class GetPostAPI extends HttpServlet {
 		BaseResponse baseResponse = new BaseResponse();
 		try {
 			String idStr = request.getParameter("id");
-			if (idStr == null) {
-				baseResponse.setCode(9994);
-				baseResponse.setMessage("No data or end of list data");
-			} else {
+			if (idStr != null) {
 				Long id = Long.valueOf(idStr);
-				System.out.println("id = " + id);
 				PostModel model = postService.findPostById(id);
-				if (model == null) {
+				if (model != null) {
+					response.getWriter().print(gson.toJson(model));
+					return;
+				} else {
 					baseResponse.setCode(9995);
 					baseResponse.setMessage("User is not validated");
 					response.getWriter().print(gson.toJson(baseResponse));
 					return;
-				} else {
-					response.getWriter().print(gson.toJson(model));
-					return;
 				}
-
+			} else {
+				baseResponse.setCode(9994);
+				baseResponse.setMessage("No data or end of list data");
 			}
 		} catch (NumberFormatException e) {
 			baseResponse.setCode(1003);
@@ -108,23 +106,11 @@ public class GetPostAPI extends HttpServlet {
 		GetPostResponse getPostResponse = new GetPostResponse();
 		try {
 			GetPostRequest getPostRequest = gson.fromJson(request.getReader(), GetPostRequest.class);
-			if (getPostRequest == null) {
-				getPostResponse.setCode(9994);
-				getPostResponse.setDataGetPostReponse(null);
-				getPostResponse.setMessage("No data or end of list data");
-				response.getWriter().print(gson.toJson(getPostResponse));
-				return;
-			} else {
+			if (getPostRequest != null) {
 				// get token
 				String jwt = request.getHeader(BaseHTTP.Authorization);
 				Long postId = getPostRequest.getId();
-				if (postId == null) {
-					getPostResponse.setCode(1002);
-					getPostResponse.setDataGetPostReponse(null);
-					getPostResponse.setMessage("Parameter is not enough");
-					response.getWriter().print(gson.toJson(getPostResponse));
-					return;
-				} else {
+				if (postId != null) {
 					dataGetPostReponse.setId(postId);
 					// search post by id
 //					PostModel postModel = postService.findPostById(postId);// get author
@@ -149,24 +135,24 @@ public class GetPostAPI extends HttpServlet {
 					AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);// jwt
 					Long accountId = accountModel.getId();
 					boolean checkThisUserLiked = likesService.checkThisUserLiked(accountId, postId);
-					dataGetPostReponse.setIs_liked(checkThisUserLiked);
+					dataGetPostReponse.setLiked(checkThisUserLiked);
 					// is_blocked
 					BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountId);
 					if (blocksModel == null) {
-						dataGetPostReponse.setIs_blocked("UnBlocked");
+						dataGetPostReponse.setIsBlocked("UnBlocked");
 					} else {
-						dataGetPostReponse.setIs_blocked("Blocked");
+						dataGetPostReponse.setIsBlocked("Blocked");
 					}
 					// can_edit
 					if (accountId == postModel.getAccountId()) {
-						dataGetPostReponse.setCan_edit("Can Edit");
+						dataGetPostReponse.setCanEdit("Can Edit");
 					} else {
-						dataGetPostReponse.setCan_edit("Can't Edit");
+						dataGetPostReponse.setCanEdit("Can't Edit");
 					}
-					if (dataGetPostReponse.getIs_blocked().equalsIgnoreCase("Blocked")) {
-						dataGetPostReponse.setCan_comment("Can't Comment");
+					if (dataGetPostReponse.getIsBlocked().equalsIgnoreCase("Blocked")) {
+						dataGetPostReponse.setCanComment("Can't Comment");
 					} else {
-						dataGetPostReponse.setCan_comment("Can Comment");
+						dataGetPostReponse.setCanComment("Can Comment");
 					}
 					// get file
 					List<ImageGetPostResponse> imageGetPostResponses = new ArrayList<ImageGetPostResponse>();
@@ -205,13 +191,26 @@ public class GetPostAPI extends HttpServlet {
 					dataGetPostReponse.setCreated(
 							String.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
 					if (postModel.getModifiedDate() != null) {
-						dataGetPostReponse.setModified(String
-								.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
+						dataGetPostReponse.setModified(
+								String.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
 					}
 					getPostResponse.setDataGetPostReponse(dataGetPostReponse);
 					getPostResponse.setCode(1000);
 					getPostResponse.setMessage("OK");
+
+				} else {
+					getPostResponse.setCode(1002);
+					getPostResponse.setDataGetPostReponse(null);
+					getPostResponse.setMessage("Parameter is not enough");
+					response.getWriter().print(gson.toJson(getPostResponse));
+					return;
 				}
+			} else {
+				getPostResponse.setCode(9994);
+				getPostResponse.setDataGetPostReponse(null);
+				getPostResponse.setMessage("No data or end of list data");
+				response.getWriter().print(gson.toJson(getPostResponse));
+				return;
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
 			getPostResponse.setCode(1003);

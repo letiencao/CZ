@@ -6,8 +6,8 @@ public class EditPostRequest {
 	private Long id;
 	private String described;
 	private List<String> image;
-	private List<Long> image_del;
-	private List<Integer> image_sort;
+	private List<Long> imageDel;
+	private List<Integer> imageSort;
 	private String video;
 	public Long getId() {
 		return id;
@@ -27,17 +27,18 @@ public class EditPostRequest {
 	public void setImage(List<String> image) {
 		this.image = image;
 	}
-	public List<Long> getImage_del() {
-		return image_del;
+	
+	public List<Long> getImageDel() {
+		return imageDel;
 	}
-	public void setImage_del(List<Long> image_del) {
-		this.image_del = image_del;
+	public void setImageDel(List<Long> imageDel) {
+		this.imageDel = imageDel;
 	}
-	public List<Integer> getImage_sort() {
-		return image_sort;
+	public List<Integer> getImageSort() {
+		return imageSort;
 	}
-	public void setImage_sort(List<Integer> image_sort) {
-		this.image_sort = image_sort;
+	public void setImageSort(List<Integer> imageSort) {
+		this.imageSort = imageSort;
 	}
 	public String getVideo() {
 		return video;

@@ -117,11 +117,11 @@ public class CommentAPI extends HttpServlet {
 							commentResponse.setCode(1000);
 							commentResponse.setMessage("OK");
 							commentResponse.setDataGetCommentResponse(dataGetCommentResponse);
-							commentResponse.setIs_blocked(false);
+							commentResponse.setBlocked(false);
 						} else {
 							// This User was blocked by The Author
 							commentResponse.setDataGetCommentResponse(null);
-							commentResponse.setIs_blocked(true);
+							commentResponse.setBlocked(true);
 							commentResponse.setCode(1009);
 							commentResponse.setMessage("Not Access");
 						}

@@ -3,14 +3,15 @@ package com.letiencao.response.friend;
 import com.letiencao.response.BaseResponse;
 
 public class SetFriendResponse extends BaseResponse {
-	private int requested_friends;
+	private int requestedFriends;
 
-	public int getRequested_friends() {
-		return requested_friends;
+	public int getRequestedFriends() {
+		return requestedFriends;
 	}
 
-	public void setRequested_friends(int requested_friends) {
-		this.requested_friends = requested_friends;
+	public void setRequestedFriends(int requestedFriends) {
+		this.requestedFriends = requestedFriends;
 	}
+	
 	
 }

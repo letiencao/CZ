@@ -35,6 +35,8 @@ import com.letiencao.service.impl.PostService;
 public class GetListCommentAPI extends HttpServlet {
 
 	/**
+	 * Created By Cao LT
+	 * Created Date : 06/04/2021
 	 * 
 	 */
 	private IBlocksService blocksService;
@@ -66,12 +68,12 @@ public class GetListCommentAPI extends HttpServlet {
 			Long postId = getListCommentRequest.getPostId();
 			int index = getListCommentRequest.getIndex();
 			int count = getListCommentRequest.getCount();
-			System.out.println("String index = " + String.valueOf(index));
-			System.out.println("String count = " + String.valueOf(count));
+//			System.out.println("String index = " + String.valueOf(index));
+//			System.out.println("String count = " + String.valueOf(count));
 			if (postId == null || String.valueOf(index) == null || String.valueOf(count) == null) {
 				// parameter not enough
 				listCommentResponse.setList(null);
-				listCommentResponse.setIs_blocked(false);
+				listCommentResponse.setBlocked(false);
 				listCommentResponse.setCode(1002);
 				listCommentResponse.setMessage("Parameter is not enough");
 
@@ -80,7 +82,7 @@ public class GetListCommentAPI extends HttpServlet {
 						|| String.valueOf(count).length() == 0 || count < 0 || index < 0) {
 					// parameter value is invalid
 					listCommentResponse.setList(null);
-					listCommentResponse.setIs_blocked(false);
+					listCommentResponse.setBlocked(false);
 					listCommentResponse.setCode(1004);
 					listCommentResponse.setMessage("Parameter value is invalid");
 				} else {
@@ -118,14 +120,14 @@ public class GetListCommentAPI extends HttpServlet {
 									commentResponses.add(commentResponse);
 								}
 								listCommentResponse.setList(commentResponses);
-								listCommentResponse.setIs_blocked(false);
+								listCommentResponse.setBlocked(false);
 								listCommentResponse.setCode(1000);
 								listCommentResponse.setMessage("OK");
 							}
 						} else {
 							// not access
 							listCommentResponse.setList(null);
-							listCommentResponse.setIs_blocked(true);
+							listCommentResponse.setBlocked(true);
 							listCommentResponse.setCode(1009);
 							listCommentResponse.setMessage("Not Access");
 						}

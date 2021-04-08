@@ -1,6 +1,11 @@
 package com.letiencao.api;
 
 public class BaseHTTP {
+	/*
+	 * Created By Cao LT
+	 * Created Date 06/04/2021
+	 * 
+	 * */
 	public static final String Authorization = "Authorization";
 
 	// Response

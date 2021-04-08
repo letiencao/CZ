@@ -6,23 +6,26 @@ import com.letiencao.response.BaseResponse;
 
 public class GetListPostResponse extends BaseResponse {
 	private List<DataGetPostReponse> posts;
-	private int new_items;
-	private Long last_id;
+	private int newItems;
+	private Long lastId;
 
-	public int getNew_items() {
-		return new_items;
+	
+	
+
+	public int getNewItems() {
+		return newItems;
 	}
 
-	public void setNew_items(int new_items) {
-		this.new_items = new_items;
+	public void setNewItems(int newItems) {
+		this.newItems = newItems;
 	}
 
-	public Long getLast_id() {
-		return last_id;
+	public Long getLastId() {
+		return lastId;
 	}
 
-	public void setLast_id(Long last_id) {
-		this.last_id = last_id;
+	public void setLastId(Long lastId) {
+		this.lastId = lastId;
 	}
 
 	public List<DataGetPostReponse> getList() {

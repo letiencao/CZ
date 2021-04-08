@@ -39,6 +39,7 @@ public class ReportAPI extends HttpServlet {
 	private IAccountService accountService;
 	private IReportService reportService;
 	private ITypeReportService typeReportService;
+
 	public ReportAPI() {
 		genericService = new BaseService();
 		postService = new PostService();
@@ -62,7 +63,7 @@ public class ReportAPI extends HttpServlet {
 			if (id != null && subject != null && details != null) {
 				if (id.toString().length() > 0 && subject.toString().length() > 0 && details.length() > 0) {
 					PostModel postModel = postService.findPostById(id);
-					if (postModel.getId() != null) {
+					if (postModel != null) {
 						// get information of reporter
 						String jwt = request.getHeader(BaseHTTP.Authorization);
 						String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
@@ -70,14 +71,14 @@ public class ReportAPI extends HttpServlet {
 						// get reporter id
 						Long accountId = accountModel.getId();
 						// Check typeReport id existed
-						TypeReportModel typeReportModel = typeReportService.findOne(subject);
-						if(typeReportModel != null) {
+						TypeReportModel typeReportModel = typeReportService.findOne(subject + 1);
+						if (typeReportModel != null) {
 							// Check Duplicate
 							boolean checkReported = reportService.checkReported(accountId, id);
-							System.out.println("checkReported : "+checkReported);
+							System.out.println("checkReported : " + checkReported);
 							if (checkReported == false) {
 								// OK
-								reportService.insertOne(accountId, id, subject, details);
+								reportService.insertOne(accountId, id, subject + 1, details);
 								baseResponse.setCode(BaseHTTP.CODE_1000);
 								baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							} else {
@@ -86,12 +87,12 @@ public class ReportAPI extends HttpServlet {
 								baseResponse.setCode(BaseHTTP.CODE_1010);
 								baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
 							}
-						}else {
+						} else {
 							// Exception
 							baseResponse.setCode(BaseHTTP.CODE_9999);
 							baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 						}
-						
+
 					} else {
 						// post is not existed
 						baseResponse.setCode(BaseHTTP.CODE_9992);

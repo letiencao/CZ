@@ -10,16 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
+import com.letiencao.model.BlocksModel;
 import com.letiencao.model.FriendModel;
 import com.letiencao.request.friend.FriendIdRequest;
 import com.letiencao.response.friend.SetFriendResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
+import com.letiencao.service.IBlocksService;
 import com.letiencao.service.IFriendService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
+import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.FriendService;
 
 @WebServlet("/api/set-request-friend")
@@ -32,11 +36,13 @@ public class SetRequestFriendAPI extends HttpServlet {
 	private IAccountService accountService;
 	private GenericService genericService;
 	private IFriendService friendService;
+	private IBlocksService blocksService;
 
 	public SetRequestFriendAPI() {
 		accountService = new AccountService();
 		genericService = new BaseService();
 		friendService = new FriendService();
+		blocksService = new BlocksService();
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -47,68 +53,87 @@ public class SetRequestFriendAPI extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		FriendIdRequest friendIdRequest = gson.fromJson(request.getReader(), FriendIdRequest.class);
 		SetFriendResponse setFriendResponse = new SetFriendResponse();
-		if (friendIdRequest != null) {
-			Long userId = friendIdRequest.getUserId();
-			if (userId != null) {
-				if (userId.toString().length() > 0) {
-					AccountModel accountModel = accountService.findById(userId);
-					if (accountModel.getId() != null) {
-						// get userId , id through token
-						String jwt = request.getHeader(BaseHTTP.Authorization);
-						String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
-						AccountModel model = accountService.findByPhoneNumber(phoneNumber);
-						//check accountId == userId
-						if (model.getId() != userId) {
-							boolean checkRequestExsisted = friendService.checkRequestExisted(model.getId(), userId);
-							boolean checkRequestExsisted1 = friendService.checkRequestExisted(userId, model.getId());
-							if (checkRequestExsisted == false && checkRequestExsisted1 == false) {
-								Long id = friendService.insertOne(model.getId(), userId);
-								// get list requests of accountId from token
-								List<FriendModel> list = friendService.findListFriendRequestById(model.getId());
-								System.out.println("Size Of List = " + list.size());
-								setFriendResponse.setCode(BaseHTTP.CODE_1000);
-								setFriendResponse.setMessage(BaseHTTP.MESSAGE_1000);
-								setFriendResponse.setRequested_friends(list.size());
+		try {
+			FriendIdRequest friendIdRequest = gson.fromJson(request.getReader(), FriendIdRequest.class);
+			if (friendIdRequest != null) {
+				Long userId = friendIdRequest.getUserId();
+				if (userId != null) {
+					if (userId.toString().length() > 0) {
+						AccountModel accountModel = accountService.findById(userId);
+						if (accountModel != null) {
+							// get userId , id through token
+							String jwt = request.getHeader(BaseHTTP.Authorization);
+							String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
+							AccountModel model = accountService.findByPhoneNumber(phoneNumber);
+							// check accountId == userId
+							if (model.getId() != userId) {
+								//Check Block
+								BlocksModel blocksModel = blocksService.findOne(model.getId(), userId);
+								BlocksModel blocksModel2 = blocksService.findOne(userId, model.getId());
+								if(blocksModel == null && blocksModel2 == null) {
+									boolean checkRequestExsisted = friendService.checkRequestExisted(model.getId(), userId);
+									boolean checkRequestExsisted1 = friendService.checkRequestExisted(userId,
+											model.getId());
+									if (checkRequestExsisted == false && checkRequestExsisted1 == false) {
+										Long id = friendService.insertOne(model.getId(), userId);
+										// get list requests of accountId from token
+										List<FriendModel> list = friendService.findListFriendRequestById(model.getId());
+										System.out.println("Size Of List = " + list.size());
+										setFriendResponse.setCode(BaseHTTP.CODE_1000);
+										setFriendResponse.setMessage(BaseHTTP.MESSAGE_1000);
+										setFriendResponse.setRequestedFriends(list.size());
+									} else {
+										// Exception
+										setFriendResponse.setCode(BaseHTTP.CODE_9999);
+										setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
+										setFriendResponse.setRequestedFriends(-1);
+									}
+								}else {
+									// Exception
+									setFriendResponse.setCode(BaseHTTP.CODE_9999);
+									setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
+									setFriendResponse.setRequestedFriends(-1);
+								}
+								
 							} else {
-								// Exception
+								// exception
 								setFriendResponse.setCode(BaseHTTP.CODE_9999);
 								setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
-								setFriendResponse.setRequested_friends(-1);
+								setFriendResponse.setRequestedFriends(-1);
 							}
-						} else {
-							// exception
-							setFriendResponse.setCode(BaseHTTP.CODE_9999);
-							setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
-							setFriendResponse.setRequested_friends(-1);
-						}
 
+						} else {
+							// User is not validate
+							setFriendResponse.setCode(BaseHTTP.CODE_9995);
+							setFriendResponse.setMessage(BaseHTTP.MESSAGE_9995);
+							setFriendResponse.setRequestedFriends(-1);
+						}
 					} else {
-						// User is not validate
-						setFriendResponse.setCode(BaseHTTP.CODE_9995);
-						setFriendResponse.setMessage(BaseHTTP.MESSAGE_9995);
-						setFriendResponse.setRequested_friends(-1);
+						// value invalid
+						setFriendResponse.setCode(BaseHTTP.CODE_1004);
+						setFriendResponse.setMessage(BaseHTTP.MESSAGE_1004);
+						setFriendResponse.setRequestedFriends(-1);
 					}
 				} else {
-					// value invalid
-					setFriendResponse.setCode(BaseHTTP.CODE_1004);
-					setFriendResponse.setMessage(BaseHTTP.MESSAGE_1004);
-					setFriendResponse.setRequested_friends(-1);
+					// not enough
+					setFriendResponse.setCode(BaseHTTP.CODE_1002);
+					setFriendResponse.setMessage(BaseHTTP.MESSAGE_1002);
+					setFriendResponse.setRequestedFriends(-1);
 				}
 			} else {
-				// not enough
-				setFriendResponse.setCode(BaseHTTP.CODE_1002);
-				setFriendResponse.setMessage(BaseHTTP.MESSAGE_1002);
-				setFriendResponse.setRequested_friends(-1);
+				// No data
+				setFriendResponse.setCode(BaseHTTP.CODE_9994);
+				setFriendResponse.setMessage(BaseHTTP.MESSAGE_9994);
+				setFriendResponse.setRequestedFriends(-1);
 			}
-		} else {
-			// No data
-			setFriendResponse.setCode(BaseHTTP.CODE_9994);
-			setFriendResponse.setMessage(BaseHTTP.MESSAGE_9994);
-			setFriendResponse.setRequested_friends(-1);
+			response.getWriter().print(gson.toJson(setFriendResponse));
+		} catch (JsonSyntaxException | NumberFormatException e) {
+			setFriendResponse.setCode(BaseHTTP.CODE_1003);
+			setFriendResponse.setMessage(BaseHTTP.MESSAGE_1003);
+			setFriendResponse.setRequestedFriends(-1);
+			response.getWriter().print(gson.toJson(setFriendResponse));
 		}
-		response.getWriter().print(gson.toJson(setFriendResponse));
 	}
 
 }

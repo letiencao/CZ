@@ -1,23 +1,21 @@
 package com.letiencao.request.post;
 
 public class CheckNewItemRequest {
-	private Long last_id;
-	private int category_id;
-
-	public Long getLast_id() {
-		return last_id;
+	private Long lastId;
+	private int categoryId;
+	public Long getLastId() {
+		return lastId;
+	}
+	public void setLastId(Long lastId) {
+		this.lastId = lastId;
+	}
+	public int getCategoryId() {
+		return categoryId;
+	}
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public void setLast_id(Long last_id) {
-		this.last_id = last_id;
-	}
-
-	public int getCategory_id() {
-		return category_id;
-	}
-
-	public void setCategory_id(int category_id) {
-		this.category_id = category_id;
-	}
+	
 
 }

@@ -27,8 +27,7 @@ import com.letiencao.service.impl.PostService;
 public class DeletePostAPI extends HttpServlet {
 
 	/**
-	 * Created By : Cao LT
-	 * Created Date : 01/04/2021
+	 * Created By : Cao LT Created Date : 01/04/2021
 	 * 
 	 */
 	private IPostService postService;
