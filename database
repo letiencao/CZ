@@ -132,3 +132,7 @@ alter table chat add constraint fk_chat_account_2 foreign key (idB) references a
 alter table report add constraint fk_report_account foreign key (accountid) references account(id);
 alter table report add constraint fk_report_post foreign key (postid) references post(id);
 alter table report add constraint fk_report_typereport foreign key (typereportid) references typereport(id);
+INSERT INTO typereport(deleted,name) VALUES(false,"Nội dung nhạy cảm");
+INSERT INTO typereport(deleted,name) VALUES(false,"Làm phiền");
+INSERT INTO typereport(deleted,name) VALUES(false,"Lừa đảo");
+INSERT INTO typereport(deleted,name) VALUES(false,"Lí do khác")
