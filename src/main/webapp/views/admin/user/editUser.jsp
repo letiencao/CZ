@@ -83,7 +83,6 @@
 								roleId : inputRoleId
 							};
 						    $.ajax({
-
 								url : 'update-user-api',
 								type : 'PUT',
 								contentType : 'application/json',

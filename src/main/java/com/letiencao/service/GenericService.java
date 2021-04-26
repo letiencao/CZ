@@ -3,7 +3,7 @@ package com.letiencao.service;
 import java.sql.Timestamp;
 
 public interface GenericService {
-	String getMD5(String input);
+//	String getMD5(String input);
 
 	String createJWT(String issuer);
 

@@ -1,9 +1,6 @@
 package com.letiencao.service.impl;
 
-import java.math.BigInteger;
 import java.security.Key;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -22,35 +19,35 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class BaseService implements GenericService {
 	public static final String SECRET_KEY = "oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd9jo1QTy4b7P9Ze5_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGhXEbdJI-ZQ19k_o9MI0y3eZN2lp9jow55FfXMiINEdt1XR85VipRLSOkT6kSpzs2x-jbLDiz9iFVzkd81YKxMgPA7VfZeQUm4n-mOmnWMaVX30zGFU4L3oPBctYKkl4dYfqYWqRNfrgPJVi5DGFjywgxx0ASEiJHtV72paI3fDR2XwlSkyhhmY-ICjCRmsJN4fX1pdoL8a18-aQrvyu4j0Os6dVPYIoPvvY0SAZtWYKHfM15g7A3HD4cVREf9cUsprCRK93w";
 	public static final Long ttlMillis = 86400000L;
-	public static final String UUID = "letiencao2000";
+	public static final String UUID = "";
 
-	@Override
-	public String getMD5(String input) {
-		try {
-
-			// Static getInstance method is called with hashing MD5
-			MessageDigest md = MessageDigest.getInstance("MD5");
-
-			// digest() method is called to calculate message digest
-			// of an input digest() return array of byte
-			byte[] messageDigest = md.digest(input.getBytes());
-
-			// Convert byte array into signum representation
-			BigInteger no = new BigInteger(1, messageDigest);
-
-			// Convert message digest into hex value
-			String hashtext = no.toString(16);
-			while (hashtext.length() < 32) {
-				hashtext = "0" + hashtext;
-			}
-			return hashtext;
-		}
-
-		// For specifying wrong message digest algorithms
-		catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	@Override
+//	public String getMD5(String input) {
+//		try {
+//
+//			// Static getInstance method is called with hashing MD5
+//			MessageDigest md = MessageDigest.getInstance("MD5");
+//
+//			// digest() method is called to calculate message digest
+//			// of an input digest() return array of byte
+//			byte[] messageDigest = md.digest(input.getBytes());
+//
+//			// Convert byte array into signum representation
+//			BigInteger no = new BigInteger(1, messageDigest);
+//
+//			// Convert message digest into hex value
+//			String hashtext = no.toString(16);
+//			while (hashtext.length() < 32) {
+//				hashtext = "0" + hashtext;
+//			}
+//			return hashtext;
+//		}
+//
+//		// For specifying wrong message digest algorithms
+//		catch (NoSuchAlgorithmException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -115,7 +112,7 @@ public class BaseService implements GenericService {
 	public long convertTimestampToSeconds(Timestamp timestamp) {
 		Timestamp t = new Timestamp(0);
 		long seconds = timestamp.getTime() - t.getTime();
-		System.out.println("seconds = "+seconds);
+		System.out.println("seconds = " + seconds);
 		return seconds;
 	}
 

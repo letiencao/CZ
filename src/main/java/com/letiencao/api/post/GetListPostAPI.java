@@ -85,17 +85,17 @@ public class GetListPostAPI extends HttpServlet {
 								.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 						Long accountId = accountModel.getId();
 						List<PostModel> list = new ArrayList<PostModel>();
-						//Check userId Request existed
-						if(getListPostRequest.getUserId() != null) {
+						// Check userId Request existed
+						if (getListPostRequest.getUserId() != null) {
 							System.out.println("!= null");
 							list = postService.findPostByAccountId(getListPostRequest.getUserId());
-							System.out.println("Size = "+list.size());
-						}else {
+							System.out.println("Size = " + list.size());
+						} else {
 							System.out.println("== null");
 							list = postService.findPostByAccountId(accountId);
 						}
 //						
-						if(list.size() > 0 ) {
+						if (list.size() > 0) {
 							if (count + index > list.size()) {
 								count = (int) (list.size() - index);
 							}
@@ -162,7 +162,8 @@ public class GetListPostAPI extends HttpServlet {
 								// get author
 								AuthorGetPostResponse authorGetPostResponse = new AuthorGetPostResponse();
 								authorGetPostResponse.setId(postModel.getAccountId());
-								authorGetPostResponse.setName(accountService.findById(postModel.getAccountId()).getName());
+								authorGetPostResponse
+										.setName(accountService.findById(postModel.getAccountId()).getName());
 								authorGetPostResponse
 										.setAvatar(accountService.findById(postModel.getAccountId()).getAvatar());
 								dataGetPostReponse.setAuthorGetPostResponse(authorGetPostResponse);
@@ -180,48 +181,47 @@ public class GetListPostAPI extends HttpServlet {
 								dataGetPostReponses.add(dataGetPostReponse);
 							}
 							GetListPostRequest.setLastId(list.get((int) index + count - 1).getId());
-							getListPostResponse.setCode(1000);
-							getListPostResponse.setMessage("OK");
-							System.out.println("COUNT == "+count);
+							getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+							getListPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
+							System.out.println("COUNT == " + count);
 							getListPostResponse.setLastId(GetListPostRequest.getLastId());
 							GetListPostRequest.setIndex(count + GetListPostRequest.getIndex());
 							getListPostResponse.setList(dataGetPostReponses);
 							getListPostResponse.setNewItems(count);
-						}else {
-							getListPostResponse.setCode(1000);
-							getListPostResponse.setMessage("OK");
+						} else {
+							getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+							getListPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							getListPostResponse.setLastId(GetListPostRequest.getLastId());
 							GetListPostRequest.setIndex(count + GetListPostRequest.getIndex());
 							getListPostResponse.setList(dataGetPostReponses);
 							getListPostResponse.setNewItems(0);
 						}
-						
 
 					} else {
-						getListPostResponse.setCode(1004);
-						getListPostResponse.setMessage("Parameter value is invalid");
+						getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+						getListPostResponse.setMessage(BaseHTTP.MESSAGE_1004);
 						getListPostResponse.setLastId(-1L);
 						getListPostResponse.setList(null);
 						getListPostResponse.setNewItems(-1);
 					}
 				} else {
-					getListPostResponse.setCode(1002);
-					getListPostResponse.setMessage("Parameter is not enough");
+					getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+					getListPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
 					getListPostResponse.setLastId(-1L);
 					getListPostResponse.setList(null);
 					getListPostResponse.setNewItems(-1);
 				}
 			} else {
-				getListPostResponse.setCode(9994);
-				getListPostResponse.setMessage("No data or end of list data");
+				getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+				getListPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
 				getListPostResponse.setLastId(-1L);
 				getListPostResponse.setList(null);
 				getListPostResponse.setNewItems(-1);
 			}
 			response.getWriter().print(gson.toJson(getListPostResponse));
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			getListPostResponse.setCode(1003);
-			getListPostResponse.setMessage("Parameter value is invalid");
+			getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			getListPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			getListPostResponse.setLastId(-1L);
 			getListPostResponse.setList(null);
 			getListPostResponse.setNewItems(-1);

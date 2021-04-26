@@ -41,7 +41,7 @@ public class CheckNewItemAPI extends HttpServlet {
 		List<Long> models = new ArrayList<Long>(); // list data new items
 		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
 		CheckNewItemResponse checkNewItemResponse = new CheckNewItemResponse();
-		
+
 		if (checkNewItemRequest != null) {
 			Long last_id = checkNewItemRequest.getLastId();
 			if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
@@ -63,40 +63,40 @@ public class CheckNewItemAPI extends HttpServlet {
 									models.add(id);
 								}
 							}
-							checkNewItemResponse.setCode(BaseHTTP.CODE_1000);
+							checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 							checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							checkNewItemResponse.setData(models);
 
 						} else {
 							// exception
 							// all posts is deleted
-							checkNewItemResponse.setCode(BaseHTTP.CODE_9999);
+							checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 							checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
 							checkNewItemResponse.setData(null);
 						}
 					} else {
 						// post is not existed
-						checkNewItemResponse.setCode(BaseHTTP.CODE_9992);
+						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
 						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9992);
 						checkNewItemResponse.setData(null);
 					}
 
 				} else {
 					// value invalid
-					checkNewItemResponse.setCode(BaseHTTP.CODE_1004);
+					checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 					checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					checkNewItemResponse.setData(null);
 				}
 			} else {
 				// parameter not enough
-				checkNewItemResponse.setCode(BaseHTTP.CODE_1002);
+				checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				checkNewItemResponse.setData(null);
 			}
 
 		} else {
 			// empty body
-			checkNewItemResponse.setCode(BaseHTTP.CODE_9994);
+			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9994);
 			checkNewItemResponse.setData(null);
 		}

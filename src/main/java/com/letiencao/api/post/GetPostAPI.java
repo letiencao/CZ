@@ -79,18 +79,18 @@ public class GetPostAPI extends HttpServlet {
 					response.getWriter().print(gson.toJson(model));
 					return;
 				} else {
-					baseResponse.setCode(9995);
-					baseResponse.setMessage("User is not validated");
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
 					response.getWriter().print(gson.toJson(baseResponse));
 					return;
 				}
 			} else {
-				baseResponse.setCode(9994);
-				baseResponse.setMessage("No data or end of list data");
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
 			}
 		} catch (NumberFormatException e) {
-			baseResponse.setCode(1003);
-			baseResponse.setMessage("Parameter type is invalid");
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
 		}
 		response.getWriter().print(gson.toJson(baseResponse));
 
@@ -195,30 +195,30 @@ public class GetPostAPI extends HttpServlet {
 								String.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
 					}
 					getPostResponse.setDataGetPostReponse(dataGetPostReponse);
-					getPostResponse.setCode(1000);
-					getPostResponse.setMessage("OK");
+					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+					getPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
 
 				} else {
-					getPostResponse.setCode(1002);
+					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 					getPostResponse.setDataGetPostReponse(null);
-					getPostResponse.setMessage("Parameter is not enough");
+					getPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
 					response.getWriter().print(gson.toJson(getPostResponse));
 					return;
 				}
 			} else {
-				getPostResponse.setCode(9994);
+				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 				getPostResponse.setDataGetPostReponse(null);
-				getPostResponse.setMessage("No data or end of list data");
+				getPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
 				response.getWriter().print(gson.toJson(getPostResponse));
 				return;
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			getPostResponse.setCode(1003);
-			getPostResponse.setMessage("Parameter type is invalid");
+			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			getPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			getPostResponse.setDataGetPostReponse(null);
 		} catch (NullPointerException e) {
-			getPostResponse.setCode(9992);
-			getPostResponse.setMessage("Post is not existed");
+			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+			getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
 			getPostResponse.setDataGetPostReponse(null);
 		}
 		response.getWriter().print(gson.toJson(getPostResponse));

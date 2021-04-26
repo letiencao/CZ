@@ -29,17 +29,19 @@ public class FriendService implements IFriendService {
 		return friendDAO.findListFriendRequestById(id);
 	}
 	@Override
-	public boolean checkFriendExisted(Long idRequest, Long idRequested) {
-//		friendDAO.checkFriendExisted(idRequest, idRequested)
+	public boolean checkFriendExisted(Long idRequest, Long idRequested,boolean isFriend) {
+		FriendModel friendModel = friendDAO.findOne(idRequest, idRequested, isFriend);
+		FriendModel friendModel1 = friendDAO.findOne(idRequested, idRequest, isFriend);
+		if(friendModel != null || friendModel1 != null) {
+			return true;
+		}
 		return false;
 	}
 	@Override
-	public boolean checkRequestExisted(Long idRequest, Long idRequested) {
-		List<FriendModel> list = friendDAO.findAll();
-		for(int i = 0;i<list.size();i++) {
-			if(list.get(i).getIdA() == idRequest && list.get(i).getIdB() == idRequested && list.get(i).isDeleted() == false) {
-				return true;
-			}
+	public boolean checkRequestExisted(Long idRequest, Long idRequested,boolean isFriend) {
+		FriendModel friendModel = friendDAO.findOne(idRequest, idRequested, isFriend);
+		if(friendModel != null) {
+			return true;
 		}
 		return false;
 		
@@ -55,6 +57,10 @@ public class FriendService implements IFriendService {
 	@Override
 	public FriendModel findOne(Long idRequest, Long idRequested) {
 		return friendDAO.findOne(idRequest, idRequested);
+	}
+	@Override
+	public List<FriendModel> findListFriendById(Long id) {
+		return friendDAO.findListFriendById(id);
 	}
 
 }

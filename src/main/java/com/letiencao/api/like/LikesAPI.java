@@ -62,8 +62,8 @@ public class LikesAPI extends HttpServlet {
 		try {
 			LikesRequest likesRequest = gson.fromJson(request.getReader(), LikesRequest.class);
 			if (likesRequest == null) {
-				likesResponse.setCode(9994);
-				likesResponse.setMessage("No data or end of list data");
+				likesResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+				likesResponse.setMessage(BaseHTTP.MESSAGE_9994);
 				likesResponse.setDataLikesResponse(null);
 				response.getWriter().print(gson.toJson(likesResponse));
 				return;
@@ -84,12 +84,12 @@ public class LikesAPI extends HttpServlet {
 							if (check == false) {
 								Long id = likesService.insertOne(likesRequest);
 								if (id == -1) {
-									likesResponse.setCode(9992);
+									likesResponse.setCode(String.valueOf(9992));
 									likesResponse.setMessage("Post is not existed");
 									likesResponse.setDataLikesResponse(null);
 								} else {
 
-									likesResponse.setCode(1000);
+									likesResponse.setCode(String.valueOf(1000));
 									likesResponse.setMessage("OK");
 									int like = likesService.findByPostId(likesRequest.getPostId());
 									DataLikesResponse dataLikesResponse = new DataLikesResponse();
@@ -98,32 +98,32 @@ public class LikesAPI extends HttpServlet {
 
 								}
 							} else {
-								likesResponse.setCode(1010);
+								likesResponse.setCode(String.valueOf(1010));
 								likesResponse.setMessage("Action has been done previously by this user");
 								likesResponse.setDataLikesResponse(null);
 							}
 
 						} else {
-							likesResponse.setCode(1009);
+							likesResponse.setCode(String.valueOf(1009));
 							likesResponse.setMessage("Not access");
 							likesResponse.setDataLikesResponse(null);
 						}
 					} catch (NullPointerException e) {
 						System.out.println("Null Pointer Exception LikesAPI : " + e.getMessage());
-						likesResponse.setCode(9992);
+						likesResponse.setCode(String.valueOf(9992));
 						likesResponse.setMessage("Post is not existed");
 						likesResponse.setDataLikesResponse(null);
 					}
 
 				} else {
-					likesResponse.setCode(1002);
+					likesResponse.setCode(String.valueOf(1002));
 					likesResponse.setMessage("Parameter is not enough");
 					likesResponse.setDataLikesResponse(null);
 				}
 				response.getWriter().print(gson.toJson(likesResponse));
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			likesResponse.setCode(1003);
+			likesResponse.setCode(String.valueOf(1003));
 			likesResponse.setMessage("Parameter type is invalid");
 			likesResponse.setDataLikesResponse(null);
 			response.getWriter().print(gson.toJson(likesResponse));
@@ -142,7 +142,7 @@ public class LikesAPI extends HttpServlet {
 		try {
 			LikesRequest likesRequest = gson.fromJson(request.getReader(), LikesRequest.class);
 			if (likesRequest == null) {
-				baseResponse.setCode(9994);
+				baseResponse.setCode(String.valueOf(9994));
 				baseResponse.setMessage("No data or end of list data");
 				response.getWriter().print(gson.toJson(baseResponse));
 				return;
@@ -161,34 +161,34 @@ public class LikesAPI extends HttpServlet {
 							if (check == true) {
 								boolean b = likesService.disLike(likesRequest.getPostId(), likesRequest.getAccountId());
 								if (b == false) {
-									baseResponse.setCode(1001);
+									baseResponse.setCode(String.valueOf(1001));
 									baseResponse.setMessage("Can not connect to DB");
 								} else {
-									baseResponse.setCode(1000);
+									baseResponse.setCode(String.valueOf(1000));
 									baseResponse.setMessage("OK");
 								}
 							} else {
-								baseResponse.setCode(9999);
+								baseResponse.setCode(String.valueOf(9999));
 								baseResponse.setMessage("Exception Error");
 							}
 						} else {
-							baseResponse.setCode(1009);
+							baseResponse.setCode(String.valueOf(1009));
 							baseResponse.setMessage("Not Access");
 						}
 
 					} else {
-						baseResponse.setCode(9992);
+						baseResponse.setCode(String.valueOf(9992));
 						baseResponse.setMessage("Post is not existed");
 					}
 
 				} else {
-					baseResponse.setCode(1002);
+					baseResponse.setCode(String.valueOf(1002));
 					baseResponse.setMessage("Parameter is not enough");
 				}
 				response.getWriter().print(gson.toJson(baseResponse));
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			baseResponse.setCode(1003);
+			baseResponse.setCode(String.valueOf(1003));
 			baseResponse.setMessage("Parameter type is invalid");
 			response.getWriter().print(gson.toJson(baseResponse));
 		}

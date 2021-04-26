@@ -55,13 +55,10 @@ public class DeletePostAPI extends HttpServlet {
 		// check author
 		try {
 			DeletePostRequest deletePostRequest = gson.fromJson(request.getReader(), DeletePostRequest.class);
-			if (deletePostRequest == null) {
-				baseResponse.setCode(9994);
-				baseResponse.setMessage("No data or end of list data");
-			} else {
+			if (deletePostRequest != null) {
 				if (deletePostRequest.getId() == null) {
-					baseResponse.setCode(1002);
-					baseResponse.setMessage("Parameter is not enough");
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				} else {
 					PostModel postModel = postService.findById(deletePostRequest.getId());
 					if (postModel != null) {
@@ -72,28 +69,31 @@ public class DeletePostAPI extends HttpServlet {
 						if (id == accountModel.getId()) {
 							boolean b = postService.deleteById(deletePostRequest.getId());
 							if (b == true) {
-								baseResponse.setCode(1000);
-								baseResponse.setMessage("OK");
+								baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+								baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							} else {
-								baseResponse.setCode(1010);
-								baseResponse.setMessage("Action has been done previously by this user");
+								baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
+								baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
 							}
 
 						} else {
-							baseResponse.setCode(1009);
-							baseResponse.setMessage("Not Access");
+							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
+							baseResponse.setMessage(BaseHTTP.MESSAGE_1009);
 						}
 
 					} else {
-						baseResponse.setCode(9992);
-						baseResponse.setMessage("Post is not existed");
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+						baseResponse.setMessage(BaseHTTP.MESSAGE_9992);
 					}
 
 				}
+			} else {
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
 			}
 		} catch (JsonSyntaxException | NumberFormatException e) {
-			baseResponse.setCode(1004);
-			baseResponse.setMessage("Parameter value is invalid");
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+			baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
 		}
 		response.getWriter().print(gson.toJson(baseResponse));
 

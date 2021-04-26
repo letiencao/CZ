@@ -48,9 +48,8 @@ public class SetAcceptFriendAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
-		FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
 		try {
-
+			FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
 			if (friendAcceptRequest != null) {
 				Long userId = friendAcceptRequest.getUserId();
 				boolean isAccept = friendAcceptRequest.isAccept();
@@ -66,7 +65,7 @@ public class SetAcceptFriendAPI extends HttpServlet {
 							// idRequest == idRequested
 							if (model.getId() != userId) {
 								// check request existed
-								boolean checkRequested = friendService.checkRequestExisted(userId, model.getId());
+								boolean checkRequested = friendService.checkRequestExisted(userId, model.getId(),false);
 								if (checkRequested == true) {
 									if (isAccept == true) {
 										// if existed => is_friend == true
@@ -127,6 +126,7 @@ public class SetAcceptFriendAPI extends HttpServlet {
 		} catch (NumberFormatException | JsonSyntaxException e) {
 			baseResponse.setCode(BaseHTTP.CODE_1003);
 			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
+			response.getWriter().print(gson.toJson(baseResponse));
 		}
 	}
 }

@@ -23,9 +23,9 @@
 							Password is not correct</div>
 					</c:if>
 					<div class="wrap-input100 validate-input m-b-23"
-						data-validate="Email is reauired">
-						<span class="label-input100">Email</span> <input class="input100"
-							type="email" name="email" placeholder="Type your email">
+						data-validate="Phone number is reauired">
+						<span class="label-input100">Phone Number</span> <input class="input100"
+							type="tel" name="phoneNumber" placeholder="Type your phone number">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 

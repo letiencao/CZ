@@ -21,8 +21,7 @@ import com.letiencao.service.impl.AccountService;
 public class SignUpAPI extends HttpServlet {
 
 	/***************************
-	 * Created By Cao LT 
-	 * Created Date 31/03/2021
+	 * Created By Cao LT Created Date 31/03/2021
 	 * 
 	 *//////////////////////////
 	private static final long serialVersionUID = 1L;
@@ -41,7 +40,14 @@ public class SignUpAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		SignUpResponse signUpResponse = new SignUpResponse();
-		SignUpRequest signUpRequest = gson.fromJson(request.getReader(), SignUpRequest.class);
+//		SignUpRequest signUpRequest = gson.fromJson(request.getReader(), SignUpRequest.class);
+		SignUpRequest signUpRequest = new SignUpRequest();
+		String phoneNumberQuery = request.getParameter("phoneNumber");
+		String passwordQuery = request.getParameter("password");
+		String uuidQuery = request.getParameter("uuid");
+		signUpRequest.setPhoneNumber(phoneNumberQuery);
+		signUpRequest.setPassword(passwordQuery);
+		signUpRequest.setUuid(uuidQuery);
 		try {
 			if (signUpRequest.getPhoneNumber() != null && signUpRequest.getPassword() != null
 					&& signUpRequest.getUuid() != null) {
@@ -54,12 +60,12 @@ public class SignUpAPI extends HttpServlet {
 				AccountModel accountModel = new AccountModel();
 
 				if (phoneNumber.length() == 0 || password.length() == 0 || uuid.length() == 0) {
-					//Modified By : Cao LT
-					//Modified Date 31/03/2021
-					
+					// Modified By : Cao LT
+					// Modified Date 31/03/2021
+
 //					signUpResponse.setCode(1003);
 //					signUpResponse.setMessage("Parameter type is invalid");
-					
+
 					valueInValid(signUpResponse);
 				} else {
 					if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0'
@@ -67,11 +73,11 @@ public class SignUpAPI extends HttpServlet {
 							&& !phoneNumber.equalsIgnoreCase(password)) {
 						accountModel = accountService.signUp(signUpRequest);
 						if (accountModel != null) {
-							signUpResponse.setCode(BaseHTTP.CODE_1000);
+							signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 							signUpResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							signUpResponse.setAccountModel(accountModel);
 						} else {
-							signUpResponse.setCode(BaseHTTP.CODE_9996);
+							signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_9996));
 							signUpResponse.setMessage(BaseHTTP.MESSAGE_9996);
 							signUpResponse.setAccountModel(null);
 						}
@@ -81,12 +87,12 @@ public class SignUpAPI extends HttpServlet {
 				}
 			} else {
 
-				signUpResponse.setCode(BaseHTTP.CODE_1002);
+				signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				signUpResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				signUpResponse.setAccountModel(null);
 			}
 		} catch (NullPointerException e) {
-			signUpResponse.setCode(BaseHTTP.CODE_9994);//9994
+			signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));// 9994
 			signUpResponse.setMessage(BaseHTTP.MESSAGE_9994);
 			signUpResponse.setAccountModel(null);
 		}
@@ -94,8 +100,9 @@ public class SignUpAPI extends HttpServlet {
 		response.getWriter().print(gson.toJson(signUpResponse));
 
 	}
+
 	public void valueInValid(SignUpResponse signUpResponse) {
-		signUpResponse.setCode(BaseHTTP.CODE_1004);
+		signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 		signUpResponse.setMessage(BaseHTTP.MESSAGE_1004);
 		signUpResponse.setAccountModel(null);
 	}

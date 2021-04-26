@@ -72,9 +72,9 @@ public class SetRequestFriendAPI extends HttpServlet {
 								BlocksModel blocksModel = blocksService.findOne(model.getId(), userId);
 								BlocksModel blocksModel2 = blocksService.findOne(userId, model.getId());
 								if(blocksModel == null && blocksModel2 == null) {
-									boolean checkRequestExsisted = friendService.checkRequestExisted(model.getId(), userId);
+									boolean checkRequestExsisted = friendService.checkRequestExisted(model.getId(), userId,false);
 									boolean checkRequestExsisted1 = friendService.checkRequestExisted(userId,
-											model.getId());
+											model.getId(),false);
 									if (checkRequestExsisted == false && checkRequestExsisted1 == false) {
 										Long id = friendService.insertOne(model.getId(), userId);
 										// get list requests of accountId from token

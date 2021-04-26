@@ -34,11 +34,11 @@ public class LogoutAPI extends HttpServlet {
 		System.out.println("telephone : "+genericService.getPhoneNumberFromToken(jwt));
 		BaseResponse baseResponse = new BaseResponse();
 		if(genericService.getPhoneNumberFromToken(jwt) != null) {
-			baseResponse.setCode(BaseHTTP.CODE_1000);
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 			baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 			System.out.println("Check = "+genericService.validateToken(jwt));
 		}else {
-			baseResponse.setCode(BaseHTTP.CODE_9998);
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9998));
 			baseResponse.setMessage(BaseHTTP.MESSAGE_9998);
 		}
 		response.getWriter().print(gson.toJson(baseResponse));

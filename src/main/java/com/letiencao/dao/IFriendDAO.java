@@ -12,5 +12,7 @@ public interface IFriendDAO {
 	List<FriendModel> findAll();
 	boolean setIsFriend(Long idRequest,Long idRequested);
 	boolean deleteRequest(Long idRequest,Long idRequested);
+	FriendModel findOne(Long idRequest,Long idRequested,boolean isFriend);
 	FriendModel findOne(Long idRequest,Long idRequested);
+	List<FriendModel> findListFriendById(Long id);
 }

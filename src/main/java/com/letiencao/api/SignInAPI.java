@@ -42,14 +42,16 @@ public class SignInAPI extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
+		// Query String
+		String phoneNumberQuery = request.getParameter("phoneNumber");
+		String passwordQuery = request.getParameter("password");
 		Gson gson = new Gson();
-		SignInRequest signInRequest = gson.fromJson(request.getReader(), SignInRequest.class);
+//		SignInRequest signInRequest = gson.fromJson(request.getReader(), SignInRequest.class); //Body JSON
+		SignInRequest signInRequest = new SignInRequest();
+		signInRequest.setPhoneNumber(phoneNumberQuery);
+		signInRequest.setPassword(passwordQuery);
 		SignInResponse signInResponse = new SignInResponse();
-		if (signInRequest == null) {
-			signInResponse.setCode(BaseHTTP.CODE_9994);
-			signInResponse.setMessage(BaseHTTP.MESSAGE_9994);
-			signInResponse.setAccountModel(null);
-		} else {
+		if (signInRequest != null) {
 			try {
 				String phoneNumber = signInRequest.getPhoneNumber();
 				String password = signInRequest.getPassword();
@@ -58,37 +60,52 @@ public class SignInAPI extends HttpServlet {
 				if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0' && password.length() >= 6
 						&& password.length() <= 10 && !phoneNumber.equalsIgnoreCase(password)) {
 					AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
-					
-					if (accountModel == null) {
-						signInResponse.setCode(BaseHTTP.CODE_9995);
+
+					if (accountModel != null) {
+						String jwt = accountService.signIn(signInRequest);
+						phoneNumber = genericService.getPhoneNumberFromToken(jwt);
+
+						if (jwt != null) {
+							// Convert Date to seconds
+							accountModel.setCreatedDateLong(
+									genericService.convertTimestampToSeconds(accountModel.getCreatedDate()));
+							if (accountModel.getModifiedDate() != null) {
+								accountModel.setModifiedDateLong(
+										genericService.convertTimestampToSeconds(accountModel.getModifiedDate()));
+							}
+							signInResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+							signInResponse.setMessage(BaseHTTP.MESSAGE_1000);
+							signInResponse.setToken(jwt);
+							signInResponse.setAccountModel(accountModel);
+						} else {
+							signInResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+							signInResponse.setMessage(BaseHTTP.MESSAGE_9999);
+							signInResponse.setToken(null);
+							signInResponse.setAccountModel(null);
+						}
+					} else {
+						signInResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 						signInResponse.setMessage(BaseHTTP.MESSAGE_9995);
 						signInResponse.setToken(null);
 						signInResponse.setAccountModel(null);
-					} else {
-						String jwt = accountService.signIn(signInRequest);
-						phoneNumber = genericService.getPhoneNumberFromToken(jwt);
-						//Convert Date to seconds
-						accountModel.setCreatedDateLong(genericService.convertTimestampToSeconds(accountModel.getCreatedDate()));
-						if(accountModel.getModifiedDate() != null) {
-							accountModel.setModifiedDateLong(genericService.convertTimestampToSeconds(accountModel.getModifiedDate()));
-						}
-						signInResponse.setCode(BaseHTTP.CODE_1000);
-						signInResponse.setMessage(BaseHTTP.MESSAGE_1000);
-						signInResponse.setToken(jwt);
-						signInResponse.setAccountModel(accountModel);
 
 					}
 				} else {
-					signInResponse.setCode(BaseHTTP.CODE_1004);
+					signInResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 					signInResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					signInResponse.setAccountModel(null);
 				}
 			} catch (NullPointerException e) {
-				signInResponse.setCode(BaseHTTP.CODE_1002);
+				signInResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				signInResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				signInResponse.setAccountModel(null);
 			}
 		}
+//		else {
+//			signInResponse.setCode(BaseHTTP.CODE_9994);
+//			signInResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//			signInResponse.setAccountModel(null);
+//		}
 		response.getWriter().print(gson.toJson(signInResponse));
 
 	}

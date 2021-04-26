@@ -1,11 +1,14 @@
 package com.letiencao.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.letiencao.dao.IAccountDAO;
+import com.letiencao.dao.IBlocksDAO;
 import com.letiencao.dao.impl.AccountDAO;
+import com.letiencao.dao.impl.BlocksDAO;
 import com.letiencao.model.AccountModel;
-import com.letiencao.request.account.PhoneNumberRequest;
+import com.letiencao.model.BlocksModel;
 import com.letiencao.request.account.SignInRequest;
 import com.letiencao.request.account.SignUpRequest;
 import com.letiencao.service.IAccountService;
@@ -13,9 +16,11 @@ import com.letiencao.service.IAccountService;
 public class AccountService extends BaseService implements IAccountService {
 	
 	private IAccountDAO accountDAO;
+	private IBlocksDAO blocksDAO;
 	public AccountService() {
 		// TODO Auto-generated constructor stub
 		accountDAO = new AccountDAO();
+		blocksDAO = new BlocksDAO();
 	}
 	@SuppressWarnings("null")
 	@Override
@@ -32,7 +37,8 @@ public class AccountService extends BaseService implements IAccountService {
 			accountModel.setAvatar(" ");
 			accountModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			accountModel.setCreatedBy(signUpRequest.getPhoneNumber());
-			accountModel.setPassword(getMD5(signUpRequest.getPassword()));
+//			accountModel.setPassword(getMD5(signUpRequest.getPassword()));
+			accountModel.setPassword(signUpRequest.getPassword());
 			accountModel.setUuid(signUpRequest.getUuid());
 			boolean b = accountDAO.signUp(accountModel);
 			if(b) {
@@ -46,7 +52,7 @@ public class AccountService extends BaseService implements IAccountService {
 	@Override
 	public String signIn(SignInRequest signInRequest) {
 		String jwt = createJWT(signInRequest.getPhoneNumber());
-		signInRequest.setPassword(getMD5(signInRequest.getPassword()));
+//		signInRequest.setPassword(getMD5(signInRequest.getPassword()));
 		if(accountDAO.signIn(signInRequest) != null) {
 			return jwt;
 		}
@@ -59,5 +65,20 @@ public class AccountService extends BaseService implements IAccountService {
 	@Override
 	public AccountModel findById(Long id) {
 		return accountDAO.findById(id);
+	}
+	@Override
+	public List<AccountModel> findListAccountByKeyword(String keyword,String token) {
+		List<AccountModel> list = accountDAO.findListAccountByKeyword(keyword);
+		//get accountId From token
+		Long accountId = findByPhoneNumber(getPhoneNumberFromToken(token)).getId();
+		for(AccountModel accountModel : list) {
+			//Check block
+			BlocksModel b1 = blocksDAO.findOne(accountId, accountModel.getId());
+			BlocksModel b2 = blocksDAO.findOne(accountModel.getId(), accountId);
+			if(b1 != null || b2 != null) {
+				list.remove(accountModel);
+			}
+		}
+		return list;
 	}
 }

@@ -34,8 +34,7 @@ import com.letiencao.service.impl.PostService;
 public class AddPostAPI extends HttpServlet {
 
 	/**
-	 * Created By : Cao LT
-	 * Created Date : 01/04/2021
+	 * Created By : Cao LT Created Date : 01/04/2021
 	 * 
 	 */
 	private IPostService postService;
@@ -189,7 +188,7 @@ public class AddPostAPI extends HttpServlet {
 				DataAddPostResponse dataPostResponse = new DataAddPostResponse();
 				dataPostResponse.setId(id);
 				dataPostResponse.setUrl("/CZone/api/get-post?id=" + id);
-				addPostResponse.setCode(1000);
+				addPostResponse.setCode(String.valueOf(1000));
 				addPostResponse.setDataPostResponse(dataPostResponse);
 				addPostResponse.setMessage("OK");
 				writeFile(containFileItems, addPostResponse, gson);
@@ -209,44 +208,44 @@ public class AddPostAPI extends HttpServlet {
 	}
 
 	public void parameterInValid(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_1004);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1004);
 	}
 
 	public void parameterTypeInValid(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_1003);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
 	}
 
 	public void parameterNotEnough(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_1002);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
 	}
 
 	public void uploadFileFailed(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_1007);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1007));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1007);
 	}
 
 	public void maximumNumberOfImages(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_1008);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1008));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1008);
 
 	}
 
 	public void noData(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_9994);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
 	}
 
 	public void fileSizeIsTooBig(AddPostResponse addPostResponse) {
-		addPostResponse.setCode(BaseHTTP.CODE_1006);
+		addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1006));
 		addPostResponse.setDataPostResponse(null);
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1006);
 	}
@@ -257,7 +256,7 @@ public class AddPostAPI extends HttpServlet {
 				try {
 					item.write(new File(uploadFolder() + "//" + item.getName()));
 				} catch (Exception e) {
-					addPostResponse.setCode(BaseHTTP.CODE_1010);
+					addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
 					addPostResponse.setDataPostResponse(null);
 					addPostResponse.setMessage(BaseHTTP.MESSAGE_1010);
 					System.out.println("Error = " + e.getMessage());
