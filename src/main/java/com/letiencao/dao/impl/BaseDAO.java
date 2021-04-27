@@ -18,9 +18,9 @@ public class BaseDAO<T> implements GenericDAO<T> {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://127.0.0.1:3306/czone"; 
+			String url = "jdbc:mysql://localhost:3306/czone";
 			String user = "root";
-			String password = "03021999";
+			String password = "123456789";
 			return DriverManager.getConnection(url, user, password);
 
 		} catch (ClassNotFoundException | SQLException e) {
