@@ -83,38 +83,38 @@ public class GetUserInfoAPI extends HttpServlet {
 								boolean isFriend = friendService.checkFriendExisted(userId, accountModel.getId(), true);
 								userInfoResponse.setFriend(isFriend);
 								getUserInforResponse.setUserInfoResponse(userInfoResponse);
-								getUserInforResponse.setCode(BaseHTTP.CODE_1000);
+								getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 								getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							} else {
 								// Not Access
 								getUserInforResponse.setUserInfoResponse(null);
-								getUserInforResponse.setCode(BaseHTTP.CODE_1009);
+								getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
 								getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1009);
 
 							}
 						} else {
 							// User invalidate
 							getUserInforResponse.setUserInfoResponse(null);
-							getUserInforResponse.setCode(BaseHTTP.CODE_9995);
+							getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 							getUserInforResponse.setMessage(BaseHTTP.MESSAGE_9995);
 						}
 					} else {
 						// Exception Error
 						getUserInforResponse.setUserInfoResponse(null);
-						getUserInforResponse.setCode(BaseHTTP.CODE_9999);
+						getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 						getUserInforResponse.setMessage(BaseHTTP.MESSAGE_9999);
 					}
 
 				} else {
 					// value invalid
 					getUserInforResponse.setUserInfoResponse(null);
-					getUserInforResponse.setCode(BaseHTTP.CODE_1004);
+					getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 					getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1004);
 				}
 			} else {
 				// Parameter not enough
 				getUserInforResponse.setUserInfoResponse(null);
-				getUserInforResponse.setCode(BaseHTTP.CODE_1002);
+				getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1002);
 			}
 		} else {
@@ -125,7 +125,7 @@ public class GetUserInfoAPI extends HttpServlet {
 			userInfoResponse = setResponse(accountModel, list);
 			userInfoResponse.setFriend(false);
 			getUserInforResponse.setUserInfoResponse(userInfoResponse);
-			getUserInforResponse.setCode(BaseHTTP.CODE_1000);
+			getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 			getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1000);
 		}
 		response.getWriter().print(gson.toJson(getUserInforResponse));

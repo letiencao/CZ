@@ -53,8 +53,9 @@ public class BlocksAPI extends HttpServlet {
 			AddBlocksRequest addBlocksRequest = gson.fromJson(request.getReader(), AddBlocksRequest.class);
 			if (addBlocksRequest == null) {
 				//....
-				baseResponse.setCode(9994);
-				baseResponse.setMessage("No data or end of list data");
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994)); //ví dụ nhé đây là gõ tay này,còn bản cập nhật sẽ như này
+//				baseResponse.setMessage("No data or end of list data");
+				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);// do sua nhu the thoi,dc chua ok
 				response.getWriter().print(gson.toJson(baseResponse));
 				return;
 			} else {
@@ -69,24 +70,24 @@ public class BlocksAPI extends HttpServlet {
 					if (idBlocks == idBlocked) {
 						id = -1L;
 						System.out.println("1");
-						baseResponse.setCode(1004);
-						baseResponse.setMessage("Parameter value is invalid");
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));//lam di ok r
+						baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					} else if (accountService.findById(idBlocked) == null) {
 						id = -1L;
 						System.out.println("2");
-						baseResponse.setCode(9995);
-						baseResponse.setMessage("User is not validated");
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
+						baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
 
 					} else {
 						//Check Block
 						BlocksModel blocksModel = blocksService.findOne(idBlocks, addBlocksRequest.getIdBlocked());
 						if(blocksModel == null) {
 							id = blocksService.insertOne(idBlocks, addBlocksRequest.getIdBlocked());
-							baseResponse.setCode(1000);
-							baseResponse.setMessage("OK");
+							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+							baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 						}else {
-							baseResponse.setCode(1010);
-							baseResponse.setMessage("Action has been done previously by this user");
+							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
+							baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
 						}
 						
 					}
@@ -94,15 +95,15 @@ public class BlocksAPI extends HttpServlet {
 					//{
 					//....
 					//}
-					baseResponse.setCode(1002);
-					baseResponse.setMessage("Parameter is not enough");
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				}
 				response.getWriter().print(gson.toJson(baseResponse));
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
 			// sai kieu
-			baseResponse.setCode(1003);
-			baseResponse.setMessage("Parameter type is invalid");
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			response.getWriter().print(gson.toJson(baseResponse));
 		}
 	}

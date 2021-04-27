@@ -53,7 +53,7 @@ public class CommentAPI extends HttpServlet {
 		commentService = new CommentService();
 		genericService = new BaseService();
 		accountService = new AccountService();
-		blocksService = new BlocksService();
+		blocksService = new BlocksService();												
 		postService = new PostService();
 	}
 
@@ -86,12 +86,12 @@ public class CommentAPI extends HttpServlet {
 			Long accountId = addCommentRequest.getAccountId();
 
 			if (postId == null || content == null || accountId == null) {
-				commentResponse.setCode(1002);
-				commentResponse.setMessage("Parameter is not enough");
+				commentResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+				commentResponse.setMessage(BaseHTTP.MESSAGE_1002);
 			} else {
 				if (postId.toString().length() == 0 || content.length() == 0 || accountId.toString().length() == 0) {
-					commentResponse.setCode(1004);
-					commentResponse.setMessage("Parameter value is invalid");
+					commentResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+					commentResponse.setMessage(BaseHTTP.MESSAGE_1004);
 				} else {
 					try {
 						PostModel postModel = postService.findById(postId);
@@ -114,29 +114,29 @@ public class CommentAPI extends HttpServlet {
 							dataGetCommentResponse.setPosterResponse(posterResponse);
 							//Convert Date to seconds
 							dataGetCommentResponse.setCreated(genericService.convertTimestampToSeconds(commentModel.getCreatedDate()));
-							commentResponse.setCode(1000);
-							commentResponse.setMessage("OK");
+							commentResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+							commentResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							commentResponse.setDataGetCommentResponse(dataGetCommentResponse);
 							commentResponse.setBlocked(false);
 						} else {
 							// This User was blocked by The Author
 							commentResponse.setDataGetCommentResponse(null);
 							commentResponse.setBlocked(true);
-							commentResponse.setCode(1009);
-							commentResponse.setMessage("Not Access");
+							commentResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
+							commentResponse.setMessage(BaseHTTP.MESSAGE_1009);
 						}
 					} catch (NullPointerException e) {
 						// post deleted or not existed
-						commentResponse.setCode(9992);
-						commentResponse.setMessage("Post is not existed");
+						commentResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+						commentResponse.setMessage(BaseHTTP.MESSAGE_9992);
 					}
 
 				}
 			}
 		} else {
 			//Request ..............
-			commentResponse.setCode(9994);
-			commentResponse.setMessage("No data or end of list data");
+			commentResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+			commentResponse.setMessage(BaseHTTP.MESSAGE_9994);
 		}
 		response.getWriter().print(gson.toJson(commentResponse));
 
@@ -277,32 +277,32 @@ public class CommentAPI extends HttpServlet {
 
 	}
 	private void ok(BaseResponse baseResponse) {
-		baseResponse.setCode(1000);
-		baseResponse.setMessage("OK");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 	}
 	private void noData(BaseResponse baseResponse) {
-		baseResponse.setCode(9994);
-		baseResponse.setMessage("No data or end of list data");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
 	}
 	private void postNotExisted(BaseResponse baseResponse) {
-		baseResponse.setCode(9992);
-		baseResponse.setMessage("Post is not existed");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_9992);
 	}
 	private void notAccess(BaseResponse baseResponse) {
-		baseResponse.setCode(1009);
-		baseResponse.setMessage("Not Access");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_1009);
 	}
 	private void exceptionError(BaseResponse baseResponse) {
-		baseResponse.setCode(9999);
-		baseResponse.setMessage("Exception Error");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 	}
 	private void valueInValid(BaseResponse baseResponse) {
-		baseResponse.setCode(1004);
-		baseResponse.setMessage("Parameter value is invalid");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
 	}
 	private void parameterNotEnough(BaseResponse baseResponse) {
-		baseResponse.setCode(1002);
-		baseResponse.setMessage("Parameter is not enough");
+		baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+		baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 	}
 	
 

@@ -70,7 +70,7 @@ public class SetAcceptFriendAPI extends HttpServlet {
 									if (isAccept == true) {
 										// if existed => is_friend == true
 										friendService.setIsFriend(userId, model.getId());
-										baseResponse.setCode(BaseHTTP.CODE_1000);
+										baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 										baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 
 									} else if (isAccept == false) {
@@ -79,52 +79,52 @@ public class SetAcceptFriendAPI extends HttpServlet {
 										if (friendModel.isFriend() == false) {
 											// if is_friend == false ,can delete
 											friendService.deleteRequest(userId, model.getId());
-											baseResponse.setCode(BaseHTTP.CODE_1000);
+											baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 											baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 										} else {
 											// exception
-											baseResponse.setCode(BaseHTTP.CODE_9999);
+											baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 											baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 										}
 									}
 
 								} else {
 									// if not existed => exception
-									baseResponse.setCode(BaseHTTP.CODE_9999);
+									baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 									baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 								}
 
 							} else {
 								// Exception
-								baseResponse.setCode(BaseHTTP.CODE_9999);
+								baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 								baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 							}
 
 						} else {
 							// user not validate
-							baseResponse.setCode(BaseHTTP.CODE_9995);
+							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 							baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
 						}
 
 					} else {
 						// value invalid
-						baseResponse.setCode(BaseHTTP.CODE_1004);
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 						baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					}
 				} else {
 					// not enough
-					baseResponse.setCode(BaseHTTP.CODE_1002);
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				}
 
 			} else {
 				// no data
-				baseResponse.setCode(BaseHTTP.CODE_9994);
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
 			}
 			response.getWriter().print(gson.toJson(baseResponse));
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			baseResponse.setCode(BaseHTTP.CODE_1003);
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
 			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			response.getWriter().print(gson.toJson(baseResponse));
 		}

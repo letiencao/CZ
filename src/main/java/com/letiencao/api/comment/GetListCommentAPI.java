@@ -74,8 +74,8 @@ public class GetListCommentAPI extends HttpServlet {
 				// parameter not enough
 				listCommentResponse.setList(null);
 				listCommentResponse.setBlocked(false);
-				listCommentResponse.setCode(1002);
-				listCommentResponse.setMessage("Parameter is not enough");
+				listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+				listCommentResponse.setMessage(BaseHTTP.MESSAGE_1002);
 
 			} else {
 				if (postId.toString().length() == 0 || String.valueOf(index).length() == 0
@@ -83,8 +83,8 @@ public class GetListCommentAPI extends HttpServlet {
 					// parameter value is invalid
 					listCommentResponse.setList(null);
 					listCommentResponse.setBlocked(false);
-					listCommentResponse.setCode(1004);
-					listCommentResponse.setMessage("Parameter value is invalid");
+					listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+					listCommentResponse.setMessage(BaseHTTP.MESSAGE_1004);
 				} else {
 					// check block -> not access
 					PostModel postModel = postService.findById(postId);
@@ -100,8 +100,8 @@ public class GetListCommentAPI extends HttpServlet {
 							if ((count + index) > list.size()) {
 								// parameter value is invalid
 								listCommentResponse.setList(null);
-								listCommentResponse.setCode(1004);
-								listCommentResponse.setMessage("Parameter value is invalid");
+								listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+								listCommentResponse.setMessage(BaseHTTP.MESSAGE_1004);
 							} else {
 								for (int i = index; i < index + count; i++) {
 									CommentModel commentModel = list.get(i);
@@ -121,29 +121,29 @@ public class GetListCommentAPI extends HttpServlet {
 								}
 								listCommentResponse.setList(commentResponses);
 								listCommentResponse.setBlocked(false);
-								listCommentResponse.setCode(1000);
-								listCommentResponse.setMessage("OK");
+								listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+								listCommentResponse.setMessage(BaseHTTP.MESSAGE_1000);
 							}
 						} else {
 							// not access
 							listCommentResponse.setList(null);
 							listCommentResponse.setBlocked(true);
-							listCommentResponse.setCode(1009);
-							listCommentResponse.setMessage("Not Access");
+							listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
+							listCommentResponse.setMessage(BaseHTTP.MESSAGE_1009);
 						}
 					} else {
 						// check bai da xoa -> post is not existed
 						listCommentResponse.setList(null);
-						listCommentResponse.setCode(9992);
-						listCommentResponse.setMessage("Post is not existed");
+						listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+						listCommentResponse.setMessage(BaseHTTP.MESSAGE_9992);
 					}
 				}
 			}
 		} else {
 			// no data or end of list data
 			listCommentResponse.setList(null);
-			listCommentResponse.setCode(9994);
-			listCommentResponse.setMessage("No data or end of list data");
+			listCommentResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+			listCommentResponse.setMessage(BaseHTTP.MESSAGE_9994);
 		}
 		response.getWriter().print(gson.toJson(listCommentResponse));
 	}

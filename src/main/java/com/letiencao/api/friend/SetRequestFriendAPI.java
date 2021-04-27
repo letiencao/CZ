@@ -80,56 +80,56 @@ public class SetRequestFriendAPI extends HttpServlet {
 										// get list requests of accountId from token
 										List<FriendModel> list = friendService.findListFriendRequestById(model.getId());
 										System.out.println("Size Of List = " + list.size());
-										setFriendResponse.setCode(BaseHTTP.CODE_1000);
+										setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 										setFriendResponse.setMessage(BaseHTTP.MESSAGE_1000);
 										setFriendResponse.setRequestedFriends(list.size());
 									} else {
 										// Exception
-										setFriendResponse.setCode(BaseHTTP.CODE_9999);
+										setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9999));
 										setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
 										setFriendResponse.setRequestedFriends(-1);
 									}
 								}else {
 									// Exception
-									setFriendResponse.setCode(BaseHTTP.CODE_9999);
+									setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9999));
 									setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
 									setFriendResponse.setRequestedFriends(-1);
 								}
 								
 							} else {
 								// exception
-								setFriendResponse.setCode(BaseHTTP.CODE_9999);
+								setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9999));
 								setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
 								setFriendResponse.setRequestedFriends(-1);
 							}
 
 						} else {
 							// User is not validate
-							setFriendResponse.setCode(BaseHTTP.CODE_9995);
+							setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9995));
 							setFriendResponse.setMessage(BaseHTTP.MESSAGE_9995);
 							setFriendResponse.setRequestedFriends(-1);
 						}
 					} else {
 						// value invalid
-						setFriendResponse.setCode(BaseHTTP.CODE_1004);
+						setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 						setFriendResponse.setMessage(BaseHTTP.MESSAGE_1004);
 						setFriendResponse.setRequestedFriends(-1);
 					}
 				} else {
 					// not enough
-					setFriendResponse.setCode(BaseHTTP.CODE_1002);
+					setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 					setFriendResponse.setMessage(BaseHTTP.MESSAGE_1002);
 					setFriendResponse.setRequestedFriends(-1);
 				}
 			} else {
 				// No data
-				setFriendResponse.setCode(BaseHTTP.CODE_9994);
+				setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 				setFriendResponse.setMessage(BaseHTTP.MESSAGE_9994);
 				setFriendResponse.setRequestedFriends(-1);
 			}
 			response.getWriter().print(gson.toJson(setFriendResponse));
 		} catch (JsonSyntaxException | NumberFormatException e) {
-			setFriendResponse.setCode(BaseHTTP.CODE_1003);
+			setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
 			setFriendResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			setFriendResponse.setRequestedFriends(-1);
 			response.getWriter().print(gson.toJson(setFriendResponse));
