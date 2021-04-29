@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.letiencao.model.AccountModel;
 import com.letiencao.request.account.SignInRequest;
+import com.letiencao.response.account.DataSignInResponse;
 import com.letiencao.response.account.SignInResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
@@ -75,30 +76,29 @@ public class SignInAPI extends HttpServlet {
 							}
 							signInResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 							signInResponse.setMessage(BaseHTTP.MESSAGE_1000);
-							signInResponse.setToken(jwt);
-							signInResponse.setAccountModel(accountModel);
+							DataSignInResponse dataSignInResponse = new DataSignInResponse();
+							dataSignInResponse.setAvatar(accountModel.getAvatar());
+							dataSignInResponse.setId(String.valueOf(accountModel.getId()));
+							dataSignInResponse.setPhoneNumber(accountModel.getPhoneNumber());
+							dataSignInResponse.setToken(jwt);
+							signInResponse.setData(dataSignInResponse);
+							response.getWriter().print(gson.toJson(signInResponse));
+							return;
 						} else {
 							signInResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 							signInResponse.setMessage(BaseHTTP.MESSAGE_9999);
-							signInResponse.setToken(null);
-							signInResponse.setAccountModel(null);
 						}
 					} else {
 						signInResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 						signInResponse.setMessage(BaseHTTP.MESSAGE_9995);
-						signInResponse.setToken(null);
-						signInResponse.setAccountModel(null);
-
 					}
 				} else {
 					signInResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 					signInResponse.setMessage(BaseHTTP.MESSAGE_1004);
-					signInResponse.setAccountModel(null);
 				}
 			} catch (NullPointerException e) {
 				signInResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				signInResponse.setMessage(BaseHTTP.MESSAGE_1002);
-				signInResponse.setAccountModel(null);
 			}
 		}
 //		else {
@@ -106,6 +106,7 @@ public class SignInAPI extends HttpServlet {
 //			signInResponse.setMessage(BaseHTTP.MESSAGE_9994);
 //			signInResponse.setAccountModel(null);
 //		}
+		signInResponse.setData(null);
 		response.getWriter().print(gson.toJson(signInResponse));
 
 	}

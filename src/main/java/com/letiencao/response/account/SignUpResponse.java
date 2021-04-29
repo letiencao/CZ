@@ -1,17 +1,18 @@
 package com.letiencao.response.account;
 
-import com.letiencao.model.AccountModel;
 import com.letiencao.response.BaseResponse;
 
 public class SignUpResponse extends BaseResponse {
-	private AccountModel accountModel;
+	private DataSignUpResponse data;
 
-	public AccountModel getAccountModel() {
-		return accountModel;
+	public DataSignUpResponse getData() {
+		return data;
 	}
 
-	public void setAccountModel(AccountModel accountModel) {
-		this.accountModel = accountModel;
+	public void setData(DataSignUpResponse data) {
+		this.data = data;
 	}
+	
+	
 	
 }
