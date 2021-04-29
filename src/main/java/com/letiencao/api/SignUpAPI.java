@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.letiencao.model.AccountModel;
 import com.letiencao.request.account.SignUpRequest;
+import com.letiencao.response.account.DataSignUpResponse;
 import com.letiencao.response.account.SignUpResponse;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
@@ -57,44 +58,49 @@ public class SignUpAPI extends HttpServlet {
 				String uuid = signUpRequest.getUuid();
 				Pattern p = Pattern.compile("[^A-Za-z0-9]");
 				Matcher m = p.matcher(password);
-				AccountModel accountModel = new AccountModel();
 
-				if (phoneNumber.length() == 0 || password.length() == 0 || uuid.length() == 0) {
+				if (phoneNumber.length() > 0 && password.length() > 0 && uuid.length() > 0) {
 					// Modified By : Cao LT
 					// Modified Date 31/03/2021
 
 //					signUpResponse.setCode(1003);
 //					signUpResponse.setMessage("Parameter type is invalid");
-
-					valueInValid(signUpResponse);
-				} else {
 					if (!m.find() && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0'
 							&& password.length() >= 6 && password.length() <= 10
 							&& !phoneNumber.equalsIgnoreCase(password)) {
-						accountModel = accountService.signUp(signUpRequest);
+						AccountModel accountModel = accountService.signUp(signUpRequest);
 						if (accountModel != null) {
 							signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 							signUpResponse.setMessage(BaseHTTP.MESSAGE_1000);
-							signUpResponse.setAccountModel(accountModel);
+							DataSignUpResponse dataSignUpResponse = new DataSignUpResponse(accountModel.getId(),
+									accountModel.isDeleted(), accountModel.getCreatedDateLong(),
+									accountModel.getCreatedBy(), accountModel.getModifiedBy(),
+									accountModel.getModifiedDateLong(), accountModel.getName(),
+									accountModel.getPhoneNumber(), accountModel.getAvatar(), accountModel.getUuid());
+							System.out.println("HEllo");
+							signUpResponse.setDataSignUpResponse(dataSignUpResponse);
 						} else {
 							signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_9996));
 							signUpResponse.setMessage(BaseHTTP.MESSAGE_9996);
-							signUpResponse.setAccountModel(null);
+							signUpResponse.setDataSignUpResponse(null);
 						}
 					} else {
 						valueInValid(signUpResponse);
 					}
+
+				} else {
+					valueInValid(signUpResponse);
 				}
 			} else {
 
 				signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				signUpResponse.setMessage(BaseHTTP.MESSAGE_1002);
-				signUpResponse.setAccountModel(null);
+				signUpResponse.setDataSignUpResponse(null);
 			}
 		} catch (NullPointerException e) {
 			signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));// 9994
 			signUpResponse.setMessage(BaseHTTP.MESSAGE_9994);
-			signUpResponse.setAccountModel(null);
+			signUpResponse.setDataSignUpResponse(null);
 		}
 
 		response.getWriter().print(gson.toJson(signUpResponse));
@@ -104,7 +110,7 @@ public class SignUpAPI extends HttpServlet {
 	public void valueInValid(SignUpResponse signUpResponse) {
 		signUpResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 		signUpResponse.setMessage(BaseHTTP.MESSAGE_1004);
-		signUpResponse.setAccountModel(null);
+		signUpResponse.setDataSignUpResponse(null);
 	}
 
 }
