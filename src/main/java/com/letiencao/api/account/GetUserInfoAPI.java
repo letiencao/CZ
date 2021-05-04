@@ -55,14 +55,17 @@ public class GetUserInfoAPI extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		GetUserInfoRequest getUserInfoRequest = gson.fromJson(request.getReader(), GetUserInfoRequest.class);
+//		GetUserInfoRequest getUserInfoRequest = gson.fromJson(request.getReader(), GetUserInfoRequest.class);
+		String userIdQuery = request.getParameter("userId");
+		GetUserInfoRequest getUserInfoRequest = new GetUserInfoRequest();
+		getUserInfoRequest.setUserId(Long.valueOf(userIdQuery));
 		UserInfoResponse userInfoResponse = new UserInfoResponse();
 		GetUserInforResponse getUserInforResponse = new GetUserInforResponse();
 		List<FriendModel> list = new ArrayList<FriendModel>();
 		String jwt = request.getHeader(BaseHTTP.Authorization);
 		// get information account from token
 		AccountModel accountModel = accountService.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
-		if (getUserInfoRequest != null) {
+		if (userIdQuery != null) {
 			Long userId = getUserInfoRequest.getUserId();
 			if (userId.toString() != null) {
 				if (userId.toString().length() > 0) {
@@ -117,7 +120,8 @@ public class GetUserInfoAPI extends HttpServlet {
 				getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1002);
 			}
-		} else {
+		} 
+		else {
 
 			// get size of list friend userId(token)
 			list = friendService.findListFriendById(accountModel.getId());

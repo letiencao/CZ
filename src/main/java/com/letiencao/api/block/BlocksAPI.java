@@ -26,8 +26,7 @@ import com.letiencao.service.impl.BlocksService;
 public class BlocksAPI extends HttpServlet {
 
 	/*********************************
-	 * Created By Cao LT
-	 * Created Date 31/03/2021
+	 * Created By Cao LT Created Date 31/03/2021
 	 * 
 	 *////////////////////////////////
 	private static final long serialVersionUID = 1L;
@@ -49,13 +48,18 @@ public class BlocksAPI extends HttpServlet {
 		Gson gson = new Gson();
 		String jwt = request.getHeader(BaseHTTP.Authorization);
 		BaseResponse baseResponse = new BaseResponse();
+		String idBlocksQuery = request.getParameter("idBlocks");
+		String idBlockedQuery = request.getParameter("idBlocked");
 		try {
-			AddBlocksRequest addBlocksRequest = gson.fromJson(request.getReader(), AddBlocksRequest.class);
-			if (addBlocksRequest == null) {
-				//....
-				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994)); //ví dụ nhé đây là gõ tay này,còn bản cập nhật sẽ như này
+//			AddBlocksRequest addBlocksRequest = gson.fromJson(request.getReader(), AddBlocksRequest.class);
+			AddBlocksRequest addBlocksRequest = new AddBlocksRequest();
+			addBlocksRequest.setIdBlocked(Long.valueOf(idBlockedQuery));
+			addBlocksRequest.setIdBlocks(Long.valueOf(idBlocksQuery));
+			if (idBlocksQuery == null || idBlockedQuery == null) {
+				// ....
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 //				baseResponse.setMessage("No data or end of list data");
-				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);// do sua nhu the thoi,dc chua ok
+				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
 				response.getWriter().print(gson.toJson(baseResponse));
 				return;
 			} else {
@@ -70,7 +74,7 @@ public class BlocksAPI extends HttpServlet {
 					if (idBlocks == idBlocked) {
 						id = -1L;
 						System.out.println("1");
-						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));//lam di ok r
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));// lam di ok r
 						baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					} else if (accountService.findById(idBlocked) == null) {
 						id = -1L;
@@ -79,22 +83,22 @@ public class BlocksAPI extends HttpServlet {
 						baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
 
 					} else {
-						//Check Block
+						// Check Block
 						BlocksModel blocksModel = blocksService.findOne(idBlocks, addBlocksRequest.getIdBlocked());
-						if(blocksModel == null) {
+						if (blocksModel == null) {
 							id = blocksService.insertOne(idBlocks, addBlocksRequest.getIdBlocked());
 							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 							baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
-						}else {
+						} else {
 							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
 							baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
 						}
-						
+
 					}
 				} else {
-					//{
-					//....
-					//}
+					// {
+					// ....
+					// }
 					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				}

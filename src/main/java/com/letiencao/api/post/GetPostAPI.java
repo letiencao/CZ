@@ -104,123 +104,125 @@ public class GetPostAPI extends HttpServlet {
 		Gson gson = new Gson();
 		DataGetPostReponse dataGetPostReponse = new DataGetPostReponse();
 		GetPostResponse getPostResponse = new GetPostResponse();
-		try {
-			GetPostRequest getPostRequest = gson.fromJson(request.getReader(), GetPostRequest.class);
-			if (getPostRequest != null) {
-				// get token
-				String jwt = request.getHeader(BaseHTTP.Authorization);
-				Long postId = getPostRequest.getId();
-				if (postId != null) {
-					dataGetPostReponse.setId(postId);
-					// search post by id
+//		try {
+//			GetPostRequest getPostRequest = gson.fromJson(request.getReader(), GetPostRequest.class);
+//			if (getPostRequest != null) {
+		GetPostRequest getPostRequest = new GetPostRequest();
+		String idQuery = request.getParameter("id");
+		getPostRequest.setId(Long.valueOf(idQuery));
+		// get token
+		String jwt = request.getHeader(BaseHTTP.Authorization);
+		Long postId = getPostRequest.getId();
+		if (postId != null) {
+			dataGetPostReponse.setId(postId);
+			// search post by id
 //					PostModel postModel = postService.findPostById(postId);// get author
-					PostModel postModel = new PostModel();
-					if (postService.findPostById(postId).getId() == null) {
-						postModel = postService.findById(postId);
-					} else {
-						postModel = postService.findPostById(postId);
+			PostModel postModel = new PostModel();
+			if (postService.findPostById(postId).getId() == null) {
+				postModel = postService.findById(postId);
+			} else {
+				postModel = postService.findPostById(postId);
+			}
+			System.out.println("postModel = " + postModel.getId());
+			dataGetPostReponse.setDescribed(postModel.getContent());
+			dataGetPostReponse.setCreated(String.valueOf(postModel.getCreatedDate()));
+			dataGetPostReponse.setModified(String.valueOf(postModel.getModifiedDate()));
+			// amount of like
+			int like = likesService.findByPostId(postId);
+			dataGetPostReponse.setLike(like);
+			// amount of comment
+			int comment = commentService.findByPostId(postId);
+			dataGetPostReponse.setComment(comment);
+			// check this user liked this post
+			String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
+			AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);// jwt
+			Long accountId = accountModel.getId();
+			boolean checkThisUserLiked = likesService.checkThisUserLiked(accountId, postId);
+			dataGetPostReponse.setLiked(checkThisUserLiked);
+			// is_blocked
+			BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountId);
+			if (blocksModel == null) {
+				dataGetPostReponse.setIsBlocked("UnBlocked");
+			} else {
+				dataGetPostReponse.setIsBlocked("Blocked");
+			}
+			// can_edit
+			if (accountId == postModel.getAccountId()) {
+				dataGetPostReponse.setCanEdit("Can Edit");
+			} else {
+				dataGetPostReponse.setCanEdit("Can't Edit");
+			}
+			if (dataGetPostReponse.getIsBlocked().equalsIgnoreCase("Blocked")) {
+				dataGetPostReponse.setCanComment("Can't Comment");
+			} else {
+				dataGetPostReponse.setCanComment("Can Comment");
+			}
+			// get file
+			List<ImageGetPostResponse> imageGetPostResponses = new ArrayList<ImageGetPostResponse>();
+			List<VideoGetPostResponse> videoGetPostResponses = new ArrayList<VideoGetPostResponse>();
+			if (fileService.findByPostId(postId) != null) {
+				List<FileModel> list = fileService.findByPostId(postId);
+				System.out.println("size = " + fileService.findByPostId(postId).size());
+				for (FileModel fileModel : list) {
+					if (fileModel.getContent().endsWith(".jpg") || fileModel.getContent().endsWith(".svg")
+							|| fileModel.getContent().endsWith(".JPEG") || fileModel.getContent().endsWith(".png")) {
+						ImageGetPostResponse imageGetPostResponse = new ImageGetPostResponse();
+						imageGetPostResponse.setId(fileModel.getId());
+						imageGetPostResponse.setUrl(fileModel.getContent());
+						imageGetPostResponses.add(imageGetPostResponse);
+					} else if (fileModel.getContent().endsWith(".mp4")) {
+						VideoGetPostResponse videoGetPostResponse = new VideoGetPostResponse();
+						videoGetPostResponse.setId(fileModel.getId());
+						videoGetPostResponse.setUrl(fileModel.getContent());
+						videoGetPostResponses.add(videoGetPostResponse);
 					}
-					System.out.println("postModel = " + postModel.getId());
-					dataGetPostReponse.setDescribed(postModel.getContent());
-					dataGetPostReponse.setCreated(String.valueOf(postModel.getCreatedDate()));
-					dataGetPostReponse.setModified(String.valueOf(postModel.getModifiedDate()));
-					// amount of like
-					int like = likesService.findByPostId(postId);
-					dataGetPostReponse.setLike(like);
-					// amount of comment
-					int comment = commentService.findByPostId(postId);
-					dataGetPostReponse.setComment(comment);
-					// check this user liked this post
-					String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
-					AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);// jwt
-					Long accountId = accountModel.getId();
-					boolean checkThisUserLiked = likesService.checkThisUserLiked(accountId, postId);
-					dataGetPostReponse.setLiked(checkThisUserLiked);
-					// is_blocked
-					BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountId);
-					if (blocksModel == null) {
-						dataGetPostReponse.setIsBlocked("UnBlocked");
-					} else {
-						dataGetPostReponse.setIsBlocked("Blocked");
-					}
-					// can_edit
-					if (accountId == postModel.getAccountId()) {
-						dataGetPostReponse.setCanEdit("Can Edit");
-					} else {
-						dataGetPostReponse.setCanEdit("Can't Edit");
-					}
-					if (dataGetPostReponse.getIsBlocked().equalsIgnoreCase("Blocked")) {
-						dataGetPostReponse.setCanComment("Can't Comment");
-					} else {
-						dataGetPostReponse.setCanComment("Can Comment");
-					}
-					// get file
-					List<ImageGetPostResponse> imageGetPostResponses = new ArrayList<ImageGetPostResponse>();
-					List<VideoGetPostResponse> videoGetPostResponses = new ArrayList<VideoGetPostResponse>();
-					if (fileService.findByPostId(postId) != null) {
-						List<FileModel> list = fileService.findByPostId(postId);
-						System.out.println("size = " + fileService.findByPostId(postId).size());
-						for (FileModel fileModel : list) {
-							if (fileModel.getContent().endsWith(".jpg") || fileModel.getContent().endsWith(".svg")
-									|| fileModel.getContent().endsWith(".JPEG")
-									|| fileModel.getContent().endsWith(".png")) {
-								ImageGetPostResponse imageGetPostResponse = new ImageGetPostResponse();
-								imageGetPostResponse.setId(fileModel.getId());
-								imageGetPostResponse.setUrl(fileModel.getContent());
-								imageGetPostResponses.add(imageGetPostResponse);
-							} else if (fileModel.getContent().endsWith(".mp4")) {
-								VideoGetPostResponse videoGetPostResponse = new VideoGetPostResponse();
-								videoGetPostResponse.setId(fileModel.getId());
-								videoGetPostResponse.setUrl(fileModel.getContent());
-								videoGetPostResponses.add(videoGetPostResponse);
-							}
-						}
-					} else {
-						imageGetPostResponses = null;
-						videoGetPostResponses = null;
-					}
-					// get author
-					AuthorGetPostResponse authorGetPostResponse = new AuthorGetPostResponse();
-					authorGetPostResponse.setId(postModel.getAccountId());
-					authorGetPostResponse.setName(accountService.findById(postModel.getAccountId()).getName());
-					authorGetPostResponse.setAvatar(accountService.findById(postModel.getAccountId()).getAvatar());
-					dataGetPostReponse.setAuthorGetPostResponse(authorGetPostResponse);
-					dataGetPostReponse.setListImage(imageGetPostResponses);
-					dataGetPostReponse.setListVideo(videoGetPostResponses);
-					// set created modified in long type
-					dataGetPostReponse.setCreated(
-							String.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
-					if (postModel.getModifiedDate() != null) {
-						dataGetPostReponse.setModified(
-								String.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
-					}
-					getPostResponse.setDataGetPostReponse(dataGetPostReponse);
-					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-					getPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
-
-				} else {
-					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
-					getPostResponse.setDataGetPostReponse(null);
-					getPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
-					response.getWriter().print(gson.toJson(getPostResponse));
-					return;
 				}
 			} else {
-				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-				getPostResponse.setDataGetPostReponse(null);
-				getPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
-				response.getWriter().print(gson.toJson(getPostResponse));
-				return;
+				imageGetPostResponses = null;
+				videoGetPostResponses = null;
 			}
-		} catch (NumberFormatException | JsonSyntaxException e) {
-			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-			getPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
+			// get author
+			AuthorGetPostResponse authorGetPostResponse = new AuthorGetPostResponse();
+			authorGetPostResponse.setId(postModel.getAccountId());
+			authorGetPostResponse.setName(accountService.findById(postModel.getAccountId()).getName());
+			authorGetPostResponse.setAvatar(accountService.findById(postModel.getAccountId()).getAvatar());
+			dataGetPostReponse.setAuthorGetPostResponse(authorGetPostResponse);
+			dataGetPostReponse.setListImage(imageGetPostResponses);
+			dataGetPostReponse.setListVideo(videoGetPostResponses);
+			// set created modified in long type
+			dataGetPostReponse
+					.setCreated(String.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
+			if (postModel.getModifiedDate() != null) {
+				dataGetPostReponse.setModified(
+						String.valueOf(genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
+			}
+			getPostResponse.setDataGetPostReponse(dataGetPostReponse);
+			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+			getPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
+
+		} else {
+			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 			getPostResponse.setDataGetPostReponse(null);
-		} catch (NullPointerException e) {
-			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
-			getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
-			getPostResponse.setDataGetPostReponse(null);
+			getPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
+			response.getWriter().print(gson.toJson(getPostResponse));
+			return;
 		}
+//			} else {
+//				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//				getPostResponse.setDataGetPostReponse(null);
+//				getPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//				response.getWriter().print(gson.toJson(getPostResponse));
+//				return;
+//			}
+//		} catch (NumberFormatException | JsonSyntaxException e) {
+//			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+//			getPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
+//			getPostResponse.setDataGetPostReponse(null);
+//		} catch (NullPointerException e) {
+//			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+//			getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
+//			getPostResponse.setDataGetPostReponse(null);
+//		}
 		response.getWriter().print(gson.toJson(getPostResponse));
 	}
 

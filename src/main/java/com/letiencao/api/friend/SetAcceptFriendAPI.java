@@ -48,9 +48,14 @@ public class SetAcceptFriendAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
-		try {
-			FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
-			if (friendAcceptRequest != null) {
+//		try {
+//			FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
+//			if (friendAcceptRequest != null) {
+			String userIdQuery = request.getParameter("userId");
+			String isAcceptQuery = request.getParameter("isAccept");
+			FriendAcceptRequest friendAcceptRequest = new FriendAcceptRequest();
+			friendAcceptRequest.setUserId(Long.valueOf(userIdQuery));
+			friendAcceptRequest.setAccept(Boolean.valueOf(isAcceptQuery));
 				Long userId = friendAcceptRequest.getUserId();
 				boolean isAccept = friendAcceptRequest.isAccept();
 				if (userId != null && String.valueOf(isAccept) != null) {
@@ -117,16 +122,16 @@ public class SetAcceptFriendAPI extends HttpServlet {
 					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				}
 
-			} else {
-				// no data
-				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
-			}
+//			} else {
+//				// no data
+//				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//			}
 			response.getWriter().print(gson.toJson(baseResponse));
-		} catch (NumberFormatException | JsonSyntaxException e) {
-			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
-			response.getWriter().print(gson.toJson(baseResponse));
-		}
+//		} catch (NumberFormatException | JsonSyntaxException e) {
+//			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+//			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
+//			response.getWriter().print(gson.toJson(baseResponse));
+//		}
 	}
 }

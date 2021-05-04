@@ -39,67 +39,69 @@ public class CheckNewItemAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		List<Long> models = new ArrayList<Long>(); // list data new items
-		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
+//		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
 		CheckNewItemResponse checkNewItemResponse = new CheckNewItemResponse();
-
-		if (checkNewItemRequest != null) {
-			Long last_id = checkNewItemRequest.getLastId();
-			if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
-				checkNewItemRequest.setCategoryId(0);
-			}
-			if (last_id != null) {
-				if (last_id.toString().length() > 0) {
-					// Check last_id
-					PostModel postModel = postService.findPostById(last_id);
-					if (postModel != null) {
-						// get all post in DB
-						List<PostModel> list = postService.findAll();
-						if (list != null) {
-							for (int i = 0; i < list.size(); i++) {
-								Long id = list.get(i).getId();
-								if (id <= last_id) {
-									continue;
-								} else {
-									models.add(id);
-								}
+		CheckNewItemRequest checkNewItemRequest = new CheckNewItemRequest();
+		String last_idQuery = request.getParameter("lastId");
+		checkNewItemRequest.setLastId(Long.valueOf(last_idQuery));
+//		if (checkNewItemRequest != null) {
+		Long last_id = checkNewItemRequest.getLastId();
+		if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
+			checkNewItemRequest.setCategoryId(0);
+		}
+		if (last_id != null) {
+			if (last_id.toString().length() > 0) {
+				// Check last_id
+				PostModel postModel = postService.findPostById(last_id);
+				if (postModel != null) {
+					// get all post in DB
+					List<PostModel> list = postService.findAll();
+					if (list != null) {
+						for (int i = 0; i < list.size(); i++) {
+							Long id = list.get(i).getId();
+							if (id <= last_id) {
+								continue;
+							} else {
+								models.add(id);
 							}
-							checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-							checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
-							checkNewItemResponse.setData(models);
-
-						} else {
-							// exception
-							// all posts is deleted
-							checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
-							checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
-							checkNewItemResponse.setData(null);
 						}
+						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
+						checkNewItemResponse.setData(models);
+
 					} else {
-						// post is not existed
-						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
-						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9992);
+						// exception
+						// all posts is deleted
+						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
 						checkNewItemResponse.setData(null);
 					}
-
 				} else {
-					// value invalid
-					checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
-					checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1004);
+					// post is not existed
+					checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+					checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9992);
 					checkNewItemResponse.setData(null);
 				}
+
 			} else {
-				// parameter not enough
-				checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
-				checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1002);
+				// value invalid
+				checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+				checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1004);
 				checkNewItemResponse.setData(null);
 			}
-
 		} else {
-			// empty body
-			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9994);
+			// parameter not enough
+			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1002);
 			checkNewItemResponse.setData(null);
 		}
+
+//		} else {
+//			// empty body
+//			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//			checkNewItemResponse.setData(null);
+//		}
 		response.getWriter().print(gson.toJson(checkNewItemResponse));
 	}
 
