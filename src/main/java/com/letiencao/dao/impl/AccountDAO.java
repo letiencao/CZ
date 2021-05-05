@@ -31,7 +31,7 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 
 	@Override
 	public AccountModel signIn(SignInRequest signInRequest) {
-		String sql = "SELECT * FROM account WHERE phonenumber = ? AND password = ?";
+		String sql = "SELECT * FROM account WHERE phonenumber = ? AND password = ? AND deleted = false";
 		try {
 			return findOne(sql, new AccountMapping(), signInRequest.getPhoneNumber(), signInRequest.getPassword());
 		} catch (ClassCastException e) {
