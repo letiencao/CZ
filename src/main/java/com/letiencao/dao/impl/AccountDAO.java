@@ -43,7 +43,7 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 	@Override
 	public AccountModel findByPhoneNumber(String phoneNumber) {
 		try {
-			String sql = "SELECT * FROM account WHERE phonenumber = ?";
+			String sql = "SELECT * FROM account WHERE phonenumber = ? AND deleted = false";
 			AccountModel accountModel = findOne(sql, new AccountMapping(), phoneNumber);
 			if (accountModel != null) {
 				return accountModel;
