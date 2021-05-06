@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.PostModel;
 import com.letiencao.request.post.CheckNewItemRequest;
@@ -43,59 +44,71 @@ public class CheckNewItemAPI extends HttpServlet {
 		CheckNewItemResponse checkNewItemResponse = new CheckNewItemResponse();
 		CheckNewItemRequest checkNewItemRequest = new CheckNewItemRequest();
 		String last_idQuery = request.getParameter("lastId");
-		checkNewItemRequest.setLastId(Long.valueOf(last_idQuery));
-//		if (checkNewItemRequest != null) {
-		Long last_id = checkNewItemRequest.getLastId();
-		if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
-			checkNewItemRequest.setCategoryId(0);
-		}
-		if (last_id != null) {
-			if (last_id.toString().length() > 0) {
-				// Check last_id
-				PostModel postModel = postService.findPostById(last_id);
-				if (postModel != null) {
-					// get all post in DB
-					List<PostModel> list = postService.findAll();
-					if (list != null) {
-						for (int i = 0; i < list.size(); i++) {
-							Long id = list.get(i).getId();
-							if (id <= last_id) {
-								continue;
+		try {
+			if (last_idQuery != null) {
+				checkNewItemRequest.setLastId(Long.valueOf(last_idQuery));
+//				if (checkNewItemRequest != null) {
+				Long last_id = checkNewItemRequest.getLastId();
+				if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
+					checkNewItemRequest.setCategoryId(0);
+				}
+				if (last_id.toString().length() > 0) {
+					// Check last_id
+					PostModel postModel = postService.findPostById(last_id);
+					if (postModel != null) {
+						// get all post in DB
+						List<PostModel> list = postService.findAll();
+						if (list != null) {
+							if (last_id <= list.get(list.size() - 1).getId()) {
+								for (int i = 0; i < list.size(); i++) {
+									Long id = list.get(i).getId();
+									if (id <= last_id) {
+										continue;
+									} else {
+										models.add(id);
+									}
+								}
+								checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+								checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
+								checkNewItemResponse.setData(models);
 							} else {
-								models.add(id);
+								checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+								checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
+								checkNewItemResponse.setData(null);
 							}
-						}
-						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
-						checkNewItemResponse.setData(models);
 
+						} else {
+							// exception
+							// all posts is deleted
+							checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+							checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
+							checkNewItemResponse.setData(null);
+						}
 					} else {
-						// exception
-						// all posts is deleted
-						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
-						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
+						// post is not existed
+						checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+						checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9992);
 						checkNewItemResponse.setData(null);
 					}
+
 				} else {
-					// post is not existed
-					checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
-					checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9992);
+					// value invalid
+					checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+					checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					checkNewItemResponse.setData(null);
 				}
-
 			} else {
-				// value invalid
-				checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
-				checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1004);
+				// parameter not enough
+				checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+				checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				checkNewItemResponse.setData(null);
 			}
-		} else {
-			// parameter not enough
-			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
-			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1002);
+
+		} catch (NumberFormatException | JsonSyntaxException e) {
+			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			checkNewItemResponse.setData(null);
 		}
-
 //		} else {
 //			// empty body
 //			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));

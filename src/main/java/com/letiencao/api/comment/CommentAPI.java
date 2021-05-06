@@ -189,8 +189,7 @@ public class CommentAPI extends HttpServlet {
 							// check comment from commentId of post from postId
 							if (commentModel.getPostId() == postId) {
 								// Check author
-								if (commentModel.getAccountId() == accountModel.getId()
-										|| postModel.getAccountId() == accountModel.getId()) {
+								if (commentModel.getAccountId() == accountModel.getId()) {
 									commentService.deleteComment(postId, commentId);
 									ok(baseResponse);
 								} else {

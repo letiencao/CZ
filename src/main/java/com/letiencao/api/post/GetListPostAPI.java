@@ -190,11 +190,9 @@ public class GetListPostAPI extends HttpServlet {
 						getListPostResponse.setList(dataGetPostReponses);
 						getListPostResponse.setNewItems(count);
 					} else {
-						getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-						getListPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
-						getListPostResponse.setLastId(GetListPostRequest.getLastId());
-						GetListPostRequest.setIndex(count + GetListPostRequest.getIndex());
-						getListPostResponse.setList(dataGetPostReponses);
+						getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
+						getListPostResponse.setMessage(BaseHTTP.MESSAGE_9995);
+						getListPostResponse.setList(null);
 						getListPostResponse.setNewItems(0);
 					}
 

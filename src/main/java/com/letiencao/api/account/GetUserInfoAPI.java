@@ -27,7 +27,7 @@ import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.FriendService;
 
-@WebServlet("/api/get-user-infor")
+@WebServlet("/api/get-user-info")
 public class GetUserInfoAPI extends HttpServlet {
 
 	/**
