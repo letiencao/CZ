@@ -10,8 +10,6 @@ import java.util.List;
 import com.letiencao.dao.IAccountDAO;
 import com.letiencao.mapping.AccountMapping;
 import com.letiencao.model.AccountModel;
-import com.letiencao.model.FriendModel;
-import com.letiencao.request.account.PhoneNumberRequest;
 import com.letiencao.request.account.SignInRequest;
 
 public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {

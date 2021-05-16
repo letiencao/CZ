@@ -172,8 +172,8 @@ public class LikesAPI extends HttpServlet {
 							baseResponse.setMessage("OK");
 						}
 					} else {
-						baseResponse.setCode(String.valueOf(9999));
-						baseResponse.setMessage("Exception Error");
+						baseResponse.setCode(String.valueOf(1010));
+						baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
 					}
 				} else {
 					baseResponse.setCode(String.valueOf(1009));

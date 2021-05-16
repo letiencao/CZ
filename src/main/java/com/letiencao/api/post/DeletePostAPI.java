@@ -75,8 +75,8 @@ public class DeletePostAPI extends HttpServlet {
 					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 					baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 				} else {
-					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
-					baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_9992);
 				}
 
 			} else {

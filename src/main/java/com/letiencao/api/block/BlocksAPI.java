@@ -48,33 +48,26 @@ public class BlocksAPI extends HttpServlet {
 		Gson gson = new Gson();
 		String jwt = request.getHeader(BaseHTTP.Authorization);
 		BaseResponse baseResponse = new BaseResponse();
-		String idBlocksQuery = request.getParameter("idBlocks");
 		String idBlockedQuery = request.getParameter("idBlocked");
+		String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
+		AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
+		Long idBlocks = accountModel.getId();
 		try {
 //			AddBlocksRequest addBlocksRequest = gson.fromJson(request.getReader(), AddBlocksRequest.class);
-			AddBlocksRequest addBlocksRequest = new AddBlocksRequest();
-			addBlocksRequest.setIdBlocked(Long.valueOf(idBlockedQuery));
-			addBlocksRequest.setIdBlocks(Long.valueOf(idBlocksQuery));
-			if (idBlocksQuery == null || idBlockedQuery == null) {
-				// ....
-				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-//				baseResponse.setMessage("No data or end of list data");
-				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
-				response.getWriter().print(gson.toJson(baseResponse));
-				return;
-			} else {
-				String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
-				AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
-				Long idBlocks = accountModel.getId();
-				Long idBlocked = addBlocksRequest.getIdBlocked();
-				System.out.println("idBlocked = " + idBlocked);
-				if (idBlocked != null) {
+			
+				
+				if (idBlockedQuery != null) {
 					@SuppressWarnings("unused")
+					AddBlocksRequest addBlocksRequest = new AddBlocksRequest();
+					addBlocksRequest.setIdBlocked(Long.valueOf(idBlockedQuery));
+					addBlocksRequest.setIdBlocks(Long.valueOf(idBlocks));
+					
+						Long idBlocked = addBlocksRequest.getIdBlocked();
 					Long id = 0L;
 					if (idBlocks == idBlocked) {
 						id = -1L;
 						System.out.println("1");
-						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));// lam di ok r
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 						baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					} else if (accountService.findById(idBlocked) == null) {
 						id = -1L;
@@ -103,9 +96,10 @@ public class BlocksAPI extends HttpServlet {
 					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				}
 				response.getWriter().print(gson.toJson(baseResponse));
-			}
+			
 		} catch (NumberFormatException | JsonSyntaxException e) {
 			// sai kieu
+			System.out.println(e.getMessage());
 			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
 			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			response.getWriter().print(gson.toJson(baseResponse));

@@ -54,7 +54,7 @@ public class SetRequestFriendAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		SetFriendResponse setFriendResponse = new SetFriendResponse();
-//		try {
+		try {
 //			FriendIdRequest friendIdRequest = gson.fromJson(request.getReader(), FriendIdRequest.class);
 		String userIdQuery = request.getParameter("userId");
 		FriendIdRequest friendIdRequest = new FriendIdRequest();
@@ -89,27 +89,27 @@ public class SetRequestFriendAPI extends HttpServlet {
 								setFriendResponse.setRequestedFriends(list.size());
 							} else {
 								// Exception
-								setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9999));
+								setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 								setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
 								setFriendResponse.setRequestedFriends(-1);
 							}
 						} else {
 							// Exception
-							setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9999));
+							setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 							setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
 							setFriendResponse.setRequestedFriends(-1);
 						}
 
 					} else {
 						// exception
-						setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9999));
+						setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 						setFriendResponse.setMessage(BaseHTTP.MESSAGE_9999);
 						setFriendResponse.setRequestedFriends(-1);
 					}
 
 				} else {
 					// User is not validate
-					setFriendResponse.setCode(String.valueOf(BaseHTTP.MESSAGE_9995));
+					setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 					setFriendResponse.setMessage(BaseHTTP.MESSAGE_9995);
 					setFriendResponse.setRequestedFriends(-1);
 				}
@@ -132,12 +132,12 @@ public class SetRequestFriendAPI extends HttpServlet {
 //				setFriendResponse.setRequestedFriends(-1);
 //			}
 		response.getWriter().print(gson.toJson(setFriendResponse));
-//		} catch (JsonSyntaxException | NumberFormatException e) {
-//			setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-//			setFriendResponse.setMessage(BaseHTTP.MESSAGE_1003);
-//			setFriendResponse.setRequestedFriends(-1);
-//			response.getWriter().print(gson.toJson(setFriendResponse));
-//		}
+		} catch (JsonSyntaxException | NumberFormatException e) {
+			setFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			setFriendResponse.setMessage(BaseHTTP.MESSAGE_1003);
+			setFriendResponse.setRequestedFriends(-1);
+			response.getWriter().print(gson.toJson(setFriendResponse));
+		}
 	}
 
 }

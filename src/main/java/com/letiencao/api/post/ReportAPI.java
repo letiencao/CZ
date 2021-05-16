@@ -56,7 +56,7 @@ public class ReportAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
-//		try {
+		try {
 //			ReportRequest reportRequest = gson.fromJson(request.getReader(), ReportRequest.class);
 //			if (reportRequest != null) {
 		String idQuery = request.getParameter("id");
@@ -122,11 +122,11 @@ public class ReportAPI extends HttpServlet {
 //				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
 //				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
 //			}
-//		} catch (NumberFormatException | JsonSyntaxException e) {
-//			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-//			baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
-//			response.getWriter().print(gson.toJson(baseResponse));
-//		}
+} catch (NumberFormatException | JsonSyntaxException e) {
+	baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+	baseResponse.setMessage(BaseHTTP.MESSAGE_1003);
+	response.getWriter().print(gson.toJson(baseResponse));
+}
 
 		response.getWriter().print(gson.toJson(baseResponse));
 	}

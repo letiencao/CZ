@@ -108,11 +108,13 @@ public class GetPostAPI extends HttpServlet {
 //			if (getPostRequest != null) {
 		GetPostRequest getPostRequest = new GetPostRequest();
 		String idQuery = request.getParameter("id");
-		getPostRequest.setId(Long.valueOf(idQuery));
+		
 		// get token
 		String jwt = request.getHeader(BaseHTTP.Authorization);
-		Long postId = getPostRequest.getId();
-		if (postId != null) {
+		
+		if (idQuery != null) {
+			getPostRequest.setId(Long.valueOf(idQuery));
+			Long postId = getPostRequest.getId();
 			if (postId > 0) {
 				dataGetPostReponse.setId(postId);
 				// search post by id
@@ -125,7 +127,7 @@ public class GetPostAPI extends HttpServlet {
 					System.out.println(2);
 					postModel = postService.findPostById(postId);
 				}
-				if (postModel.getId() != null) {
+				if (postModel != null) {
 					System.out.println("postModel = " + postModel);
 //					PostModel postModel = postService.findPostById(postId);
 					dataGetPostReponse.setDescribed(postModel.getContent());
