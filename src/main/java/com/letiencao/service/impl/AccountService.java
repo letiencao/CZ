@@ -87,4 +87,20 @@ public class AccountService extends BaseService implements IAccountService {
 		}
 		return list;
 	}
+
+	@Override
+	public boolean changePassword(String token, String password, String newPassword) {
+		String phoneNumber = getPhoneNumberFromToken(token);
+		AccountModel accountModel = findByPhoneNumber(phoneNumber);
+		String pw = accountModel.getPassword();
+		if (pw.equals(password)) {
+			accountModel.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+			accountModel.setPassword(newPassword);
+			accountModel.setModifiedBy(phoneNumber);
+			return accountDAO.changePassword(accountModel);
+		} else {
+			return false;
+		}
+
+	}
 }
