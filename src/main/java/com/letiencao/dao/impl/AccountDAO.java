@@ -29,7 +29,7 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 
 	@Override
 	public AccountModel signIn(SignInRequest signInRequest) {
-		String sql = "SELECT * FROM account WHERE phonenumber = ? AND password = ?";
+		String sql = "SELECT * FROM account WHERE phonenumber = ? AND password = ? AND deleted = false";
 		try {
 			return findOne(sql, new AccountMapping(), signInRequest.getPhoneNumber(), signInRequest.getPassword());
 		} catch (ClassCastException e) {
@@ -41,7 +41,7 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 	@Override
 	public AccountModel findByPhoneNumber(String phoneNumber) {
 		try {
-			String sql = "SELECT * FROM account WHERE phonenumber = ?";
+			String sql = "SELECT * FROM account WHERE phonenumber = ? AND deleted = false";
 			AccountModel accountModel = findOne(sql, new AccountMapping(), phoneNumber);
 			if (accountModel != null) {
 				return accountModel;

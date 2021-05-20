@@ -22,7 +22,11 @@ import com.letiencao.service.impl.BaseService;
 
 @WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post", "/api/blocks", "/api/like",
 		"/api/delete-post", "/api/get-comments", "/api/get-list-posts", "/api/report", "/api/set-accept-friend",
-		"/api/set-request-friend", "/api/get-user-infor","/api/change-password"})
+
+		"/api/set-request-friend", "/api/get-user-infor","/api/change-password",
+
+		"/api/set-request-friend", "/api/get-user-info" })
+
 public class APIFilter implements Filter {
 
 	private GenericService genericService;
@@ -50,26 +54,36 @@ public class APIFilter implements Filter {
 		BaseResponse baseResponse = new BaseResponse();
 		Gson gson = new Gson();
 		String authToken = httpRequest.getHeader(BaseHTTP.Authorization);
+//		try {
+
+		System.out.println("authToken = " + authToken);
+		String url = httpRequest.getRequestURI();
+		System.out.println("url = " + url);
 		try {
-			System.out.println("authToken = " + authToken);
-			String url = httpRequest.getRequestURI();
-			System.out.println("url = " + url);
 			if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {
 				chain.doFilter(request, response);
-			} else {
-//				baseResponse.setCode(9998);
+			}
+		} catch (IllegalArgumentException e) {
+			if(authToken == "") {
+				System.out.println("Exception = "+e.getMessage());
 				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9998));
 
 				baseResponse.setMessage(BaseHTTP.MESSAGE_9998);
 				httpResponse.getWriter().print(gson.toJson(baseResponse));
+			}else {
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+				baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
+				httpResponse.getWriter().print(gson.toJson(baseResponse));
 			}
-		} catch (IllegalArgumentException e) {
-			// token == null
-//			baseResponse.setCode(9994);
-			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-			baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
-			httpResponse.getWriter().print(gson.toJson(baseResponse));
 		}
+
+//		} catch (IllegalArgumentException e) {
+//			// token == null
+////			baseResponse.setCode(9994);
+//			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+//			baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
+//			httpResponse.getWriter().print(gson.toJson(baseResponse));
+//		}
 
 	}
 

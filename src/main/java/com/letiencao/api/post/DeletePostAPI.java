@@ -51,50 +51,52 @@ public class DeletePostAPI extends HttpServlet {
 		Gson gson = new Gson();
 		String jwt = request.getHeader(BaseHTTP.Authorization);
 		BaseResponse baseResponse = new BaseResponse();
-		List<PostModel> list = postService.findAll();
+//		List<PostModel> list = postService.findAll();
+		DeletePostRequest deletePostRequest = new DeletePostRequest();
+		String idQuery = request.getParameter("id");
+		deletePostRequest.setId(Long.valueOf(idQuery));
 		// check author
-		try {
-			DeletePostRequest deletePostRequest = gson.fromJson(request.getReader(), DeletePostRequest.class);
-			if (deletePostRequest != null) {
-				if (deletePostRequest.getId() == null) {
-					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
-					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
+//		try {
+//			DeletePostRequest deletePostRequest = gson.fromJson(request.getReader(), DeletePostRequest.class);
+//			if (deletePostRequest != null) {
+//				if (deletePostRequest.getId() == null) {
+//					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+//					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
+//				} else {
+		PostModel postModel = postService.findById(deletePostRequest.getId());
+		if (postModel != null) {
+			Long id = postService.findAccountIdByPostId(deletePostRequest.getId());
+			System.out.println("ID = " + id);
+			String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
+			AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
+			if (id == accountModel.getId()) {
+				boolean b = postService.deleteById(deletePostRequest.getId());
+				if (b == true) {
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
 				} else {
-					PostModel postModel = postService.findById(deletePostRequest.getId());
-					if (postModel != null) {
-						Long id = postService.findAccountIdByPostId(deletePostRequest.getId());
-						System.out.println("ID = " + id);
-						String phoneNumber = genericService.getPhoneNumberFromToken(jwt);
-						AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);
-						if (id == accountModel.getId()) {
-							boolean b = postService.deleteById(deletePostRequest.getId());
-							if (b == true) {
-								baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-								baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
-							} else {
-								baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
-								baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
-							}
-
-						} else {
-							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
-							baseResponse.setMessage(BaseHTTP.MESSAGE_1009);
-						}
-
-					} else {
-						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
-						baseResponse.setMessage(BaseHTTP.MESSAGE_9992);
-					}
-
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_9992);
 				}
+
 			} else {
-				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
+				baseResponse.setMessage(BaseHTTP.MESSAGE_1009);
 			}
-		} catch (JsonSyntaxException | NumberFormatException e) {
-			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
-			baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
+
+		} else {
+			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+			baseResponse.setMessage(BaseHTTP.MESSAGE_9992);
 		}
+
+//			} else {
+//				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//			}
+//		} catch (JsonSyntaxException | NumberFormatException e) {
+//			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+//			baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
+//		}
 		response.getWriter().print(gson.toJson(baseResponse));
 
 	}

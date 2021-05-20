@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.PostModel;
 import com.letiencao.request.post.CheckNewItemRequest;
@@ -39,15 +40,18 @@ public class CheckNewItemAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		List<Long> models = new ArrayList<Long>(); // list data new items
-		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
+//		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
 		CheckNewItemResponse checkNewItemResponse = new CheckNewItemResponse();
-
-		if (checkNewItemRequest != null) {
-			Long last_id = checkNewItemRequest.getLastId();
-			if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
-				checkNewItemRequest.setCategoryId(0);
-			}
-			if (last_id != null) {
+		CheckNewItemRequest checkNewItemRequest = new CheckNewItemRequest();
+		String last_idQuery = request.getParameter("lastId");
+		try {
+			if (last_idQuery != null) {
+				checkNewItemRequest.setLastId(Long.valueOf(last_idQuery));
+//				if (checkNewItemRequest != null) {
+				Long last_id = checkNewItemRequest.getLastId();
+				if (String.valueOf(checkNewItemRequest.getCategoryId()) == null) {
+					checkNewItemRequest.setCategoryId(0);
+				}
 				if (last_id.toString().length() > 0) {
 					// Check last_id
 					PostModel postModel = postService.findPostById(last_id);
@@ -55,17 +59,23 @@ public class CheckNewItemAPI extends HttpServlet {
 						// get all post in DB
 						List<PostModel> list = postService.findAll();
 						if (list != null) {
-							for (int i = 0; i < list.size(); i++) {
-								Long id = list.get(i).getId();
-								if (id <= last_id) {
-									continue;
-								} else {
-									models.add(id);
+							if (last_id <= list.get(list.size() - 1).getId()) {
+								for (int i = 0; i < list.size(); i++) {
+									Long id = list.get(i).getId();
+									if (id <= last_id) {
+										continue;
+									} else {
+										models.add(id);
+									}
 								}
+								checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+								checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
+								checkNewItemResponse.setData(models);
+							} else {
+								checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+								checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);
+								checkNewItemResponse.setData(null);
 							}
-							checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-							checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
-							checkNewItemResponse.setData(models);
 
 						} else {
 							// exception
@@ -94,12 +104,17 @@ public class CheckNewItemAPI extends HttpServlet {
 				checkNewItemResponse.setData(null);
 			}
 
-		} else {
-			// empty body
-			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9994);
+		} catch (NumberFormatException | JsonSyntaxException e) {
+			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1003);
 			checkNewItemResponse.setData(null);
 		}
+//		} else {
+//			// empty body
+//			checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//			checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//			checkNewItemResponse.setData(null);
+//		}
 		response.getWriter().print(gson.toJson(checkNewItemResponse));
 	}
 

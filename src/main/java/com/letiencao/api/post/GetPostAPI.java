@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
@@ -104,23 +103,33 @@ public class GetPostAPI extends HttpServlet {
 		Gson gson = new Gson();
 		DataGetPostReponse dataGetPostReponse = new DataGetPostReponse();
 		GetPostResponse getPostResponse = new GetPostResponse();
-		try {
-			GetPostRequest getPostRequest = gson.fromJson(request.getReader(), GetPostRequest.class);
-			if (getPostRequest != null) {
-				// get token
-				String jwt = request.getHeader(BaseHTTP.Authorization);
-				Long postId = getPostRequest.getId();
-				if (postId != null) {
-					dataGetPostReponse.setId(postId);
-					// search post by id
-//					PostModel postModel = postService.findPostById(postId);// get author
-					PostModel postModel = new PostModel();
-					if (postService.findPostById(postId).getId() == null) {
-						postModel = postService.findById(postId);
-					} else {
-						postModel = postService.findPostById(postId);
-					}
-					System.out.println("postModel = " + postModel.getId());
+//		try {
+//			GetPostRequest getPostRequest = gson.fromJson(request.getReader(), GetPostRequest.class);
+//			if (getPostRequest != null) {
+		GetPostRequest getPostRequest = new GetPostRequest();
+		String idQuery = request.getParameter("id");
+		
+		// get token
+		String jwt = request.getHeader(BaseHTTP.Authorization);
+		
+		if (idQuery != null) {
+			getPostRequest.setId(Long.valueOf(idQuery));
+			Long postId = getPostRequest.getId();
+			if (postId > 0) {
+				dataGetPostReponse.setId(postId);
+				// search post by id
+//						PostModel postModel = postService.findPostById(postId);// get author
+				PostModel postModel = postService.findPostById(postId);
+				if (postModel == null) {
+					System.out.println(1);
+					postModel = postService.findById(postId);
+				} else {
+					System.out.println(2);
+					postModel = postService.findPostById(postId);
+				}
+				if (postModel != null) {
+					System.out.println("postModel = " + postModel);
+//					PostModel postModel = postService.findPostById(postId);
 					dataGetPostReponse.setDescribed(postModel.getContent());
 					dataGetPostReponse.setCreated(String.valueOf(postModel.getCreatedDate()));
 					dataGetPostReponse.setModified(String.valueOf(postModel.getModifiedDate()));
@@ -197,30 +206,42 @@ public class GetPostAPI extends HttpServlet {
 					getPostResponse.setDataGetPostReponse(dataGetPostReponse);
 					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 					getPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
-
 				} else {
-					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+					getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
 					getPostResponse.setDataGetPostReponse(null);
-					getPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
+					getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
 					response.getWriter().print(gson.toJson(getPostResponse));
 					return;
 				}
 			} else {
-				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 				getPostResponse.setDataGetPostReponse(null);
-				getPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
-				response.getWriter().print(gson.toJson(getPostResponse));
-				return;
+				getPostResponse.setMessage(BaseHTTP.MESSAGE_1004);
 			}
-		} catch (NumberFormatException | JsonSyntaxException e) {
-			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-			getPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
+
+		} else {
+			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 			getPostResponse.setDataGetPostReponse(null);
-		} catch (NullPointerException e) {
-			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
-			getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
-			getPostResponse.setDataGetPostReponse(null);
+			getPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
+			response.getWriter().print(gson.toJson(getPostResponse));
+			return;
 		}
+//			} else {
+//				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//				getPostResponse.setDataGetPostReponse(null);
+//				getPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//				response.getWriter().print(gson.toJson(getPostResponse));
+//				return;
+//			}
+//		} catch (NumberFormatException | JsonSyntaxException e) {
+//			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
+//			getPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
+//			getPostResponse.setDataGetPostReponse(null);
+//		} catch (NullPointerException e) {
+//			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
+//			getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
+//			getPostResponse.setDataGetPostReponse(null);
+//		}
 		response.getWriter().print(gson.toJson(getPostResponse));
 	}
 

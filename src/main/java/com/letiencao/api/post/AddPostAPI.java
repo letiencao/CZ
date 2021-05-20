@@ -89,7 +89,7 @@ public class AddPostAPI extends HttpServlet {
 						if (countVideo < 1) {
 							if (image == true) {
 								System.out.println("11111111111111111111111111111");
-								parameterTypeInValid(addPostResponse);
+								parameterInValid(addPostResponse);
 								response.getWriter().print(gson.toJson(addPostResponse));
 								return;
 							} else {
@@ -115,7 +115,7 @@ public class AddPostAPI extends HttpServlet {
 						if (countImage < 4) {
 							if (video == true) {
 								System.out.println("111111111111111222222222222222222333333");
-								parameterTypeInValid(addPostResponse);
+								parameterInValid(addPostResponse);
 								response.getWriter().print(gson.toJson(addPostResponse));
 								return;
 							} else {

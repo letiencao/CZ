@@ -35,7 +35,7 @@ public class AccountService extends BaseService implements IAccountService {
 			AccountModel accountModel = new AccountModel();
 			accountModel.setPhoneNumber(signUpRequest.getPhoneNumber());
 			accountModel.setName(signUpRequest.getPhoneNumber());
-			accountModel.setDeleted(true);
+			accountModel.setDeleted(false);
 			accountModel.setAvatar(" ");
 			accountModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			accountModel.setCreatedBy(signUpRequest.getPhoneNumber());

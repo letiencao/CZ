@@ -49,79 +49,86 @@ public class SetAcceptFriendAPI extends HttpServlet {
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
 		try {
-			FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
-			if (friendAcceptRequest != null) {
-				Long userId = friendAcceptRequest.getUserId();
-				boolean isAccept = friendAcceptRequest.isAccept();
-				if (userId != null && String.valueOf(isAccept) != null) {
-					if (userId.toString().length() > 0 && String.valueOf(isAccept).length() > 0) {
-						// check user existed
-						AccountModel accountModel = accountService.findById(userId);
-						if (accountModel != null) {
-							// get token
-							String jwt = request.getHeader(BaseHTTP.Authorization);
-							AccountModel model = accountService
-									.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
-							// idRequest == idRequested
-							if (model.getId() != userId) {
-								// check request existed
-								boolean checkRequested = friendService.checkRequestExisted(userId, model.getId(),false);
-								if (checkRequested == true) {
-									if (isAccept == true) {
-										// if existed => is_friend == true
-										friendService.setIsFriend(userId, model.getId());
+//			FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
+//			if (friendAcceptRequest != null) {
+			String userIdQuery = request.getParameter("userId");
+			String isAcceptQuery = request.getParameter("isAccept");
+
+			if (userIdQuery != null && isAcceptQuery != null) {
+				if (userIdQuery.length() > 0 && isAcceptQuery.length() > 0) {
+					FriendAcceptRequest friendAcceptRequest = new FriendAcceptRequest();
+					friendAcceptRequest.setUserId(Long.valueOf(userIdQuery));
+					friendAcceptRequest.setAccept(Boolean.valueOf(isAcceptQuery));
+					Long userId = friendAcceptRequest.getUserId();
+					boolean isAccept = friendAcceptRequest.isAccept();
+					// check user existed
+					AccountModel accountModel = accountService.findById(userId);
+
+					if (accountModel != null) {
+						// get token
+						String jwt = request.getHeader(BaseHTTP.Authorization);
+						AccountModel model = accountService
+								.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
+						// idRequest == idRequested
+						if (model.getId() != userId) {
+							// check request existed
+							boolean checkRequested = friendService.checkRequestExisted(userId, model.getId(), false);
+							if (checkRequested == true) {
+								if (isAccept == true) {
+									// if existed => is_friend == true
+									friendService.setIsFriend(userId, model.getId());
+									baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+									baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+
+								} else if (isAccept == false) {
+									// if isAccept == 0 => remove request
+									FriendModel friendModel = friendService.findOne(userId, model.getId());
+									if (friendModel.isFriend() == false) {
+										// if is_friend == false ,can delete
+										friendService.deleteRequest(userId, model.getId());
 										baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 										baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
-
-									} else if (isAccept == false) {
-										// if isAccept == 0 => remove request
-										FriendModel friendModel = friendService.findOne(userId, model.getId());
-										if (friendModel.isFriend() == false) {
-											// if is_friend == false ,can delete
-											friendService.deleteRequest(userId, model.getId());
-											baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-											baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
-										} else {
-											// exception
-											baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
-											baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
-										}
+									} else {
+										// exception
+										baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+										baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 									}
-
-								} else {
-									// if not existed => exception
-									baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
-									baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 								}
 
 							} else {
-								// Exception
+								// if not existed => exception
 								baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 								baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 							}
 
 						} else {
-							// user not validate
-							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
-							baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
+							// Exception
+							baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+							baseResponse.setMessage(BaseHTTP.MESSAGE_9999);
 						}
 
 					} else {
-						// value invalid
-						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
-						baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
+						// user not validate
+						baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
+						baseResponse.setMessage(BaseHTTP.MESSAGE_9995);
 					}
-				} else {
-					// not enough
-					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
-					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
-				}
 
+				} else {
+					// value invalid
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1004);
+				}
 			} else {
-				// no data
-				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
+				// not enough
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
+				baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
 			}
+
+//			} else {
+//				// no data
+//				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
+//				baseResponse.setMessage(BaseHTTP.MESSAGE_9994);
+//			}
 			response.getWriter().print(gson.toJson(baseResponse));
 		} catch (NumberFormatException | JsonSyntaxException e) {
 			baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));

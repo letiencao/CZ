@@ -9,8 +9,9 @@ public class AccountMapping implements IRowMapping<AccountModel> {
 
 	@Override
 	public AccountModel mapRow(ResultSet resultSet) {
-		AccountModel model = new AccountModel();
+		
 		try {
+			AccountModel model = new AccountModel();
 			model.setId(resultSet.getLong("id"));
 			model.setDeleted(resultSet.getBoolean("deleted"));
 			model.setCreatedDate(resultSet.getTimestamp("createddate"));
@@ -22,12 +23,13 @@ public class AccountMapping implements IRowMapping<AccountModel> {
 			model.setPassword(resultSet.getString("password"));
 			model.setAvatar(resultSet.getString("avatar"));
 			model.setUuid(resultSet.getString("uuid"));
+			return model;
 		} catch (SQLException e) {
 			System.out.println("Failed__User Mapping");
 			System.out.println("Failed__User Mapping = "+e.getMessage());
 			return null;
 		}
-		return model;
+		
 		
 	}
 
