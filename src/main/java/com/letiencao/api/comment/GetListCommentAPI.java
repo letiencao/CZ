@@ -31,7 +31,7 @@ import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.CommentService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/get-comments")
+@WebServlet("/api/get-comment")
 public class GetListCommentAPI extends HttpServlet {
 
 	/**

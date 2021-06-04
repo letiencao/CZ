@@ -20,8 +20,8 @@ import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
-@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post", "/api/blocks", "/api/like",
-		"/api/delete-post", "/api/get-comments", "/api/get-list-posts", "/api/report", "/api/set-accept-friend",
+@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/set-comment","/api/edit-comment","/api/del-comment", "/api/get-post", "/api/blocks", "/api/like",
+		"/api/delete-post", "/api/get-comment", "/api/get-list-posts", "/api/report", "/api/set-accept-friend",
 
 		"/api/set-request-friend", "/api/get-user-infor","/api/change-password",
 
