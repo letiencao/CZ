@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/letiencao/api/account/ChangePasswordAPI.java=UTF-8
 encoding//src/main/java/com/letiencao/api/block/BlocksAPI.java=UTF-8
 encoding//src/main/java/com/letiencao/api/post/AddPostAPI.java=UTF-8
 encoding//src/main/java/com/letiencao/api/post/DeletePostAPI.java=UTF-8

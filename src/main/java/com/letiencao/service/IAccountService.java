@@ -12,4 +12,5 @@ public interface IAccountService {
 	AccountModel findByPhoneNumber(String phoneNumber);
 	AccountModel findById(Long id);
 	List<AccountModel> findListAccountByKeyword(String keyword,String token);
+	boolean changePassword(String token,String password,String newPassword);
 }

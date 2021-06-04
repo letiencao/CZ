@@ -22,7 +22,11 @@ import com.letiencao.service.impl.BaseService;
 
 @WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/comment", "/api/get-post", "/api/blocks", "/api/like",
 		"/api/delete-post", "/api/get-comments", "/api/get-list-posts", "/api/report", "/api/set-accept-friend",
+
+		"/api/set-request-friend", "/api/get-user-infor","/api/change-password",
+
 		"/api/set-request-friend", "/api/get-user-info" })
+
 public class APIFilter implements Filter {
 
 	private GenericService genericService;

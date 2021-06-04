@@ -73,7 +73,8 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 		ResultSet resultSet = null;
 		List<AccountModel> list = new ArrayList<AccountModel>();
 		try {
-			String sql = "SELECT * FROM account WHERE deleted = false AND (name LIKE '%"+keyword+"%' OR phonenumber LIKE '%"+keyword+"%')";
+			String sql = "SELECT * FROM account WHERE deleted = false AND (name LIKE '%" + keyword
+					+ "%' OR phonenumber LIKE '%" + keyword + "%')";
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
@@ -109,6 +110,13 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public boolean changePassword(AccountModel accountModel) {
+		String sql = "UPDATE account SET createddate = ?,modifieddate = ?,modifiedby = ?,password = ? WHERE id = ?";
+		return update(sql, accountModel.getCreatedDate(), accountModel.getModifiedDate(), accountModel.getModifiedBy(),
+				accountModel.getPassword(), accountModel.getId());
 	}
 
 }
