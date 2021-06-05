@@ -43,7 +43,7 @@ public class EditPostAPI extends HttpServlet{
 	}
 	private static final long serialVersionUID = 1L;
 	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();

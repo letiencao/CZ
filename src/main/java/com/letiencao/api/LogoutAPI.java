@@ -25,7 +25,7 @@ public class LogoutAPI extends HttpServlet {
 		genericService = new BaseService();
 	}
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		String jwt = request.getHeader(BaseHTTP.Authorization);
